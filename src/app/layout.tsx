@@ -18,9 +18,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-br"
-      className={`${poppins.variable} h-full antialiased`}
+      className={`${poppins.variable} h-full antialiased bg-background-1000`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" cz-shortcut-listen="true">{children}</body>
     </html>
   );
 }
