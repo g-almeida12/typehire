@@ -4,8 +4,8 @@ import { UserLoginSchema, type UserLoginPayload } from "@/utils/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, GoogleOAuthButton, Input } from "@/components/common";
-import { UserCircle2, Mail, IdCard, KeyRound } from "lucide-react";
-import { signInByEmail, signUpByEmail } from "@/lib/actions";
+import { MailIcon, KeyRoundIcon } from "@/components/icons";
+import { signInByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -62,7 +62,7 @@ export default function LoginPage() {
           <Input
             {...register("email")}
             label="Email"
-            Icon={Mail}
+            Icon={MailIcon}
             placeholder="exemplo@gmail.com"
             error={errors.email?.message}
             disabled={isLoading}
@@ -70,7 +70,7 @@ export default function LoginPage() {
           <Input
             {...register("password")}
             label="Senha"
-            Icon={KeyRound}
+            Icon={KeyRoundIcon}
             placeholder="Sua senha pessoal"
             error={errors.password?.message}
             disabled={isLoading}

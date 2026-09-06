@@ -4,7 +4,7 @@ import { type UserRegisterPayload, UserRegisterSchema } from "@/utils/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, GoogleOAuthButton, Input } from "@/components/common";
-import { UserCircle2, Mail, IdCard, KeyRound } from "lucide-react";
+import { UserCircleIcon, MailIcon, IdCardIcon, KeyRoundIcon } from "@/components/icons";
 import { signUpByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ export default function RegisterPage() {
           <Input
             {...register("name")}
             label="Nome completo"
-            Icon={UserCircle2}
+            Icon={UserCircleIcon}
             placeholder="Seu nome completo"
             error={errors.name?.message}
             disabled={isLoading}
@@ -70,7 +70,7 @@ export default function RegisterPage() {
           <Input
             {...register("email")}
             label="Email"
-            Icon={Mail}
+            Icon={MailIcon}
             placeholder="exemplo@gmail.com"
             error={errors.email?.message}
             disabled={isLoading}
@@ -78,7 +78,7 @@ export default function RegisterPage() {
           <Input
             {...register("cpf")}
             label="CPF"
-            Icon={IdCard}
+            Icon={IdCardIcon}
             placeholder="123.456.789-00"
             error={errors.cpf?.message}
             disabled={isLoading}
@@ -86,7 +86,7 @@ export default function RegisterPage() {
           <Input
             {...register("password")}
             label="Senha"
-            Icon={KeyRound}
+            Icon={KeyRoundIcon}
             placeholder="Sua senha pessoal"
             error={errors.password?.message}
             disabled={isLoading}
