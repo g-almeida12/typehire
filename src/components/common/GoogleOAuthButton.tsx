@@ -4,14 +4,16 @@ import { authClient } from "@/utils/auth/auth-client";
 import Image from "next/image";
 import { ButtonHTMLAttributes } from "react";
 
-interface GoogleSignUpButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+interface GoogleOAuthButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  callbackURL: string;
+}
 
-export function GoogleSignUpButton({ ...props }: GoogleSignUpButtonProps) {
+export function GoogleOAuthButton({ callbackURL, ...props }: GoogleOAuthButtonProps) {
   const handleGoogleSignup = async () => {
     try {
       const result = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/",
+        callbackURL,
       });
       console.log("Result: ", result);
     } catch (err) {
@@ -22,7 +24,7 @@ export function GoogleSignUpButton({ ...props }: GoogleSignUpButtonProps) {
   return (
     <button
       onClick={handleGoogleSignup}
-      className="w-full flex items-center justify-center gap-2 mt-17 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] cursor-pointer"
+      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] cursor-pointer"
       {...props}
     >
       <Image src="/google-icon.svg" alt="Google" width={24} height={24} />

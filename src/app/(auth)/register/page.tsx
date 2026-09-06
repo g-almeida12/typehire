@@ -1,13 +1,14 @@
 "use client";
 
-import { UserRegisterPayload, UserRegisterSchema } from "@/utils/schemas";
+import { type UserRegisterPayload, UserRegisterSchema } from "@/utils/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, GoogleSignUpButton, Input } from "@/components/common";
+import { Button, GoogleOAuthButton, Input } from "@/components/common";
 import { UserCircle2, Mail, IdCard, KeyRound } from "lucide-react";
 import { signUpByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const {
@@ -24,11 +25,16 @@ export default function RegisterPage() {
   const handleSignUpByEmail = async (data: UserRegisterPayload) => {
     try {
       setIsLoading(true);
-      await signUpByEmail(data);
-
-      router.push('/');
+      const response = await signUpByEmail(data);
+      if (!response.success) {
+        setError("root", { message: response.message });
+      } else {
+        router.push("/");
+      }
     } catch (err: any) {
-      setError("root", { message: err.error });
+      setError("root", {
+        message: "Desculpe, mas não foi possível registrar sua conta.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -103,11 +109,11 @@ export default function RegisterPage() {
                 className="text-sm text-background-300 text-left"
               >
                 Concordo que li e aceito os{" "}
-                <a className="font-medium text-accent-300 cursor-pointer">
+                <a className="font-medium text-accent-100 cursor-pointer">
                   Termos de Condições
                 </a>{" "}
                 e a{" "}
-                <a className="font-medium text-accent-300 cursor-pointer">
+                <a className="font-medium text-accent-100 cursor-pointer">
                   Política de Privacidade
                 </a>
                 .
@@ -127,7 +133,24 @@ export default function RegisterPage() {
         </div>
       </form>
 
-      <GoogleSignUpButton disabled={isLoading} />
+      <div className="relative mt-12">
+        <hr />
+        <span className="absolute top-[50%] left-[50%] px-2 translate-x-[-50%] translate-y-[-50%] bg-background-1000">
+          ou
+        </span>
+      </div>
+
+      <div className="mt-12">
+        <GoogleOAuthButton callbackURL="/complete-profile" disabled={isLoading} />
+      </div>
+
+      <p className="mt-17 text-sm text-background-300">
+        Já possui uma conta? Então{" "}
+        <Link href={"/login"} className="text-accent-100 font-medium">
+          Conecte-se agora
+        </Link>
+        .
+      </p>
     </div>
   );
 }

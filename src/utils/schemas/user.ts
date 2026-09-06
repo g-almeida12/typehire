@@ -33,6 +33,13 @@ export const UserRegisterSchema = UserBaseSchema.extend({
 });
 export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
 
+export const UserLoginSchema = UserBaseSchema.pick({
+  email: true,
+}).extend({
+  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
+});
+export type UserLoginPayload = z.infer<typeof UserLoginSchema>;
+
 export const UserResponseSchema = UserBaseSchema.extend({
   publicId: z.string(),
   image: z.string().nullable(),
