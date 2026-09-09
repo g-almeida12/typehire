@@ -9,6 +9,7 @@ import { signUpByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { APP_URLS } from "@/utils/constants";
 
 export default function RegisterPage() {
   const {
@@ -146,7 +147,7 @@ export default function RegisterPage() {
 
       <p className="mt-17 text-sm text-background-300">
         Já possui uma conta? Então{" "}
-        <Link href={"/login"} className="text-accent-100 font-medium">
+        <Link href={APP_URLS.login} className="text-accent-100 font-medium">
           Conecte-se agora
         </Link>
         .

@@ -5,7 +5,7 @@ import "./globals.css";
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"]
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -14,13 +14,15 @@ export const metadata: Metadata = {
     "Portal de empregos focado em TI com transparência salarial obrigatória e retorno garantido aos candidatos. Encontre vagas para Devs, Designers e Analistas.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="pt-br"
       className={`${poppins.variable} h-full antialiased bg-background-1000`}
     >
-      <body className="min-h-full flex flex-col" cz-shortcut-listen="true">{children}</body>
+      <body className="min-h-full flex flex-col" cz-shortcut-listen="true">
+        {children}
+      </body>
     </html>
   );
 }

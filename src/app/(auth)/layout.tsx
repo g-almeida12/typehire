@@ -7,7 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      <Navbar />
+      <Navbar onlyBrand />
       <main className="px-4 text-center">{children}</main>
     </>
   );

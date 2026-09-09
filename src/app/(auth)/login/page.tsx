@@ -9,6 +9,7 @@ import { signInByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { APP_URLS } from "@/utils/constants";
 
 export default function LoginPage() {
   const {
@@ -94,7 +95,7 @@ export default function LoginPage() {
 
       <p className="mt-17 text-sm text-background-300">
         Ainda não possui uma conta no TypeHire? Então{" "}
-        <Link href={"/register"} className="text-accent-100 font-medium">
+        <Link href={APP_URLS.register} className="text-accent-100 font-medium">
           Registre-se agora
         </Link>
         .
