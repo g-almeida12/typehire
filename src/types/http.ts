@@ -1,3 +1,10 @@
 export type ServerActionResponse<B> = Promise<
-  { success: true; data: B } | { success: false; message: string; data?: unknown }
+  | { success: true; status: number; data: B }
+  | {
+      success: false;
+      status: number;
+      message: string;
+      field?: string | string[];
+      data?: unknown;
+    }
 >;

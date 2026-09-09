@@ -9,20 +9,20 @@ datasource db {
 
 model User {  
   id            String    @id
-  publicId      String    @unique @default(uuid())
   name          String
-  cpf           String?    @unique
-  agreeToTerms  Boolean?
-  phoneNumber   String?   @unique
-  location      String?
   email         String    @unique
-  emailVerified Boolean   @default(false)
   image         String?
+  cpf           String?   @unique
   password      String?
+  agreeToTerms  Boolean?
+  emailVerified Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
   sessions      Session[]
   accounts      Account[]
+  companies     CompanyMember[]
+  jobs          Job[]
 
   @@map("user")
 }
@@ -75,4 +75,88 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Company {
+  id         String       @id @default(cuid())
+  name       String
+  cnpj       String       @unique
+  image      String?
+  website    String?
+  bio        String?
+  size       CompanySize
+  members    CompanyMember[]
+  jobs       Job[]
+  createdBy  String
+
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Job {
+  id             String       @id @default(cuid())
+  title          String
+  description    String
+  fixedSalary    Float?     
+  minSalary      Float? 
+  maxSalary      Float? 
+  hourlySalary   Float?    
+  type           JobType
+  level          JobLevel
+  modality       JobModality
+  location       String?
+  skills         String[]
+  status         JobStatus
+  companyId      String
+  createdBy      String
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  company        Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  creator        User         @relation(fields: [createdBy], references: [id])
+}
+
+model CompanyMember {
+  id String @id @default(cuid())
+  userId String
+  companyId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId], map: "companyMember_userId_companyId_uidx")
+}
+
+enum CompanySize {
+  STARTUP
+  PEQUENA
+  MÉDIA
+  GRANDE
+  MULTINACIONAL
+}
+
+enum JobType {
+  INTEGRAL
+  MEIO_PERÍODO
+  FREELANCER
+}
+
+enum JobLevel {
+  ESTAGIÁRIO
+  JÚNIOR
+  PLENO
+  SÊNIOR
+}
+
+enum JobModality {
+  REMOTO
+  HÍBRIDO
+  PRESENCIAL
+}
+
+enum JobStatus {
+  ABERTA
+  FECHADA
+  PAUSADA
 }
