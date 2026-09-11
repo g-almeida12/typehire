@@ -8,7 +8,7 @@ export {
   CircleQuestionMark as QuestionMarkIcon,
   Eye as EyeIcon,
   EyeOff as EyeOffIcon,
-  Filter as FilterIcon
+  SlidersHorizontal as Sliders
 } from "lucide-react";
 
 export type { LucideIcon as IconKey } from "lucide-react";

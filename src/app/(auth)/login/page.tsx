@@ -30,9 +30,10 @@ export default function LoginPage() {
 
       if (!response.success) {
         setError("root", { message: response.message });
-      } else {
-        router.push("/");
+        return;
       }
+
+      router.replace(APP_URLS.home);
     } catch (err: any) {
       setError("root", {
         message: "Desculpe, mas não foi possível conectar na sua conta.",
@@ -79,7 +80,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <Button text="Conectar-se" variant="ghost" disabled={isLoading} />
+        <Button text="Conectar-se" variant="primary" disabled={isLoading} />
       </form>
 
       <div className="relative mt-12">

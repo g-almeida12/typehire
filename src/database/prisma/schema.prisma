@@ -13,7 +13,6 @@ model User {
   email         String    @unique
   image         String?
   cpf           String?   @unique
-  password      String?
   agreeToTerms  Boolean?
   emailVerified Boolean   @default(false)
   createdAt     DateTime  @default(now())
@@ -106,7 +105,7 @@ model Job {
   modality       JobModality
   location       String?
   skills         String[]
-  status         JobStatus
+  status         JobStatus?   @default(ABERTA)
   companyId      String
   createdBy      String
 

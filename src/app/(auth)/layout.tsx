@@ -8,7 +8,7 @@ export default function AuthLayout({
   return (
     <>
       <Navbar onlyBrand />
-      <main className="px-4 text-center">{children}</main>
+      <main className="pb-8 px-4 text-center">{children}</main>
     </>
   );
 }

@@ -4,7 +4,12 @@ import { type UserRegisterPayload, UserRegisterSchema } from "@/utils/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, GoogleOAuthButton, Input } from "@/components/common";
-import { UserCircleIcon, MailIcon, IdCardIcon, KeyRoundIcon } from "@/components/icons";
+import {
+  UserCircleIcon,
+  MailIcon,
+  IdCardIcon,
+  KeyRoundIcon,
+} from "@/components/icons";
 import { signUpByEmail } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,9 +34,10 @@ export default function RegisterPage() {
       const response = await signUpByEmail(data);
       if (!response.success) {
         setError("root", { message: response.message });
-      } else {
-        router.push("/");
+        return;
       }
+
+      router.replace(APP_URLS.home);
     } catch (err: any) {
       setError("root", {
         message: "Desculpe, mas não foi possível registrar sua conta.",
@@ -128,8 +134,9 @@ export default function RegisterPage() {
           </div>
           <Button
             text="Cadastrar usuário"
-            variant="ghost"
+            variant="primary"
             disabled={isLoading}
+            type="submit"
           />
         </div>
       </form>
@@ -142,7 +149,10 @@ export default function RegisterPage() {
       </div>
 
       <div className="mt-12">
-        <GoogleOAuthButton callbackURL="/complete-profile" disabled={isLoading} />
+        <GoogleOAuthButton
+          callbackURL="/complete-profile"
+          disabled={isLoading}
+        />
       </div>
 
       <p className="mt-17 text-sm text-background-300">

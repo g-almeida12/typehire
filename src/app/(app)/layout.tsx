@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { authServer } from "@/utils/auth/auth-server";
 import { APP_URLS } from "@/utils/constants";
 import { headers } from "next/headers";
@@ -9,7 +11,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   });
 
   if (!session) {
-    redirect(APP_URLS.register);
+    redirect(APP_URLS.login);
   }
 
   return children;

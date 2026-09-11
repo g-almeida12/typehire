@@ -20,7 +20,7 @@ export async function signUpByEmail(
       body: {
         email: userData.email,
         name: userData.name,
-        password: userData.password!,
+        password: userData.password,
       },
     });
 
@@ -38,8 +38,9 @@ export async function signUpByEmail(
       message: "",
       status: 0,
     };
+
     if (
-      err.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" ||
+      err.body.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" ||
       err.code === "P2002"
     ) {
       response.message = "Email ou CPF já cadastrados.";
@@ -49,6 +50,7 @@ export async function signUpByEmail(
         "Ocorreu um erro inesperado ao tentar realizar o cadastro.";
       response.status = 500;
     }
+
     return { success: false, ...response };
   }
 }
@@ -75,11 +77,12 @@ export async function signInByEmail(
       data: mapPrivateUserEntity(loggedUser),
     };
   } catch (err: any) {
+    console.log(err);
     let response: { message: string; status: number } = {
       message: "",
       status: 0,
     };
-    if (err.code === "INVALID_EMAIL_OR_PASSWORD") {
+    if (err.statusCode === 401) {
       response.message = "Email ou senha inválidos.";
       response.status = 401;
     } else {
