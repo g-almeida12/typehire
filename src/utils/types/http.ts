@@ -8,3 +8,12 @@ export type ServerActionResponse<B> = Promise<
       data?: unknown;
     }
 >;
+
+export type PaginationResponsePayload = {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};

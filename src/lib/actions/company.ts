@@ -1,16 +1,17 @@
 "use server";
 
 import { prisma } from "@/database";
-import { ServerActionResponse } from "@/types";
+import { ServerActionResponse } from "@/utils/types";
 import {
   CompanyCreatePayload,
   CompanyResponsePayload,
-} from "@/utils/schemas/company";
-import { companyWithDetailsSelect, mapCompanyEntity } from "../entities";
+} from "@/lib/schemas/company";
+import { companyWithDetailsInclude, mapCompanyEntity } from "../entities";
 import { Prisma } from "@/database/generated/client";
-import { PrismaClientError } from "@/utils/errors/prisma-error";
+import { PrismaClientError } from "@/lib/errors/prisma-error";
+import { cacheLife, cacheTag } from "next/cache";
 
-export async function createCompany(
+export async function createCompanyAction(
   companyData: CompanyCreatePayload,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
@@ -19,7 +20,7 @@ export async function createCompany(
         ...companyData,
         members: { create: { userId: companyData.createdBy } },
       },
-      select: companyWithDetailsSelect,
+      include: companyWithDetailsInclude,
     });
 
     return { success: true, status: 201, data: mapCompanyEntity(company) };
@@ -47,13 +48,17 @@ export async function createCompany(
   }
 }
 
-export async function getCompanyById(
+export async function getCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<CompanyResponsePayload | null> {
+  "use cache";
+  cacheLife("default");
+  cacheTag(`company-${companyId}`);
+
   try {
     const company = await prisma.company.findUnique({
       where: { id: companyId },
-      select: companyWithDetailsSelect,
+      include: companyWithDetailsInclude,
     });
     if (!company) {
       return { success: true, status: 200, data: null };

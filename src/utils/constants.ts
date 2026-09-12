@@ -5,4 +5,5 @@ export const APP_URLS = {
   home: "/",
   applications: "/applications",
   profile: "/profile",
-} as const ;
+  job: (id: string) => `/jobs/${id}` as const,
+} as const;

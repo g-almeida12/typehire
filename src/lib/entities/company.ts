@@ -1,17 +1,7 @@
-import { CompanyResponsePayload } from "@/utils/schemas/company";
+import { CompanyResponsePayload } from "@/lib/schemas/company";
 import { Prisma } from "@/database/generated/client";
 
-export const companyWithDetailsSelect = {
-  id: true,
-  name: true,
-  image: true,
-  cnpj: true,
-  website: true,
-  bio: true,
-  size: true,
-  createdBy: true,
-  createdAt: true,
-  updatedAt: true,
+export const companyWithDetailsInclude = {
   members: {
     select: {
       user: {
@@ -33,10 +23,10 @@ export const companyWithDetailsSelect = {
       createdAt: true,
     },
   },
-} satisfies Prisma.CompanySelect; 
+} satisfies Prisma.CompanyInclude;
 
 export type CompanyEntity = Prisma.CompanyGetPayload<{
-  select: typeof companyWithDetailsSelect;
+  include: typeof companyWithDetailsInclude;
 }>;
 
 export function mapCompanyEntity(

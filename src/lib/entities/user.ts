@@ -2,7 +2,7 @@ import { Prisma } from "@/database/generated/client";
 import {
   UserPrivateResponsePayload,
   UserPublicResponsePayload,
-} from "@/utils/schemas/user";
+} from "@/lib/schemas/user";
 
 export type UserEntity = Prisma.UserGetPayload<{}>;
 

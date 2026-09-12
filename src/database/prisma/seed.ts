@@ -4,9 +4,6 @@ async function main() {
   await prisma.job.deleteMany();
   await prisma.companyMember.deleteMany();
   await prisma.company.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.account.deleteMany();
-  await prisma.verification.deleteMany();
 
   const user = (await prisma.user.findUnique({
     where: { email: "almeida@gmail.com" },
@@ -41,8 +38,9 @@ async function main() {
         level: "PLENO",
         modality: "HÍBRIDO",
         title: "Designer UI/UX",
+        location: "Recife, PE",
         type: "FREELANCER",
-        fixedSalary: 5500.9,
+        hourlySalary: 100.0,
         id: "job2",
         description: "Vaga para Designer UI/UX Pleno Híbrida.",
       },
@@ -51,9 +49,11 @@ async function main() {
         createdBy: user.id,
         level: "ESTAGIÁRIO",
         modality: "PRESENCIAL",
+        location: "São Paulo, SP",
         title: "Analista de dados",
         type: "INTEGRAL",
-        fixedSalary: 1600.0,
+        minSalary: 1600.0,
+        maxSalary: 2200.0,
         id: "job3",
         description: "Vaga para Analista de Dados Estagiário Presencial.",
       },

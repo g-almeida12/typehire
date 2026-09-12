@@ -1,6 +1,6 @@
 "use client";
 
-import { authClient } from "@/utils/auth/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import Image from "next/image";
 import { ButtonHTMLAttributes } from "react";
 
@@ -8,17 +8,17 @@ interface GoogleOAuthButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
   callbackURL: string;
 }
 
-export function GoogleOAuthButton({ callbackURL, ...props }: GoogleOAuthButtonProps) {
+export function GoogleOAuthButton({
+  callbackURL,
+  ...props
+}: GoogleOAuthButtonProps) {
   const handleGoogleSignup = async () => {
     try {
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL,
       });
-      console.log("Result: ", result);
-    } catch (err) {
-      console.log("Error: ", err);
-    }
+    } catch (err) {}
   };
 
   return (

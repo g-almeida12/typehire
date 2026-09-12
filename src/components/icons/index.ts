@@ -8,7 +8,14 @@ export {
   CircleQuestionMark as QuestionMarkIcon,
   Eye as EyeIcon,
   EyeOff as EyeOffIcon,
-  SlidersHorizontal as Sliders
+  SlidersHorizontal as SlidersIcon,
+  Sprout as SproutIcon,
+  Briefcase as BriefcaseIcon,
+  Award as AwardIcon,
+  House as HouseIcon,
+  Building2 as BuildingIcon,
+  CircleFadingArrowUp as CircleFadingArrowUpIcon,
+  RefreshCw as RefreshIcon
 } from "lucide-react";
 
 export type { LucideIcon as IconKey } from "lucide-react";

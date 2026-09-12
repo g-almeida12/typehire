@@ -1,6 +1,6 @@
 "use client";
 
-import { type UserRegisterPayload, UserRegisterSchema } from "@/utils/schemas";
+import { type UserRegisterPayload, UserRegisterSchema } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, GoogleOAuthButton, Input } from "@/components/common";
@@ -10,7 +10,7 @@ import {
   IdCardIcon,
   KeyRoundIcon,
 } from "@/components/icons";
-import { signUpByEmail } from "@/lib/actions";
+import { signUpByEmailAction } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default function RegisterPage() {
   const handleSignUpByEmail = async (data: UserRegisterPayload) => {
     try {
       setIsLoading(true);
-      const response = await signUpByEmail(data);
+      const response = await signUpByEmailAction(data);
       if (!response.success) {
         setError("root", { message: response.message });
         return;

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { SearchIcon, UserCircleIcon, LayersIcon } from "@/components/icons";
 import { APP_URLS } from "@/utils/constants";

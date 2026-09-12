@@ -1,18 +1,18 @@
 "use server";
 
 import { UserEntity } from "@/lib/entities";
-import { ServerActionResponse } from "@/types";
-import { authServer } from "@/utils/auth/auth-server";
+import { ServerActionResponse } from "@/utils/types";
+import { authServer } from "@/lib/auth/auth-server";
 import {
   UserLoginPayload,
   UserRegisterPayload,
   UserPrivateResponsePayload,
-} from "@/utils/schemas";
+} from "@/lib/schemas";
 import { mapPrivateUserEntity } from "../entities";
 import { prisma } from "@/database";
 import { headers } from "next/headers";
 
-export async function signUpByEmail(
+export async function signUpByEmailAction(
   userData: UserRegisterPayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
@@ -55,7 +55,7 @@ export async function signUpByEmail(
   }
 }
 
-export async function signInByEmail(
+export async function signInByEmailAction(
   userData: UserLoginPayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {

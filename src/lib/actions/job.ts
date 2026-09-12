@@ -1,16 +1,18 @@
 "use server";
 
 import { prisma } from "@/database";
-import { ServerActionResponse } from "@/types";
-import { JobCreatePayload, JobResponsePayload } from "@/utils/schemas";
-import { jobWithDetailsSelect, mapJobEntity } from "../entities";
-import { AppError } from "@/utils/errors/app-error";
+import { ServerActionResponse } from "@/utils/types";
+import { JobCreatePayload, JobResponsePayload } from "@/lib/schemas";
+import { jobWithDetailsInclude, mapJobEntity } from "../entities";
+import { AppError } from "@/lib/errors/app-error";
+import { PaginationResponsePayload } from "@/utils/types";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 
-export async function createJob(
+export async function createJobAction(
   jobData: JobCreatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    return await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const isMember = await tx.companyMember.findFirst({
         where: { userId: jobData.createdBy, companyId: jobData.companyId },
       });
@@ -30,11 +32,14 @@ export async function createJob(
           maxSalary: jobData.intervalSalary?.at(1) ?? null,
           status: "ABERTA",
         },
-        select: jobWithDetailsSelect,
+        include: jobWithDetailsInclude,
       });
 
-      return { success: true, status: 201, data: mapJobEntity(createdJob) };
+      updateTag("job-list");
+      return mapJobEntity(createdJob);
     });
+
+    return { success: true, status: 201, data: result };
   } catch (err) {
     if (err instanceof AppError) {
       return {
@@ -49,6 +54,55 @@ export async function createJob(
       success: false,
       status: 500,
       message: "Ocorreu um erro inesperado ao criar a vaga.",
+    };
+  }
+}
+
+export async function getJobsAction(
+  page: number = 1,
+  pageSize: number = 10,
+): ServerActionResponse<{
+  jobs: JobResponsePayload[];
+  pagination: PaginationResponsePayload;
+}> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("job-list");
+
+  try {
+    const jobs = await prisma.job.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: jobWithDetailsInclude,
+    });
+
+    const total = await prisma.job.count();
+    const totalPages = Math.ceil(total / pageSize);
+
+    return {
+      success: true,
+      status: 200,
+      data: {
+        jobs: jobs.map((j) => mapJobEntity(j)),
+        pagination: {
+          page,
+          pageSize,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      },
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível retornar mais vagas.",
     };
   }
 }

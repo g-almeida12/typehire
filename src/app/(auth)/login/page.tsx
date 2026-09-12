@@ -1,11 +1,11 @@
 "use client";
 
-import { UserLoginSchema, type UserLoginPayload } from "@/utils/schemas";
+import { UserLoginSchema, type UserLoginPayload } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, GoogleOAuthButton, Input } from "@/components/common";
 import { MailIcon, KeyRoundIcon } from "@/components/icons";
-import { signInByEmail } from "@/lib/actions";
+import { signInByEmailAction } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -26,7 +26,7 @@ export default function LoginPage() {
   const handleSignInByEmail = async (data: UserLoginPayload) => {
     try {
       setIsLoading(true);
-      const response = await signInByEmail(data);
+      const response = await signInByEmailAction(data);
 
       if (!response.success) {
         setError("root", { message: response.message });

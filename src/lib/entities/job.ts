@@ -1,24 +1,7 @@
 import { Prisma } from "@/database/generated/client";
-import { JobResponsePayload } from "@/utils/schemas";
+import { JobResponsePayload } from "@/lib/schemas";
 
-export const jobWithDetailsSelect = {
-  id: true,
-  title: true,
-  description: true,
-  fixedSalary: true,
-  minSalary: true,
-  maxSalary: true,
-  hourlySalary: true,
-  type: true,
-  level: true,
-  modality: true,
-  location: true,
-  skills: true,
-  status: true,
-  createdBy: true,
-  createdAt: true,
-  updatedAt: true,
-  companyId: true,
+export const jobWithDetailsInclude = {
   company: {
     select: {
       id: true,
@@ -28,10 +11,18 @@ export const jobWithDetailsSelect = {
       size: true,
     },
   },
-} satisfies Prisma.JobSelect;
+  creator: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+    },
+  },
+} satisfies Prisma.JobInclude;
 
 export type JobEntity = Prisma.JobGetPayload<{
-  select: typeof jobWithDetailsSelect;
+  include: typeof jobWithDetailsInclude;
 }>;
 
 export function mapJobEntity(job: JobEntity): JobResponsePayload {
@@ -40,7 +31,7 @@ export function mapJobEntity(job: JobEntity): JobResponsePayload {
     title: job.title,
     description: job.description,
     createdAt: job.createdAt,
-    createdBy: job.createdBy,
+    creator: job.creator,
     level: job.level,
     modality: job.modality,
     type: job.type,

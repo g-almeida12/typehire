@@ -1,14 +1,9 @@
-export const dynamic = "force-dynamic";
-
-import { authServer } from "@/utils/auth/auth-server";
+import { getUserSession } from "@/lib/data";
 import { APP_URLS } from "@/utils/constants";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {
-  const session = await authServer.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getUserSession();
 
   if (!session) {
     redirect(APP_URLS.login);

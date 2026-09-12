@@ -16,7 +16,6 @@ const JobBaseSchema = z.object({
   modality: z.enum(["REMOTO", "HÍBRIDO", "PRESENCIAL"]),
   location: z.string().optional().nullable().default(null),
   skills: z.array(z.string()),
-  createdBy: z.string(),
 });
 
 function validateJobSchema(
@@ -64,6 +63,7 @@ function validateJobSchema(
 export const JobCreateSchema = JobBaseSchema.omit({ status: true })
   .extend({
     companyId: z.string(),
+    createdBy: z.string(),
   })
   .superRefine(validateJobSchema);
 export type JobCreatePayload = z.infer<typeof JobCreateSchema>;
@@ -84,6 +84,12 @@ export const JobResponseSchema = JobBaseSchema.extend({
     image: z.string().optional().nullable().default(null),
     website: z.string().optional().nullable().default(null),
     size: z.enum(["STARTUP", "PEQUENA", "MÉDIA", "GRANDE", "MULTINACIONAL"]),
+  }),
+  creator: z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.email(),
+    image: z.string().nullable(),
   }),
 });
 export type JobResponsePayload = z.infer<typeof JobResponseSchema>;
