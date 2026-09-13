@@ -4,7 +4,6 @@ export const UserPublicResponseSchema = z.object({
   id: z.string(),
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
   email: z.email("Email inválido."),
-  image: z.string().optional().nullable(),
 });
 export type UserPublicResponsePayload = z.infer<
   typeof UserPublicResponseSchema
@@ -16,19 +15,22 @@ export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
     .string()
     .transform((val) => val.replace(/\D+/g, ""))
     .refine((val) => val.length === 11, "CPF inválido digitado."),
-  password: z
-    .string()
-    .min(8, "Senha deve ter no mínimo 8 caracteres.")
-    .nullable(),
+  location: z.string().nullable(),
+  phoneNumber: z.string().nullable(),
+  bio: z.string().nullable(),
+  githubUrl: z.string().nullable(),
+  linkedinUrl: z.string().nullable(),
+  portfolioUrl: z.string().nullable(),
+  skills: z.array(z.string()),
 });
 export type UserPrivateResponsePayload = z.infer<
   typeof UserPrivateResponseSchema
 >;
 
-export const UserRegisterSchema = UserPrivateResponseSchema.omit({
-  id: true,
-  image: true,
-  password: true,
+export const UserRegisterSchema = UserPrivateResponseSchema.pick({
+  name: true,
+  email: true,
+  cpf: true,
 }).extend({
   agreeToTerms: z
     .boolean()
@@ -37,6 +39,7 @@ export const UserRegisterSchema = UserPrivateResponseSchema.omit({
       "Você deve concordar com os termos e condições.",
     ),
   password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
+  image: z.string().optional().nullable(),
 });
 export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
 
@@ -45,3 +48,8 @@ export const UserLoginSchema = z.object({
   password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
 });
 export type UserLoginPayload = z.infer<typeof UserLoginSchema>;
+
+export const UserUpdateSchema = UserPrivateResponseSchema.omit({
+  id: true,
+}).partial();
+export type UserUpdatePayload = z.infer<typeof UserUpdateSchema>;

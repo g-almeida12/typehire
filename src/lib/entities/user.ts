@@ -12,7 +12,6 @@ export function mapPublicUserEntity(
   return {
     id: user.id,
     name: user.name,
-    image: user.image,
     email: user.email,
   };
 }
@@ -23,9 +22,7 @@ export function mapPrivateUserEntity(
   return {
     id: user.id,
     name: user.name,
-    image: user.image,
     email: user.email,
     cpf: user.cpf!,
-    password: user.password,
   };
 }

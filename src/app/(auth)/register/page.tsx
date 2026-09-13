@@ -3,7 +3,6 @@
 import { type UserRegisterPayload, UserRegisterSchema } from "@/lib/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, GoogleOAuthButton, Input } from "@/components/common";
 import {
   UserCircleIcon,
   MailIcon,
@@ -15,6 +14,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
+import { Button } from "@/components/common/Button";
+import { GoogleOAuthButton } from "@/components/common/GoogleOAuthButton";
+import { Input } from "@/components/common/Input";
 
 export default function RegisterPage() {
   const {
@@ -48,7 +50,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div>
+    <>
       <h1 className="mt-8 text-2xl font-medium">Crie sua conta</h1>
       <p className="text-sm/tight text-background-300">
         Preencha seus dados pessoais necessários e registre suas informações
@@ -162,6 +164,6 @@ export default function RegisterPage() {
         </Link>
         .
       </p>
-    </div>
+    </>
   );
 }

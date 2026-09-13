@@ -22,7 +22,6 @@ const CompanyBaseSchema = z.object({
   size: z.enum(["STARTUP", "PEQUENA", "MÉDIA", "GRANDE", "MULTINACIONAL"]),
   members: z.array(
     UserPublicResponseSchema.pick({
-      image: true,
       name: true,
       email: true,
       id: true

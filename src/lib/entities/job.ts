@@ -16,7 +16,6 @@ export const jobWithDetailsInclude = {
       id: true,
       name: true,
       email: true,
-      image: true,
     },
   },
 } satisfies Prisma.JobInclude;

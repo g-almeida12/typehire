@@ -89,7 +89,6 @@ export const JobResponseSchema = JobBaseSchema.extend({
     id: z.string(),
     name: z.string(),
     email: z.email(),
-    image: z.string().nullable(),
   }),
 });
 export type JobResponsePayload = z.infer<typeof JobResponseSchema>;

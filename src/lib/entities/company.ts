@@ -5,7 +5,7 @@ export const companyWithDetailsInclude = {
   members: {
     select: {
       user: {
-        select: { id: true, name: true, image: true, email: true },
+        select: { id: true, name: true, email: true },
       },
     },
   },

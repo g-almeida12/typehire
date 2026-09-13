@@ -2,11 +2,11 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/ui/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobsAction } from "@/lib/actions";
-import { getUserSession } from "@/lib/data";
+import { getUserData } from "@/lib/data";
 import { Suspense } from "react";
 
 export default async function HomePage() {
-  const user = (await getUserSession()).user;
+  const user = await getUserData();
 
   const jobsResult = await getJobsAction(1, 10);
   const jobs = jobsResult.success ? jobsResult.data.jobs : [];
@@ -18,16 +18,18 @@ export default async function HomePage() {
     <>
       <Navbar />
       <main>
-        <div className="flex flex-col gap-2 mt-10 mb-12">
+        <section className="flex flex-col gap-2 mt-10 mb-12">
           <p className="text-xl font-medium text-center">
             {user?.name ? `Olá, ${user.name}.` : "Olá"}
           </p>
           <SearchInput placeholder="Encontre sua próxima vaga" />
-        </div>
+        </section>
 
-        <Suspense fallback={JobListViewFallback()}>
-          <JobListView initialJobs={jobs} initialHasMore={hasMoreJobs} />
-        </Suspense>
+        <section>
+          <Suspense fallback={JobListViewFallback()}>
+            <JobListView initialJobs={jobs} initialHasMore={hasMoreJobs} />
+          </Suspense>
+        </section>
       </main>
     </>
   );
