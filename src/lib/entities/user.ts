@@ -4,7 +4,24 @@ import {
   UserPublicResponsePayload,
 } from "@/lib/schemas/user";
 
-export type UserEntity = Prisma.UserGetPayload<{}>;
+export const userWithDetailsInclude = {
+  companies: {
+    include: {
+      company: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          createdBy: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.UserInclude;
+
+export type UserEntity = Prisma.UserGetPayload<{
+  include: typeof userWithDetailsInclude;
+}>;
 
 export function mapPublicUserEntity(
   user: UserEntity,
@@ -24,5 +41,13 @@ export function mapPrivateUserEntity(
     name: user.name,
     email: user.email,
     cpf: user.cpf!,
+    location: user.location,
+    phoneNumber: user.phoneNumber,
+    skills: user.skills,
+    bio: user.bio,
+    githubUrl: user.githubUrl,
+    linkedinUrl: user.linkedinUrl,
+    portfolioUrl: user.portfolioUrl,
+    companies: user.companies.map((c) => c.company),
   };
 }

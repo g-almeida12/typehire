@@ -8,7 +8,7 @@ import {
 } from "@/lib/schemas/company";
 import { companyWithDetailsInclude, mapCompanyEntity } from "../entities";
 import { Prisma } from "@/database/generated/client";
-import { PrismaClientError } from "@/lib/errors/prisma-error";
+import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { cacheLife, cacheTag } from "next/cache";
 
 export async function createCompanyAction(
@@ -43,7 +43,7 @@ export async function createCompanyAction(
     return {
       success: false,
       status: 500,
-      message: "Ocorreu um erro inesperado ao tentar criar a empresa.",
+      message: "Não foi possível criar a empresa.",
     };
   }
 }
@@ -69,8 +69,7 @@ export async function getCompanyByIdAction(
     return {
       success: false,
       status: 500,
-      message:
-        "Ocorreu um erro inesperado ao tentar retornar os dados da empresa.",
+      message: "Não foi possível retornar os dados da empresa.",
     };
   }
 }

@@ -1,16 +1,21 @@
 "use server";
 
-import { UserEntity } from "@/lib/entities";
+import { UserEntity, userWithDetailsInclude } from "@/lib/entities";
 import { ServerActionResponse } from "@/utils/types";
 import { authServer } from "@/lib/auth/auth-server";
 import {
   UserLoginPayload,
   UserRegisterPayload,
   UserPrivateResponsePayload,
+  UserUpdatePayload,
 } from "@/lib/schemas";
 import { mapPrivateUserEntity } from "../entities";
 import { prisma } from "@/database";
 import { headers } from "next/headers";
+import { getUserData } from "../data";
+import { AppError } from "../../utils/errors/app-error";
+import { Prisma } from "@/database/generated/client";
+import { PrismaClientError } from "@/utils/errors/prisma-error";
 
 export async function signUpByEmailAction(
   userData: UserRegisterPayload,
@@ -30,6 +35,7 @@ export async function signUpByEmailAction(
         cpf: userData.cpf,
         agreeToTerms: userData.agreeToTerms,
       },
+      include: userWithDetailsInclude,
     })) as UserEntity;
 
     return { success: true, status: 201, data: mapPrivateUserEntity(newUser) };
@@ -46,8 +52,7 @@ export async function signUpByEmailAction(
       response.message = "Email ou CPF já cadastrados.";
       response.status = 409;
     } else {
-      response.message =
-        "Ocorreu um erro inesperado ao tentar realizar o cadastro.";
+      response.message = "Não foi possível realizar o cadastro.";
       response.status = 500;
     }
 
@@ -69,6 +74,7 @@ export async function signInByEmailAction(
 
     const loggedUser = (await prisma.user.findUnique({
       where: { id: authUser.user.id },
+      include: userWithDetailsInclude,
     })) as UserEntity;
 
     return {
@@ -86,10 +92,61 @@ export async function signInByEmailAction(
       response.message = "Email ou senha inválidos.";
       response.status = 401;
     } else {
-      response.message =
-        "Ocorreu um erro inesperado ao tentar conectar a sua conta.";
+      response.message = "Não foi possível conectar a sua conta.";
       response.status = 500;
     }
     return { success: false, ...response };
+  }
+}
+
+export async function signOutAction(): ServerActionResponse<boolean> {
+  try {
+    await authServer.api.signOut({
+      headers: await headers(),
+    });
+
+    return { success: true, status: 200, data: true };
+  } catch (err) {
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível desconectar a sua conta.",
+    };
+  }
+}
+
+export async function deleteUserAction(): ServerActionResponse<boolean> {
+  try {
+    const user = await getUserData();
+    if (!user) {
+      throw new AppError("Usuário não autenticado.", 401);
+    }
+
+    await prisma.user.delete({
+      where: { id: user.id },
+    });
+
+    return { success: true, status: 200, data: true };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return { success: false, status: err.statusCode, message: err.message };
+    }
+
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (leanErr.errType === "NOT_FOUND") {
+        return {
+          success: false,
+          status: 404,
+          message: "Usuário não encontrado.",
+        };
+      }
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível deletar o usuário.",
+    };
   }
 }

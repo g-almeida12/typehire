@@ -8,27 +8,28 @@ datasource db {
 }
 
 model User {  
-  id            String    @id
-  name          String
-  email         String    @unique
-  image         String?
-  cpf           String?   @unique
-  agreeToTerms  Boolean?
-  emailVerified Boolean   @default(false)
-  location      String?
-  phoneNumber   String?
-  bio           String?
-  githubUrl     String?
-  linkedinUrl   String?
-  portfolioUrl  String?
-  skills        String[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id               String    @id
+  name             String
+  email            String    @unique
+  image            String?
+  cpf              String?   @unique
+  agreeToTerms     Boolean?
+  emailVerified    Boolean   @default(false)
+  location         String?
+  phoneNumber      String?
+  bio              String?
+  githubUrl        String?
+  linkedinUrl      String?
+  portfolioUrl     String?
+  skills           String[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
-  companies     CompanyMember[]
-  jobs          Job[]
+  sessions         Session[]
+  accounts         Account[]
+  companies        CompanyMember[]
+  createdCompanies Company[]
+  jobs             Job[]
 
   @@map("user")
 }
@@ -95,15 +96,19 @@ model Company {
   jobs       Job[]
   createdBy  String
 
+  creator    User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+
+  @@map("company")
 }
 
 model Job {
   id             String       @id @default(cuid())
   title          String
   description    String
-  fixedSalary    Float?     
+  fixedSalary    Float?       
   minSalary      Float? 
   maxSalary      Float? 
   hourlySalary   Float?    
@@ -120,17 +125,20 @@ model Job {
   updatedAt      DateTime     @updatedAt
 
   company        Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  creator        User         @relation(fields: [createdBy], references: [id])
+  creator        User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("job")
 }
 
 model CompanyMember {
-  id String @id @default(cuid())
-  userId String
+  id        String  @id @default(cuid())
+  userId    String
   companyId String
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  @@map("company_member")
   @@unique([userId, companyId], map: "companyMember_userId_companyId_uidx")
 }
 

@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+const CompanySnippetSchema = z.object({
+  id: z.string(),
+  image: z.string().nullable(),
+  name: z.string(),
+  createdBy: z.string(),
+});
+
 export const UserPublicResponseSchema = z.object({
   id: z.string(),
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
@@ -22,6 +29,7 @@ export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
   linkedinUrl: z.string().nullable(),
   portfolioUrl: z.string().nullable(),
   skills: z.array(z.string()),
+  companies: z.array(CompanySnippetSchema),
 });
 export type UserPrivateResponsePayload = z.infer<
   typeof UserPrivateResponseSchema

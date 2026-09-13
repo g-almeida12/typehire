@@ -4,7 +4,7 @@ import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
 import { JobCreatePayload, JobResponsePayload } from "@/lib/schemas";
 import { jobWithDetailsInclude, mapJobEntity } from "../entities";
-import { AppError } from "@/lib/errors/app-error";
+import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { cacheLife, cacheTag, updateTag } from "next/cache";
 
@@ -53,7 +53,7 @@ export async function createJobAction(
     return {
       success: false,
       status: 500,
-      message: "Ocorreu um erro inesperado ao criar a vaga.",
+      message: "Não foi possível criar a vaga.",
     };
   }
 }
