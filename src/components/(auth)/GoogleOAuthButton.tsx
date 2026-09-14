@@ -18,7 +18,10 @@ export function GoogleOAuthButton({
         provider: "google",
         callbackURL,
       });
-    } catch (err) {}
+    } catch (err) {
+      //! Substituir por um toast
+      console.log(err);
+    }
   };
 
   return (

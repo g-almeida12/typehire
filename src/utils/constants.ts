@@ -5,5 +5,7 @@ export const APP_URLS = {
   home: "/",
   applications: "/applications",
   profile: "/profile",
+  profileUpdate: "/profile/update",
+  user: (id: string) => `/users/${id}` as const,
   job: (id: string) => `/jobs/${id}` as const,
 } as const;

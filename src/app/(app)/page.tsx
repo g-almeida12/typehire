@@ -6,7 +6,7 @@ import { getUserData } from "@/lib/data";
 import { Suspense } from "react";
 
 export default async function HomePage() {
-  const user = await getUserData();
+  const user = (await getUserData())!;
 
   const jobsResult = await getJobsAction(1, 10);
   const jobs = jobsResult.success ? jobsResult.data.jobs : [];

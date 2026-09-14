@@ -41,7 +41,7 @@ export function Button({
   ) : (
     <button
       {...props}
-      className={`${buttonStyles.base} ${buttonStyles[variant]}`}
+      className={`${buttonStyles.base} ${props.className ? props.className : buttonStyles[variant]}`}
     >
       {text}
     </button>

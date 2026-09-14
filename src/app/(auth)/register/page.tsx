@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { Button } from "@/components/common/Button";
-import { GoogleOAuthButton } from "@/components/common/GoogleOAuthButton";
+import { GoogleOAuthButton } from "@/components/(auth)/GoogleOAuthButton";
 import { Input } from "@/components/common/Input";
 
 export default function RegisterPage() {
@@ -25,6 +25,14 @@ export default function RegisterPage() {
     setError,
     register,
   } = useForm<UserRegisterPayload>({
+    defaultValues: {
+      email: "",
+      name: "",
+      cpf: "",
+      agreeToTerms: false,
+      image: null,
+      password: "",
+    },
     resolver: zodResolver(UserRegisterSchema),
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);

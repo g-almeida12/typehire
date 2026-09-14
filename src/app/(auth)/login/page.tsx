@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { Button } from "@/components/common/Button";
-import { GoogleOAuthButton } from "@/components/common/GoogleOAuthButton";
+import { GoogleOAuthButton } from "@/components/(auth)/GoogleOAuthButton";
 import { Input } from "@/components/common/Input";
 
 export default function LoginPage() {
@@ -20,6 +20,10 @@ export default function LoginPage() {
     setError,
     register,
   } = useForm<UserLoginPayload>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     resolver: zodResolver(UserLoginSchema),
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,7 +50,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
+    <>
       <h1 className="mt-8 text-2xl font-medium">Bem-vindo de volta</h1>
       <p className="text-sm/tight text-background-300">
         Faça login e continue a procurar pela sua próxima vaga.
@@ -103,6 +107,6 @@ export default function LoginPage() {
         </Link>
         .
       </p>
-    </div>
+    </>
   );
 }

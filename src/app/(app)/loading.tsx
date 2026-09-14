@@ -3,7 +3,7 @@ import { Navbar } from "@/components/ui/Navbar";
 
 export default function AppLoading() {
   return (
-    <>
+    <div aria-busy="true">
       <Navbar />
       <main>
         <div className="flex flex-col gap-2 mt-10 mb-12">
@@ -49,6 +49,6 @@ export default function AppLoading() {
           ))}
         </div>
       </main>
-    </>
+    </div>
   );
 }

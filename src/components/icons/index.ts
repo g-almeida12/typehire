@@ -15,7 +15,20 @@ export {
   House as HouseIcon,
   Building2 as BuildingIcon,
   CircleFadingArrowUp as CircleFadingArrowUpIcon,
-  RefreshCw as RefreshIcon
+  RefreshCw as RefreshIcon,
+  ArrowLeft as ArrowLeftIcon,
+  MapPinHouse as PinHouseIcon,
+  Phone as PhoneIcon,
+  MessageSquareText as MessageTextIcon,
+  Globe as GlobeIcon,
+  Edit as EditIcon,
+  MapPin as PinIcon,
+  ArrowUpRight as ArrowUpRightIcon
 } from "lucide-react";
+export { SiGithub as GitHubIcon } from "react-icons/si";
+export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";
 
-export type { LucideIcon as IconKey } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { IconType } from "react-icons";
+
+export type IconKey = LucideIcon | IconType;
