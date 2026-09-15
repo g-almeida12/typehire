@@ -1,14 +1,23 @@
 import { z } from "zod";
 import { UserPublicResponseSchema } from "./user";
+import {
+  JobLevel,
+  JobModality,
+  CompanySize,
+} from "@/database/generated/enums";
 
 const JobSnippetSchema = z.object({
   id: z.string(),
   title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
   fixedSalary: z.number().optional().nullable().default(null),
-  intervalSalary: z.tuple([z.number(), z.number()]).optional().nullable().default(null),
+  intervalSalary: z
+    .tuple([z.number(), z.number()])
+    .optional()
+    .nullable()
+    .default(null),
   hourlySalary: z.number().optional().nullable().default(null),
-  level: z.enum(["ESTAGIÁRIO", "JÚNIOR", "PLENO", "SÊNIOR"]),
-  modality: z.enum(["REMOTO", "HÍBRIDO", "PRESENCIAL"]),
+  level: z.enum(JobLevel),
+  modality: z.enum(JobModality),
   location: z.string().optional().nullable().default(null),
   createdAt: z.date(),
 });
@@ -19,12 +28,12 @@ const CompanyBaseSchema = z.object({
   image: z.string().optional().nullable().default(null),
   website: z.string().optional().nullable().default(null),
   bio: z.string().optional().nullable().default(null),
-  size: z.enum(["STARTUP", "PEQUENA", "MÉDIA", "GRANDE", "MULTINACIONAL"]),
+  size: z.enum(CompanySize),
   members: z.array(
     UserPublicResponseSchema.pick({
       name: true,
       email: true,
-      id: true
+      id: true,
     }),
   ),
   createdBy: z.string(),

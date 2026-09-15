@@ -12,8 +12,8 @@ import {
 import { mapPrivateUserEntity } from "../entities";
 import { prisma } from "@/database";
 import { headers } from "next/headers";
-import { getUserData } from "../data";
-import { AppError } from "../../utils/errors/app-error";
+import { getUserData } from "@/lib/data";
+import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 
@@ -115,11 +115,58 @@ export async function signOutAction(): ServerActionResponse<boolean> {
   }
 }
 
+export async function updateUserAction(
+  newUserData: UserUpdatePayload,
+): ServerActionResponse<UserPrivateResponsePayload> {
+  try {
+    const user = await getUserData();
+    if (!user) {
+      throw new AppError("Usuário não encontrado.", 404);
+    }
+
+    const { companies, ...data } = newUserData;
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data,
+      include: userWithDetailsInclude,
+    });
+
+    return {
+      success: true,
+      status: 200,
+      data: mapPrivateUserEntity(updatedUser),
+    };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return { success: false, status: err.statusCode, message: err.message };
+    }
+
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      switch (leanErr.errType) {
+        case "UNIQUE_CONSTRAINT_ERROR":
+          return {
+            success: false,
+            status: 409,
+            message: `${leanErr.field} passado já está registrado.`,
+            field: leanErr.field,
+          };
+      }
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível atualizar o usuário.",
+    };
+  }
+}
+
 export async function deleteUserAction(): ServerActionResponse<boolean> {
   try {
     const user = await getUserData();
     if (!user) {
-      throw new AppError("Usuário não autenticado.", 401);
+      throw new AppError("Usuário não encontrado.", 404);
     }
 
     await prisma.user.delete({

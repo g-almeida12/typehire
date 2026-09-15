@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Skill } from "@/database/generated/enums";
 
 const CompanySnippetSchema = z.object({
   id: z.string(),
@@ -28,7 +29,7 @@ export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
   githubUrl: z.string().nullable(),
   linkedinUrl: z.string().nullable(),
   portfolioUrl: z.string().nullable(),
-  skills: z.array(z.string()),
+  skills: z.array(z.enum(Skill)),
   companies: z.array(CompanySnippetSchema),
 });
 export type UserPrivateResponsePayload = z.infer<

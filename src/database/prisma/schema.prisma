@@ -21,7 +21,7 @@ model User {
   githubUrl        String?
   linkedinUrl      String?
   portfolioUrl     String?
-  skills           String[]
+  skills           Skill[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
@@ -116,7 +116,7 @@ model Job {
   level          JobLevel
   modality       JobModality
   location       String?
-  skills         String[]
+  skills         Skill[]
   status         JobStatus   @default(ABERTA)
   companyId      String
   createdBy      String
@@ -173,4 +173,117 @@ enum JobStatus {
   ABERTA
   FECHADA
   PAUSADA
+}
+
+enum Skill {
+  JAVASCRIPT
+  TYPESCRIPT
+  REACT
+  VUE
+  ANGULAR
+  SVELTE
+  NEXTJS
+  NUXT
+  NEXT
+  NEST
+  REMIX
+  ASTRO
+  HTML
+  CSS
+  TAILWINDCSS
+  SCSS
+  BOOTSTRAP
+  SASS
+  LESS
+  WEBPACK
+  VITE
+  BUN
+  
+  NODEJS
+  PYTHON
+  JAVA
+  CSHARP
+  GOLANG
+  RUST
+  RUBY
+  PHP
+  LARAVEL
+  DJANGO
+  FLASK
+  FASTAPI
+  SPRING
+  DOTNET
+  CPP
+  C
+  R
+
+  
+  POSTGRESQL
+  MYSQL
+  MONGODB
+  REDIS
+  FIREBASE
+  DYNAMODB
+  ORACLE
+  ELASTICSEARCH
+  CASSANDRA
+  MARIADB
+  
+  REACT_NATIVE
+  FLUTTER
+  SWIFT
+  KOTLIN
+  XAMARIN
+  IONIC
+  
+  DOCKER
+  KUBERNETES
+  AWS
+  AZURE
+  GCP
+  HEROKU
+  NETLIFY
+  VERCEL
+  GITLAB_CI
+  GITHUB_ACTIONS
+  JENKINS
+  TERRAFORM
+  
+  GIT
+  GITHUB
+  GITLAB
+  BITBUCKET
+  JIRA
+  FIGMA
+  LINUX
+  WINDOWS
+  MACOS
+  
+  JEST
+  VITEST
+  CYPRESS
+  SELENIUM
+  MOCHA
+  CHAI
+  PYTEST
+  UNITTEST
+  
+  REST_API
+  GRAPHQL
+  GRPC
+  WEBSOCKETS
+  OAUTH
+  JWT
+  SQL
+  NOSQL
+  MQ
+  RABBITMQ
+  KAFKA
+  REDIS_CACHE
+  DESIGN_PATTERNS
+  AGILE
+  SCRUM
+  MICROSERVICES
+  MONOLITH
+  ARCHITECTURE
 }

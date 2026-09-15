@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Skill, JobStatus, JobLevel, JobModality, JobType } from '@/database/generated/enums';
 
 const JobBaseSchema = z.object({
   title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
@@ -10,12 +11,12 @@ const JobBaseSchema = z.object({
     .nullable()
     .default(null),
   hourlySalary: z.number().optional().nullable().default(null),
-  status: z.enum(["ABERTA", "FECHADA", "PAUSADA"]),
-  type: z.enum(["INTEGRAL", "MEIO_PERÍODO", "FREELANCER"]),
-  level: z.enum(["ESTAGIÁRIO", "JÚNIOR", "PLENO", "SÊNIOR"]),
-  modality: z.enum(["REMOTO", "HÍBRIDO", "PRESENCIAL"]),
+  status: z.enum(JobStatus),
+  type: z.enum(JobType),
+  level: z.enum(JobLevel),
+  modality: z.enum(JobModality),
   location: z.string().optional().nullable().default(null),
-  skills: z.array(z.string()),
+  skills: z.array(z.enum(Skill)),
 });
 
 function validateJobSchema(

@@ -98,7 +98,6 @@ export async function getJobsAction(
       },
     };
   } catch (err) {
-    console.error(err);
     return {
       success: false,
       status: 500,
