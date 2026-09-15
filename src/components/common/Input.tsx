@@ -40,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         >
           {label}
         </label>
-        <div className="w-full flex flex-row gap-2 items-center justify-between border-2 border-background-800 px-2 py-1 rounded-md bg-background-800 hover:border-background-300 focus-within:bg-background-300 focus-within:text-background-800 focus-within:border-background-300 transition-all">
+        <div className="w-full flex flex-row gap-2 items-center justify-between border-2 border-background-800 px-2 py-1 rounded-md disabled:bg-background-300 disabled:text-background-800 disabled:border-background-300 disabled:hover:border-background-300 bg-background-800 hover:border-background-300 focus-within:bg-background-300 focus-within:text-background-800 focus-within:border-background-300  transition-all">
           <div className="flex flex-row gap-2 w-full">
             <Icon
               size={24}

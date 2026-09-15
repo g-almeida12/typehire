@@ -1,0 +1,24 @@
+import { BackButton } from "@/components/common/BackButton";
+import { ProfileUpdateForm } from "@/components/profile/ProfileUpdateForm";
+import { Skill } from "@/database/generated/enums";
+import { getUserData } from "@/lib/data";
+
+export default async function ProfileUpdate() {
+  const user = (await getUserData())!;
+
+  return (
+    <main className="pb-10">
+      <div className="size-6 mt-4">
+        <BackButton />
+      </div>
+
+      <h1 className="mt-6 mb-8 text-2xl font-semibold">
+        Atualize seus dados pessoais
+      </h1>
+
+      <section>
+        <ProfileUpdateForm user={user} skills={Object.values(Skill)} />
+      </section>
+    </main>
+  );
+}

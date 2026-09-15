@@ -63,10 +63,10 @@ export default function ProfileLoading() {
 
         <div className="flex flex-col gap-2">
           {Array.from({ length: 3 }).map((_, idx) => (
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2" key={`company-${idx}`}>
               <div className="shrink-0 size-10 bg-background-100 rounded-md animate-pulse"></div>
 
-              <div className="flex flex-col gap-1" key={`company-${idx}`}>
+              <div className="flex flex-col gap-1">
                 <span className="block w-60 h-5 rounded-md bg-background-200 animate-pulse"></span>
                 <span className="block w-40 h-3 rounded-sm bg-background-400 animate-pulse"></span>
               </div>

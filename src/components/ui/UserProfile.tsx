@@ -15,7 +15,7 @@ export async function UserProfile({ user, type }: UserProfileProps) {
       : user.name.split(" ")[0][0] + user.name.split(" ")[0][1];
 
   return (
-    <div className="max-w-full flex flex-1 flex-row items-start justify-between mt-6">
+    <div className="max-w-full flex flex-1 flex-row items-start justify-between">
       <div
         className={`${type === "readonly" ? "max-w-full" : "max-w-[calc(100%-20px)]"} flex flex-1 flex-row gap-2`}
       >

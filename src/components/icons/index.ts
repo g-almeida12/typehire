@@ -23,7 +23,9 @@ export {
   Globe as GlobeIcon,
   Edit as EditIcon,
   MapPin as PinIcon,
-  ArrowUpRight as ArrowUpRightIcon
+  ArrowUpRight as ArrowUpRightIcon,
+  Bookmark as BookmarkIcon,
+  X as XIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

@@ -12,6 +12,7 @@ import { DeleteUserButton } from "@/components/profile/DeleteUserButton";
 import { SignOutUserButton } from "@/components/profile/SignOutUserButton";
 import { UserProfile } from "@/components/ui/UserProfile";
 import { getUserData } from "@/lib/data";
+import { skillMapper } from "@/utils/mappers";
 
 export default async function ProfilePage() {
   const user = (await getUserData())!;
@@ -34,39 +35,6 @@ export default async function ProfilePage() {
     },
   ];
 
-  user.skills = [
-    "javascript",
-    "react",
-    "typescript",
-    "nodejs",
-    "mondodb",
-    "postgresql",
-    "next",
-    "figma",
-    "html0",
-    "css",
-  ];
-  user.companies = [
-    {
-      id: "123",
-      createdBy: user.id,
-      name: "Mission.dev",
-      image: null,
-    },
-    {
-      id: "456",
-      createdBy: "asdf",
-      name: "Lucide Icons",
-      image: null,
-    },
-    {
-      id: "789",
-      createdBy: "lkjsdf",
-      name: "TailwindCSS",
-      image: null,
-    },
-  ];
-
   return (
     <main className="pb-10">
       <div className="size-6 mt-4">
@@ -74,7 +42,7 @@ export default async function ProfilePage() {
       </div>
 
       {/* Profile */}
-      <section>
+      <section className="mt-6">
         <UserProfile user={user} type="edit" />
 
         {/* Main user info */}
@@ -90,7 +58,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* Bio */}
-        <p>{user.bio ?? ""}</p>
+        <p className="mt-4">{user.bio ?? ""}</p>
       </section>
 
       <hr className="mt-4 mb-8" />
@@ -102,7 +70,10 @@ export default async function ProfilePage() {
           {userSocialMedias.map(({ Icon, url, name }) => (
             <li className="w-full rounded-md" key={name}>
               <a
-                href={url ?? ""}
+                href={
+                  url ? (url.startsWith("http") ? url : `https://${url}`) : ""
+                }
+                target="_blank"
                 className="flex flex-row items-center justify-between w-full px-2 py-1 rounded-md border border-background-500 bg-background-800"
                 style={{ pointerEvents: url ? "auto" : "none" }}
               >
@@ -127,12 +98,12 @@ export default async function ProfilePage() {
         {user.skills.length > 0 ? (
           <ul className="flex flex-row flex-wrap gap-2">
             {user.skills.map((s) => (
-              <span
+              <li
                 className="block px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold"
                 key={s}
               >
-                {s}
-              </span>
+                <span>{skillMapper[s]}</span>
+              </li>
             ))}
           </ul>
         ) : (
