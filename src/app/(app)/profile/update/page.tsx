@@ -17,7 +17,7 @@ export default async function ProfileUpdate() {
       </h1>
 
       <section>
-        <ProfileUpdateForm user={user} skills={Object.values(Skill)} />
+        <ProfileUpdateForm user={user} skills={Object.values(Skill).toSorted()} />
       </section>
     </main>
   );

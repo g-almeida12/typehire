@@ -8,7 +8,7 @@ export function LoadingSpinner() {
       aria-label="Carregando..."
     >
       <div
-        className="size-9 border-5 border-background-700 border-t-accent-100 rounded-full animate-spin"
+        className="size-9 border-5 border-accent-100 border-t-background-700 rounded-full animate-spin"
         style={{ animationDuration: "0.8s" }}
       />
     </div>

@@ -20,8 +20,22 @@ interface SkillSelectProps extends InputHTMLAttributes<HTMLInputElement> {
 export const SkillSelect = forwardRef<HTMLInputElement, SkillSelectProps>(
   ({ label, skills, onOptionClick, error, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const optionsRef = useRef<(HTMLDivElement | null)[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
+    const filteredSkills = skills.filter((s) =>
+      s.text.toLowerCase().startsWith(search.toLowerCase()),
+    );
+
+    useEffect(() => {
+      if (isOpen && optionsRef.current[selectedIndex]) {
+        optionsRef.current[selectedIndex].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+    }, [isOpen, selectedIndex]);
 
     // Close the dropdown  when the user clicks outside
     useEffect(() => {
@@ -40,10 +54,44 @@ export const SkillSelect = forwardRef<HTMLInputElement, SkillSelectProps>(
         document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setSelectedIndex((prev) =>
+            prev < filteredSkills.length - 1 ? prev + 1 : 0,
+          );
+          break;
+
+        case "ArrowUp":
+          e.preventDefault();
+          setSelectedIndex((prev) =>
+            prev > 0 ? prev - 1 : filteredSkills.length - 1,
+          );
+          break;
+
+        case "Enter":
+          e.preventDefault();
+          if (
+            filteredSkills[selectedIndex] &&
+            !filteredSkills[selectedIndex].isInUserSkills
+          ) {
+            handleOptionClick(filteredSkills[selectedIndex].value);
+          }
+          break;
+
+        case "Escape":
+          e.preventDefault();
+          setIsOpen(false);
+          break;
+      }
+    };
+
     const handleOptionClick = (skill: Skill) => {
       onOptionClick(skill);
       setSearch("");
       setIsOpen(false);
+      setSelectedIndex(0);
     };
 
     return (
@@ -71,11 +119,16 @@ export const SkillSelect = forwardRef<HTMLInputElement, SkillSelectProps>(
               {...props}
               className="w-full focus:outline-none"
               ref={ref}
-              onFocus={() => setIsOpen(true)}
               value={search}
+              onFocus={() => {
+                setIsOpen(true);
+                setSelectedIndex(0);
+              }}
               onChange={(e) => {
                 setSearch(e.target.value);
+                setSelectedIndex(0);
               }}
+              onKeyDown={handleKeyDown}
               role="combobox"
               aria-expanded={isOpen}
               aria-haspopup="listbox"
@@ -91,21 +144,43 @@ export const SkillSelect = forwardRef<HTMLInputElement, SkillSelectProps>(
             id={label}
             role="listbox"
           >
-            {skills.map((s) => (
-              <div
-                className={`w-full ${s.isInUserSkills ? "bg-green-500 text-green-950" : "cursor-pointer hover:bg-background-400 hover:text-background-800"} `}
-                onClick={() => {
-                  if (!s.isInUserSkills) {
-                    handleOptionClick(s.value);
-                  }
-                }}
-                key={`select-${s.value}`}
-              >
+            {filteredSkills.length === 0 ? (
+              <div className="w-full bg-background-400 text-background-800 italic">
                 <p className="px-2 py-1 text-sm select-none font-medium">
-                  {s.text}
+                  Nenhuma habilidade encontrada.
                 </p>
               </div>
-            ))}
+            ) : (
+              filteredSkills.map((s, idx) => {
+                const styles = s.isInUserSkills
+                  ? idx === selectedIndex
+                    ? "bg-green-600 text-green-950"
+                    : "bg-green-500 text-green-950"
+                  : idx === selectedIndex
+                    ? "bg-background-500 text-background-900"
+                    : "hover:bg-background-400 hover:text-background-800";
+
+                return (
+                  <div
+                    className={`w-full ${styles}`}
+                    onClick={() => {
+                      if (!s.isInUserSkills) {
+                        handleOptionClick(s.value);
+                      }
+                    }}
+                    ref={(el) => {
+                      optionsRef.current[idx] = el;
+                    }}
+                    key={`select-${s.value}`}
+                    role="option"
+                  >
+                    <p className="px-2 py-1 text-sm select-none font-medium">
+                      {s.text}
+                    </p>
+                  </div>
+                );
+              })
+            )}
           </div>
         )}
         {error && (
