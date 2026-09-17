@@ -16,6 +16,12 @@ async function main() {
       website: "lucide.icons.io",
       size: "GRANDE",
       createdBy: user.id,
+      members: {
+        create: {
+          userId: user.id,
+        },
+      },
+      bio: "A Lucide Icons é uma organização dedicada a impulsionar a experiência visual de desenvolvedores e designers em todo o mundo através de bibliotecas de ícones modernos, leves e altamente personalizáveis. Nascida da paixão por código aberto e design minimalista, nossa missão é fornecer ferramentas visuais consistentes que simplificam a prototipagem e o desenvolvimento de interfaces em aplicações modernas.\n\nBuscamos constantemente talentos apaixonados por tecnologia que queiram construir produtos escaláveis e de alto impacto no ecossistema global. Em nosso ambiente, valorizamos a colaboração, a autonomia e a inovação contínua, oferecendo um espaço dinâmico onde engenheiros e criativos podem transformar ideias complexas em experiências digitais elegantes e acessíveis.",
     },
   });
 
@@ -118,7 +124,7 @@ Procuramos um **Analista de Dados Estagiário** para atuar presencialmente em S�
 
 main()
   .catch((err) => {
-    console.log("Error: ", err);
+    console.error("Error: ", err);
     process.exit(1);
   })
   .finally(async () => {

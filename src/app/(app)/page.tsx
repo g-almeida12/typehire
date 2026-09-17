@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="pb-4">
         <section className="flex flex-col gap-2 mt-10 mb-12">
           <p className="text-xl font-medium text-center">
             {user?.name ? `Olá, ${user.name}.` : "Olá"}

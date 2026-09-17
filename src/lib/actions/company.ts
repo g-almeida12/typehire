@@ -10,6 +10,7 @@ import { companyWithDetailsInclude, mapCompanyEntity } from "../entities";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { cacheLife, cacheTag } from "next/cache";
+import { AppError } from "@/utils/errors/app-error";
 
 export async function createCompanyAction(
   companyData: CompanyCreatePayload,
@@ -50,7 +51,7 @@ export async function createCompanyAction(
 
 export async function getCompanyByIdAction(
   companyId: string,
-): ServerActionResponse<CompanyResponsePayload | null> {
+): ServerActionResponse<CompanyResponsePayload> {
   "use cache";
   cacheLife("default");
   cacheTag(`company-${companyId}`);
@@ -61,11 +62,20 @@ export async function getCompanyByIdAction(
       include: companyWithDetailsInclude,
     });
     if (!company) {
-      return { success: true, status: 200, data: null };
+      throw new AppError("Empresa não encontrada.", 404);
     }
 
     return { success: true, status: 200, data: mapCompanyEntity(company) };
   } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        message: err.message,
+        status: err.statusCode,
+        field: err.field,
+      };
+    }
+
     return {
       success: false,
       status: 500,

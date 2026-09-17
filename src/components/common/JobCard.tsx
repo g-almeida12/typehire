@@ -12,7 +12,23 @@ import { formatRelativeTime } from "@/utils/date";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 
-export function JobCard(job: JobResponsePayload) {
+export function JobCard({
+  job,
+}: {
+  job: Pick<
+    JobResponsePayload,
+    | "level"
+    | "modality"
+    | "id"
+    | "location"
+    | "company"
+    | "title"
+    | "fixedSalary"
+    | "hourlySalary"
+    | "intervalSalary"
+    | "createdAt"
+  >;
+}) {
   const capitalizedLevel =
     job.level[0].toUpperCase() + job.level.slice(1).toLowerCase();
   const capitalizedModality =

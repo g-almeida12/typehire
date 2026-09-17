@@ -54,8 +54,8 @@ export function JobListView({ initialJobs, initialHasMore }: JobListViewProps) {
     <div>
       <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
         {jobs.map((j) => (
-          <li>
-            <JobCard {...j} id={j.id} key={j.id} />
+          <li  key={j.id}>
+            <JobCard job={j} />
           </li>
         ))}
       </ul>

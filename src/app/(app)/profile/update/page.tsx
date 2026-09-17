@@ -14,7 +14,7 @@ export default async function ProfileUpdate() {
   const user = (await getUserData())!;
 
   return (
-    <main>
+    <main  className="pb-4">
       <div className="size-6 mt-4">
         <BackButton />
       </div>

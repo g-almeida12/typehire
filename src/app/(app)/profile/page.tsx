@@ -43,7 +43,7 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <main className="pb-10">
+    <main className="pb-4">
       <div className="size-6 mt-4">
         <BackButton />
       </div>
