@@ -10,9 +10,16 @@ import {
 } from "@/components/icons";
 import { DeleteUserButton } from "@/components/profile/DeleteUserButton";
 import { SignOutUserButton } from "@/components/profile/SignOutUserButton";
-import { UserProfile } from "@/components/ui/UserProfile";
+import { UserProfile } from "@/components/common/UserProfile";
 import { getUserData } from "@/lib/data";
 import { skillMapper } from "@/utils/mappers";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfil do usuário | TypeHire",
+  description:
+    "Veja suas informações pessoais como nome, email e descrição que serão vistas pelos recrutadores.",
+};
 
 export default async function ProfilePage() {
   const user = (await getUserData())!;

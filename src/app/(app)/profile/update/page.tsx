@@ -2,6 +2,13 @@ import { BackButton } from "@/components/common/BackButton";
 import { ProfileUpdateForm } from "@/components/profile/ProfileUpdateForm";
 import { Skill } from "@/database/generated/enums";
 import { getUserData } from "@/lib/data";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Atualizar perfil do usuário | TypeHire",
+  description:
+    "Atualize suas informações pessoais e melhore o seu resultado na hora da contratação.",
+};
 
 export default async function ProfileUpdate() {
   const user = (await getUserData())!;
@@ -17,7 +24,10 @@ export default async function ProfileUpdate() {
       </h1>
 
       <section>
-        <ProfileUpdateForm user={user} skills={Object.values(Skill).toSorted()} />
+        <ProfileUpdateForm
+          user={user}
+          skills={Object.values(Skill).toSorted()}
+        />
       </section>
     </main>
   );

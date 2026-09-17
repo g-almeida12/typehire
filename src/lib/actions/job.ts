@@ -105,3 +105,39 @@ export async function getJobsAction(
     };
   }
 }
+
+export async function getJobByIdAction(
+  jobId: string,
+): ServerActionResponse<JobResponsePayload> {
+  "use cache";
+  cacheTag(`job-${jobId}`);
+  cacheLife("default");
+
+  try {
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+      include: jobWithDetailsInclude,
+    });
+
+    if (!job) {
+      throw new AppError("Vaga não encontrada.", 404);
+    }
+
+    return { success: true, status: 200, data: mapJobEntity(job) };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        message: err.message,
+        status: err.statusCode,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível retornar os dados da vaga.",
+    };
+  }
+}

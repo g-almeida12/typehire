@@ -3,7 +3,7 @@ import { ArrowLeftIcon, EditIcon } from "@/components/icons";
 export default function ProfileLoading() {
   return (
     <main className="pb-10" aria-busy="true">
-      <ArrowLeftIcon className="mt-4" />
+      <ArrowLeftIcon className="mt-4 animate-pulse" />
 
       {/* Profile */}
       <div>
@@ -46,14 +46,14 @@ export default function ProfileLoading() {
       <div className="mt-10">
         <span className="block w-80 h-6 mb-4 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-row flex-wrap gap-2">
-          <span className="block w-20 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-25 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-22 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-30 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-29 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-21 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-22 h-5 rounded-sm bg-background-700"></span>
-          <span className="block w-24 h-5 rounded-sm bg-background-700"></span>
+          <span className="block w-20 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-25 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-22 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-30 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-29 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-21 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-22 h-5 rounded-sm bg-background-700 animate-pulse"></span>
+          <span className="block w-24 h-5 rounded-sm bg-background-700 animate-pulse"></span>
         </div>
       </div>
 

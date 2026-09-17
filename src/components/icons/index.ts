@@ -26,6 +26,7 @@ export {
   ArrowUpRight as ArrowUpRightIcon,
   Bookmark as BookmarkIcon,
   X as XIcon,
+  Check as CheckIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";
