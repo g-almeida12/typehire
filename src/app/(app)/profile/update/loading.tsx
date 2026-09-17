@@ -27,7 +27,7 @@ export default function ProfileUpdateLoading() {
       </div>
 
       {/* Social medias */}
-      <div className="mt-10">
+      <div className="mt-8">
         <span className="block w-60 h-4 mb-6 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-col gap-4">
           {Array.from({ length: 3 }).map((_, idx) => (
@@ -40,7 +40,7 @@ export default function ProfileUpdateLoading() {
       </div>
 
       {/* Skills */}
-      <div className="mt-10">
+      <div className="mt-8">
         <span className="block w-60 h-4 mb-6 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-col gap-1">
           <span className="block w-40 h-3 rounded-md bg-background-400 animate-pulse"></span>

@@ -14,12 +14,12 @@ export default async function ProfileUpdate() {
   const user = (await getUserData())!;
 
   return (
-    <main className="pb-10">
+    <main>
       <div className="size-6 mt-4">
         <BackButton />
       </div>
 
-      <h1 className="mt-6 mb-8 text-2xl font-semibold">
+      <h1 className="my-8 text-2xl font-semibold">
         Atualize seus dados pessoais
       </h1>
 

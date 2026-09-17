@@ -52,11 +52,13 @@ export function JobListView({ initialJobs, initialHasMore }: JobListViewProps) {
 
   return (
     <div>
-      <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
+      <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
         {jobs.map((j) => (
-          <JobCard {...j} id={j.id} key={j.id} />
+          <li>
+            <JobCard {...j} id={j.id} key={j.id} />
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className="mt-5">
         {(() => {

@@ -49,7 +49,7 @@ export default async function ProfilePage() {
       </div>
 
       {/* Profile */}
-      <section className="mt-6">
+      <section className="mt-8">
         <UserProfile user={user} type="edit" />
 
         {/* Main user info */}
@@ -100,7 +100,7 @@ export default async function ProfilePage() {
       </section>
 
       {/* Skills */}
-      <section className="mt-10">
+      <section className="mt-8">
         <h2 className="mb-2 text-xl font-medium">Suas habilidades</h2>
         {user.skills.length > 0 ? (
           <ul className="flex flex-row flex-wrap gap-2">
@@ -121,7 +121,7 @@ export default async function ProfilePage() {
       </section>
 
       {/* Memberships */}
-      <section className="mt-10">
+      <section className="mt-8">
         <h2 className="mb-2 text-xl font-medium">Empresas em que participa</h2>
         {user.companies.length > 0 ? (
           <ul className="flex flex-col gap-1">
@@ -149,7 +149,7 @@ export default async function ProfilePage() {
       </section>
 
       {/* Session */}
-      <section className="mt-10">
+      <section className="mt-8">
         <h2 className="mb-2 text-xl font-medium">Gerenciamento da sessão</h2>
         <div className="flex flex-col gap-2">
           <SignOutUserButton />

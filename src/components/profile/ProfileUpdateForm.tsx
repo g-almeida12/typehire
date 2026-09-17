@@ -88,7 +88,7 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
   return (
     <form
       onSubmit={handleSubmit(handleUserUpdate)}
-      className="flex flex-col gap-10 mt-6"
+      className="flex flex-col gap-8 mt-6"
       autoComplete="off"
     >
       {errors.root?.message && (

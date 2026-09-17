@@ -23,7 +23,7 @@ export default function ProfileLoading() {
         </div>
 
         {/* User phone number and location */}
-        <div className="w- max-w-80 flex flex-row items-center gap-4 mt-2">
+        <div className="w-max-w-80 flex flex-row items-center gap-4 mt-2">
           <span className="block w-30 h-5 rounded-md bg-background-400 animate-pulse"></span>
           <span className="block w-40 h-5 rounded-md bg-background-400 animate-pulse"></span>
         </div>
@@ -43,7 +43,7 @@ export default function ProfileLoading() {
       </div>
 
       {/* Skills */}
-      <div className="mt-10">
+      <div className="mt-8">
         <span className="block w-80 h-6 mb-4 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-row flex-wrap gap-2">
           <span className="block w-20 h-5 rounded-sm bg-background-700 animate-pulse"></span>
@@ -58,7 +58,7 @@ export default function ProfileLoading() {
       </div>
 
       {/* Companies */}
-      <div className="mt-10">
+      <div className="mt-8">
         <span className="block w-80 h-6 mb-4 rounded-md bg-background-200 animate-pulse"></span>
 
         <div className="flex flex-col gap-2">
