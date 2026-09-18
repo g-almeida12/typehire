@@ -4,6 +4,52 @@ async function main() {
   await prisma.job.deleteMany();
   await prisma.companyMember.deleteMany();
   await prisma.company.deleteMany();
+  
+  await prisma.user.createMany({
+    data: [
+      {
+        id: "user123",
+        name: "João Carlos",
+        email: "joaocarlos@gmail.com",
+      },
+      {
+        id: "user124",
+        name: "Julia Silva",
+        email: "juliasilva@gmail.com",
+      },
+      {
+        id: "user125",
+        name: "Juliana Costa",
+        email: "julianacosta@gmail.com",
+      },
+      {
+        id: "user126",
+        name: "Gabriel Souza",
+        email: "gabrielsouza@gmail.com",
+      },
+      {
+        id: "user127",
+        name: "Gabriela Santos",
+        email: "gabrielasantos@gmail.com",
+      },
+      {
+        id: "user128",
+        name: "Carlos Eduardo",
+        email: "carloseduardo@gmail.com",
+      },
+      {
+        id: "user129",
+        name: "Camila Rodrigues",
+        email: "camilarodrigues@gmail.com",
+      },
+      {
+        id: "user130",
+        name: "Lucas Oliveira",
+        email: "lucasoliveira@gmail.com",
+      },
+    ],
+    skipDuplicates: true, // Evita erros caso algum ID ou e-mail já exista no banco
+  });
 
   const user = (await prisma.user.findUnique({
     where: { email: "almeida@gmail.com" },

@@ -19,7 +19,7 @@ export default async function ProfileUpdate() {
         <BackButton />
       </div>
 
-      <h1 className="my-8 text-2xl font-semibold">
+      <h1 className="mt-8 mb-6 text-2xl font-semibold">
         Atualize seus dados pessoais
       </h1>
 

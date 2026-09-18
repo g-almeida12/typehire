@@ -14,6 +14,7 @@ import { UserProfile } from "@/components/common/UserProfile";
 import { getUserData } from "@/lib/data";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
+import { APP_URLS } from "@/utils/constants";
 
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",
@@ -144,7 +145,7 @@ export default async function ProfilePage() {
         )}
 
         <div className="mt-2">
-          <Button text="Registrar uma nova empresa" variant="ghost" />
+          <Button text="Registrar uma nova empresa" variant="ghost" href={APP_URLS.companyCreate} />
         </div>
       </section>
 

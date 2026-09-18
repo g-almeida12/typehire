@@ -16,7 +16,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const buttonStyles = {
-    base: "block w-full max-w-125 rounded-md py-1 border-2 font-medium cursor-pointer transition-all disabled:cursor-auto",
+    base: "block w-full max-w-125 rounded-md px-1 py-1 border-2 font-medium text-center cursor-pointer transition-all disabled:cursor-auto",
     primary: `
       border-accent-300 bg-accent-300 text-background-100 
       hover:border-accent-400 hover:bg-accent-400 hover:text-background-300

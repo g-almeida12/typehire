@@ -6,6 +6,10 @@ import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Encontre sua próxima vaga | TypeHire",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function AppLayout({ children }: LayoutProps<"/">) {

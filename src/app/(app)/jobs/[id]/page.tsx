@@ -40,7 +40,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   return (
     <>
       <Navbar />
-      <main  className="pb-4">
+      <main className="pb-4">
         <div className="size-6 mt-4">
           <BackButton />
         </div>
@@ -191,16 +191,7 @@ export async function generateMetadata(
     };
   }
 
-  const title = `${response.data.title} na ${response.data.company.name} | TypeHire`;
-  const description = `Confira os requisitos, faixa salarial visível e detalhes para a vaga de ${response.data.title} na ${response.data.company.name}. Encontre sua próxima oportunidade em TI.`;
-
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
+    title: `${response.data.title} na ${response.data.company.name} | TypeHire`,
   };
 }

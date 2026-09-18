@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { SkillSelect } from "../common/SkillSelect";
+import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
 import { skillMapper } from "@/utils/mappers";
 import { Button } from "../common/Button";
 import { updateUserAction } from "@/lib/actions";
@@ -66,7 +66,7 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
     }
   }, [user, reset]);
 
-  const filteredSkills = skills.map((s) => ({
+  const skillsInfo = skills.map((s) => ({
     text: skillMapper[s],
     value: s,
     isInUserSkills: selectedSkills.includes(s) || user.skills.includes(s),
@@ -189,10 +189,10 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
         <legend className="text-xl font-medium mb-3">
           Habilidades registradas
         </legend>
-        <SkillSelect
+        <SkillsDropdownSelect
           label="Adicione uma nova habilidade"
-          skills={filteredSkills}
-          onOptionClick={(skill) =>
+          skills={skillsInfo}
+          onSkillClick={(skill) =>
             setSelectedSkills((prev) => [...prev, skill])
           }
           placeholder="Digite uma habilidade"
@@ -216,6 +216,7 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
                         selectedSkills.filter((skill) => skill !== s),
                       )
                     }
+                    aria-label="Remover habilidade"
                   >
                     <XIcon size={18} />
                   </button>

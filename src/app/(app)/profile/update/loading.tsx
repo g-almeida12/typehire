@@ -5,11 +5,11 @@ export default function ProfileUpdateLoading() {
     <main className="pb-10" aria-busy="true">
       <ArrowLeftIcon className="mt-4" />
 
-      <span className="block w-80 h-6 mb-8 mt-6 rounded-md bg-background-200 animate-pulse"></span>
+      <span className="block w-80 h-6 mt-8 mb-6 rounded-md bg-background-200 animate-pulse"></span>
 
       {/* User personal info */}
       <div>
-        <span className="block w-60 h-4 mb-6 rounded-md bg-background-200 animate-pulse"></span>
+        <span className="block w-60 h-5 mb-6 rounded-md bg-background-200 animate-pulse"></span>
 
         {/* Inputs */}
         <div className="flex flex-col gap-4">
@@ -28,7 +28,7 @@ export default function ProfileUpdateLoading() {
 
       {/* Social medias */}
       <div className="mt-8">
-        <span className="block w-60 h-4 mb-6 rounded-md bg-background-200 animate-pulse"></span>
+        <span className="block w-60 h-5 mb-6 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-col gap-4">
           {Array.from({ length: 3 }).map((_, idx) => (
             <div className="flex flex-col gap-1" key={`social-input-${idx}`}>
@@ -41,7 +41,7 @@ export default function ProfileUpdateLoading() {
 
       {/* Skills */}
       <div className="mt-8">
-        <span className="block w-60 h-4 mb-6 rounded-md bg-background-200 animate-pulse"></span>
+        <span className="block w-60 h-5 mb-6 rounded-md bg-background-200 animate-pulse"></span>
         <div className="flex flex-col gap-1">
           <span className="block w-40 h-3 rounded-md bg-background-400 animate-pulse"></span>
           <div className="block w-full h-8 rounded-md bg-background-600 animate-pulse"></div>

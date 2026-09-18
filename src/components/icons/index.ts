@@ -27,6 +27,9 @@ export {
   Bookmark as BookmarkIcon,
   X as XIcon,
   Check as CheckIcon,
+  AtSign as AtSignIcon,
+  Package as PackageIcon,
+  ChevronDown as ChevronDownIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

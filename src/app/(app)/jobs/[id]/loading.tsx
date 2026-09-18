@@ -8,7 +8,7 @@ import {
 
 export default function JobLoading() {
   return (
-    <>
+    <div aria-busy="true">
       {/* Navbar */}
       <nav className="flex flex-row justify-between items-center w-full h-13 px-4 py-2">
         <div className="flex items-center gap-2">
@@ -31,7 +31,7 @@ export default function JobLoading() {
           />
         </div>
       </nav>
-      <main aria-busy="true">
+      <main>
         <ArrowLeftIcon className="mt-4 animate-pulse" />
 
         {/* Company profile */}
@@ -102,6 +102,6 @@ export default function JobLoading() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }

@@ -15,7 +15,6 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   if (!response.success) notFound();
 
   const company = response.data;
-  console.log(company);
   const companyCreator = company.members.filter(
     (m) => m.id === company.createdBy,
   )[0];
@@ -99,16 +98,7 @@ export async function generateMetadata(
     };
   }
 
-  const title = `${response.data.name} | Vagas e Perfil no TypeHire`;
-  const description = `Conheça a empresa ${response.data.name} e veja suas vagas abertas em TI.`;
-
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-    },
+    title: `${response.data.name} | Vagas e Perfil no TypeHire`,
   };
 }
