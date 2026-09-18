@@ -4,18 +4,17 @@ import { Skill, JobStatus, JobLevel, JobModality, JobType } from '@/database/gen
 const JobBaseSchema = z.object({
   title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
   description: z.string().min(100, "Descrição não pode ser curta demais."),
-  fixedSalary: z.number().optional().nullable().default(null),
+  fixedSalary: z.number().optional().nullable(),
   intervalSalary: z
     .tuple([z.number(), z.number()])
     .optional()
-    .nullable()
-    .default(null),
-  hourlySalary: z.number().optional().nullable().default(null),
+    .nullable(),
+  hourlySalary: z.number().optional().nullable(),
   status: z.enum(JobStatus),
   type: z.enum(JobType),
   level: z.enum(JobLevel),
   modality: z.enum(JobModality),
-  location: z.string().optional().nullable().default(null),
+  location: z.string().optional().nullable(),
   skills: z.array(z.enum(Skill)),
 });
 

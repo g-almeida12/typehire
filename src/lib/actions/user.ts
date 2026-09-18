@@ -157,6 +157,7 @@ export async function getUsersByEmailPrefix(
           mode: "insensitive",
         },
       },
+      take: 7,
     });
 
     return {
