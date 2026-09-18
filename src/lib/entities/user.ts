@@ -24,7 +24,7 @@ export type UserEntity = Prisma.UserGetPayload<{
 }>;
 
 export function mapPublicUserEntity(
-  user: UserEntity,
+  user: Omit<UserEntity, 'companies'>,
 ): UserPublicResponsePayload {
   return {
     id: user.id,

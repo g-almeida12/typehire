@@ -1,6 +1,10 @@
 "use server";
 
-import { UserEntity, userWithDetailsInclude } from "@/lib/entities";
+import {
+  mapPublicUserEntity,
+  UserEntity,
+  userWithDetailsInclude,
+} from "@/lib/entities";
 import { ServerActionResponse } from "@/utils/types";
 import { authServer } from "@/lib/auth/auth-server";
 import {
@@ -8,6 +12,7 @@ import {
   UserRegisterPayload,
   UserPrivateResponsePayload,
   UserUpdatePayload,
+  UserPublicResponsePayload,
 } from "@/lib/schemas";
 import { mapPrivateUserEntity } from "../entities";
 import { prisma } from "@/database";
@@ -111,6 +116,59 @@ export async function signOutAction(): ServerActionResponse<boolean> {
       success: false,
       status: 500,
       message: "Não foi possível desconectar a sua conta.",
+    };
+  }
+}
+
+export async function getUserById(
+  userId: string,
+): ServerActionResponse<UserPublicResponsePayload> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        status: 404,
+        message: "Usuário não encontrado.",
+      };
+    }
+
+    return { success: true, status: 200, data: mapPublicUserEntity(user) };
+  } catch (_err) {
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível encontrar o usuário.",
+    };
+  }
+}
+
+export async function getUsersByEmailPrefix(
+  prefix: string,
+): ServerActionResponse<UserPublicResponsePayload[]> {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        email: {
+          startsWith: prefix,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    return {
+      success: true,
+      status: 200,
+      data: users.map((u) => mapPublicUserEntity(u)),
+    };
+  } catch (_err) {
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível buscar os usuário.",
     };
   }
 }
