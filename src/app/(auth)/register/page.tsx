@@ -43,8 +43,12 @@ export default function RegisterPage() {
       setIsLoading(true);
       const response = await signUpByEmailAction(data);
       if (!response.success) {
-        setError("root", { message: response.message });
-        return;
+        if (response.status === 409) {
+          setError("root", { message: response.message });
+          return;
+        }
+
+        throw new Error();
       }
 
       router.replace(APP_URLS.home);
@@ -52,7 +56,6 @@ export default function RegisterPage() {
       setError("root", {
         message: "Desculpe, mas não foi possível registrar sua conta.",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -143,7 +146,7 @@ export default function RegisterPage() {
             )}
           </div>
           <Button
-            text="Cadastrar usuário"
+            text={isLoading ? "Cadastrando usuário..." : "Cadastrar usuário"}
             variant="primary"
             disabled={isLoading}
             type="submit"

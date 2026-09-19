@@ -38,7 +38,7 @@ export default async function HomePage() {
 function JobListViewFallback() {
   return (
     <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {/* Job Card */}
+      {/* Job card list */}
       {Array.from({ length: 4 }).map((_, idx) => (
         <div
           className="px-4 py-4 border-y border-y-background-700 not-first:-mt-px"

@@ -1,9 +1,10 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyForm } from "@/components/companies/CompanyForm";
+import { getUserData } from "@/lib/data";
 import { Metadata } from "next";
 
 export default async function CompanyCreatePage() {
-  await new Promise((r) => setTimeout(r, 5_000))
+  const user = (await getUserData())!
 
   return (
     <main className="pb-4">
@@ -21,7 +22,7 @@ export default async function CompanyCreatePage() {
       </p>
 
       <section>
-        <CompanyForm />
+        <CompanyForm currentUserEmail={user.email} />
       </section>
     </main>
   );

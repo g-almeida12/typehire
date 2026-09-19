@@ -12,7 +12,13 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
   const response = await getCompanyByIdAction(companyId);
 
-  if (!response.success) notFound();
+  if (!response.success) {
+    if (response.status === 404) {
+      notFound();
+    } else {
+      throw new Error();
+    }
+  }
 
   const company = response.data;
   const companyCreator = company.members.filter(
@@ -47,7 +53,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               </p>
             ) : (
               company.jobs.map((j, idx) => (
-                <li key={`job-${idx}`}>
+                <li  className="not-first:-mt-px" key={`job-${idx}`}>
                   <JobCard job={{ ...j, company }} />
                 </li>
               ))
@@ -89,16 +95,30 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
 export async function generateMetadata(
   props: PageProps<"/companies/[id]">,
 ): Promise<Metadata> {
-  const companyId = (await props.params).id;
-  const response = await getCompanyByIdAction(companyId);
+  try {
+    const companyId = (await props.params).id;
+    const response = await getCompanyByIdAction(companyId);
 
-  if (!response.success) {
+    if (!response.success) {
+      return {
+        title: "Empresa não encontrada | TypeHire",
+        description:
+          "A empresa que você está procurando pode ter sido desligada ou não existe.",
+      };
+    }
+
+    const description = response.data.bio
+      ? response.data.bio.slice(0, 150) +
+        (response.data.bio.length > 150 ? "..." : "")
+      : `Conheça a empresa ${response.data.name}, seus objetivos, suas vagas e seus colaboradores.`;
+
     return {
-      title: "Empresa não encontrada | TypeHire",
+      title: `${response.data.name} | Vagas e Perfil no TypeHire`,
+      description,
+    };
+  } catch (_err) {
+    return {
+      title: "TypeHire - Portal de Vagas",
     };
   }
-
-  return {
-    title: `${response.data.name} | Vagas e Perfil no TypeHire`,
-  };
 }

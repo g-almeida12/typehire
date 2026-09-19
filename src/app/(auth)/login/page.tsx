@@ -35,8 +35,12 @@ export default function LoginPage() {
       const response = await signInByEmailAction(data);
 
       if (!response.success) {
-        setError("root", { message: response.message });
-        return;
+        if (response.status === 401) {
+          setError("root", { message: response.message });
+          return;
+        }
+
+        throw new Error();
       }
 
       router.replace(APP_URLS.home);
@@ -44,7 +48,6 @@ export default function LoginPage() {
       setError("root", {
         message: "Desculpe, mas não foi possível conectar na sua conta.",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -86,7 +89,11 @@ export default function LoginPage() {
           />
         </div>
 
-        <Button text="Conectar-se" variant="primary" disabled={isLoading} />
+        <Button
+          text={isLoading ? "Conectando-se..." : "Conecte-se"}
+          variant="primary"
+          disabled={isLoading}
+        />
       </form>
 
       <div className="relative mt-12">

@@ -19,7 +19,14 @@ export async function createCompanyAction(
     const company = await prisma.company.create({
       data: {
         ...companyData,
-        members: { create: { userId: companyData.createdBy } },
+        members: {
+          create: [
+            { userId: companyData.createdBy },
+            ...companyData.members
+              .filter((u) => u.email !== companyData.createdBy)
+              .map((u) => ({ userId: u.id })),
+          ],
+        },
       },
       include: companyWithDetailsInclude,
     });
@@ -62,7 +69,7 @@ export async function getCompanyByIdAction(
       include: companyWithDetailsInclude,
     });
     if (!company) {
-      throw new AppError("Empresa não encontrada.", 404);
+      throw new AppError("Empresa não encontrada", 404);
     }
 
     return { success: true, status: 200, data: mapCompanyEntity(company) };

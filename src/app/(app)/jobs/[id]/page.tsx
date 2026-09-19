@@ -32,8 +32,13 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
     getJobByIdAction(jobId),
   ]);
 
+  // Handle get job request exceptions
   if (!response.success) {
-    notFound();
+    if (response.status === 404) {
+      notFound();
+    } else {
+      throw new Error("Não foi possível carregar os dados da vaga.");
+    }
   }
 
   const job = response.data;
@@ -180,18 +185,27 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 export async function generateMetadata(
   props: PageProps<"/jobs/[id]">,
 ): Promise<Metadata> {
-  const jobId = (await props.params).id;
-  const response = await getJobByIdAction(jobId);
+  try {
+    const jobId = (await props.params).id;
+    const response = await getJobByIdAction(jobId);
 
-  if (!response.success) {
+    if (!response.success) {
+      return {
+        title: "Vaga não encontrada | TypeHire",
+        description:
+          "A vaga que você está procurando pode ter sido encerrada ou não existe.",
+      };
+    }
+
     return {
-      title: "Vaga não encontrada | TypeHire",
+      title: `${response.data.title} na ${response.data.company.name} | TypeHire`,
       description:
-        "A vaga que você está procurando pode ter sido encerrada ou não existe.",
+        response.data.description.slice(0, 150) +
+        (response.data.description.length > 150 ? "..." : ""),
+    };
+  } catch (_err) {
+    return {
+      title: "TypeHire - Portal de Vagas",
     };
   }
-
-  return {
-    title: `${response.data.title} na ${response.data.company.name} | TypeHire`,
-  };
 }

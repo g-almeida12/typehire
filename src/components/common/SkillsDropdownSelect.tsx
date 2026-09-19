@@ -23,6 +23,7 @@ export const SkillsDropdownSelect = forwardRef<
 >(({ label, skills, onSkillClick, error, ...props }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<(HTMLLIElement | null)[]>([]);
+  const inputInternalRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -88,6 +89,9 @@ export const SkillsDropdownSelect = forwardRef<
           !filteredSkills[selectedIndex].isInUserSkills
         ) {
           handleSkillClick(filteredSkills[selectedIndex].value);
+          if (inputInternalRef.current) {
+            inputInternalRef.current.blur();
+          }
         }
         break;
 
@@ -119,7 +123,15 @@ export const SkillsDropdownSelect = forwardRef<
           <input
             {...props}
             className="w-full focus:outline-none"
-            ref={ref}
+            ref={(el) => {
+              inputInternalRef.current = el;
+
+              if (typeof ref === "function") {
+                ref(el);
+              } else if (ref) {
+                ref.current = el;
+              }
+            }}
             value={search}
             onFocus={() => {
               setIsOpen(true);

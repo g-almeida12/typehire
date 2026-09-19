@@ -129,15 +129,20 @@ export async function getUserById(
     });
 
     if (!user) {
-      return {
-        success: false,
-        status: 404,
-        message: "Usuário não encontrado.",
-      };
+      throw new AppError("Usuário não encontrado.", 404);
     }
 
     return { success: true, status: 200, data: mapPublicUserEntity(user) };
-  } catch (_err) {
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        message: err.message,
+        status: err.statusCode,
+        field: err.field,
+      };
+    }
+
     return {
       success: false,
       status: 500,
@@ -197,7 +202,12 @@ export async function updateUserAction(
     };
   } catch (err) {
     if (err instanceof AppError) {
-      return { success: false, status: err.statusCode, message: err.message };
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
     }
 
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -235,7 +245,12 @@ export async function deleteUserAction(): ServerActionResponse<boolean> {
     return { success: true, status: 200, data: true };
   } catch (err) {
     if (err instanceof AppError) {
-      return { success: false, status: err.statusCode, message: err.message };
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
     }
 
     if (err instanceof Prisma.PrismaClientKnownRequestError) {

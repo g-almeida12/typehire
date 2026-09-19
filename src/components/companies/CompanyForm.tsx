@@ -27,9 +27,10 @@ import { UserProfile } from "../common/UserProfile";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
+  currentUserEmail: string;
 }
 
-export function CompanyForm({ company }: CompanyFormProps) {
+export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
   const {
     formState: { errors },
     setError,
@@ -63,11 +64,10 @@ export function CompanyForm({ company }: CompanyFormProps) {
         if (!response.success) {
           if (response.status === 409 && response.field === "cnpj") {
             setError("cnpj", { message: "CNPJ já cadastrado." });
-          } else {
-            throw new Error("");
+            return;
           }
 
-          return;
+          throw new Error();
         }
 
         router.replace(APP_URLS.company(response.data.id));
@@ -152,6 +152,7 @@ export function CompanyForm({ company }: CompanyFormProps) {
 
         <UsersDropdownSelect
           label="Digite o email do associado"
+          currentUserEmail={currentUserEmail}
           selectedUsersEmail={selectedUsers.map((u) => u.email)}
           onUserClick={(user) => setSelectedUsers((prev) => [...prev, user])}
         />
