@@ -9,7 +9,7 @@ import {
 import { companyWithDetailsInclude, mapCompanyEntity } from "../entities";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
-import { cacheLife, cacheTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
 
 export async function createCompanyAction(
@@ -60,8 +60,8 @@ export async function getCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<CompanyResponsePayload> {
   "use cache";
-  cacheLife("default");
   cacheTag(`company-${companyId}`);
+  cacheLife("default");
 
   try {
     const company = await prisma.company.findUnique({
@@ -98,6 +98,8 @@ export async function deleteCompanyByIdAction(
     await prisma.company.delete({
       where: { id: companyId },
     });
+
+    updateTag(`company-${companyId}`);
 
     return { success: true, status: 200, data: null };
   } catch (err) {

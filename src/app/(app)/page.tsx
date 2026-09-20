@@ -27,7 +27,11 @@ export default async function HomePage() {
 
         <section>
           <Suspense fallback={JobListViewFallback()}>
-            <JobListView initialJobs={jobs} initialHasMore={hasMoreJobs} />
+            <JobListView
+              initialJobs={jobs}
+              initialHasMore={hasMoreJobs}
+              key={jobs.map((j) => j.id).join(",")}
+            />
           </Suspense>
         </section>
       </main>

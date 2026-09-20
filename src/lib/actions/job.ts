@@ -35,7 +35,6 @@ export async function createJobAction(
         include: jobWithDetailsInclude,
       });
 
-      updateTag("job-list");
       return mapJobEntity(createdJob);
     });
 
@@ -65,10 +64,6 @@ export async function getJobsAction(
   jobs: JobResponsePayload[];
   pagination: PaginationResponsePayload;
 }> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("job-list");
-
   try {
     const jobs = await prisma.job.findMany({
       skip: (page - 1) * pageSize,
