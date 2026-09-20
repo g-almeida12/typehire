@@ -90,3 +90,32 @@ export async function getCompanyByIdAction(
     };
   }
 }
+
+export async function deleteCompanyByIdAction(
+  companyId: string,
+): ServerActionResponse<null> {
+  try {
+    await prisma.company.delete({
+      where: { id: companyId },
+    });
+
+    return { success: true, status: 200, data: null };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (leanErr.errType === "NOT_FOUND") {
+        return {
+          success: false,
+          status: 404,
+          message: "Empresa não encontrada.",
+        };
+      }
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível deletar a empresa.",
+    };
+  }
+}
