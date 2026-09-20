@@ -30,6 +30,9 @@ export {
   AtSign as AtSignIcon,
   Package as PackageIcon,
   ChevronDown as ChevronDownIcon,
+  MoreHorizontal as MoreOptionsIcon,
+  Trash2 as TrashIcon,
+  Info as InfoIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

@@ -35,7 +35,7 @@ export function JobCard({
     job.modality[0].toUpperCase() + job.modality.slice(1).toLowerCase();
 
   return (
-    <Link href={APP_URLS.job(job.id)}>
+    <Link href={APP_URLS.job(job.id)} prefetch={false}>
       <div className="px-4 py-4 border-y border-y-background-700">
         {/* Job and company profile */}
         <div className="flex flex-row gap-2">
