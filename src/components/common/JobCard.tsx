@@ -11,6 +11,7 @@ import {
 import { formatRelativeTime } from "@/utils/date";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
+import Image from "next/image";
 
 export function JobCard({
   job,
@@ -29,6 +30,10 @@ export function JobCard({
     | "createdAt"
   >;
 }) {
+  const companyAvatar =
+    job.company.name.split(" ").length >= 2
+      ? job.company.name.split(" ")[0][0] + job.company.name.split(" ")[1][0]
+      : job.company.name.split(" ")[0][0] + job.company.name.split(" ")[0][1];
   const capitalizedLevel =
     job.level[0].toUpperCase() + job.level.slice(1).toLowerCase();
   const capitalizedModality =
@@ -38,12 +43,37 @@ export function JobCard({
     <Link href={APP_URLS.job(job.id)} prefetch={false}>
       <div className="px-4 py-4 border-y border-y-background-700">
         {/* Job and company profile */}
-        <div className="flex flex-row gap-2">
-          <div className="shrink-0 size-10 bg-background-100 rounded-md"></div>
+        <div className="flex flex-col gap-2">
+          {/* Company image and name */}
+          <div className="flex flex-row gap-2 items-start">
+            <div
+              className="flex items-center justify-center shrink-0 size-8 bg-accent-600 rounded-md"
+              aria-label="Logo da empresa"
+            >
+              {job.company.image ? (
+                <Image src={job.company.image} alt="Logo da empresa" />
+              ) : (
+                <span
+                  className="text-xl font-semibold text-accent-100"
+                  aria-hidden="true"
+                >
+                  {companyAvatar}
+                </span>
+              )}
+            </div>
+            <div className="min-w-0 max-w-full flex flex-col gap-1">
+              <p className="min-w-0 text-background-100 text-sm/[14px] truncate">
+                {job.company.name}
+              </p>
+              <p className="text-background-300 text-sm/[14px] truncate italic">
+                {job.company.website}
+              </p>
+            </div>
+          </div>
           <div className="flex flex-col gap-0">
-            <p className="text-lg/[18px] font-medium">{job.title}</p>
-            <p className="text-background-300 text-sm">
-              {job.company.name} {job.location && `• ${job.location}`}
+            <p className="text-lg font-medium">{job.title}</p>
+            <p className="text-background-300 text-sm/[14px] truncate italic">
+              {job.location ?? "Remoto"}
             </p>
           </div>
         </div>
@@ -62,6 +92,8 @@ export function JobCard({
                   return <BriefcaseIcon size={20} />;
                 case "SÊNIOR":
                   return <AwardIcon size={20} />;
+                default:
+                  return null;
               }
             })()}
             <p className="font-semibold text-sm">{capitalizedLevel}</p>
@@ -77,6 +109,8 @@ export function JobCard({
                   return <RefreshIcon size={20} />;
                 case "REMOTO":
                   return <HouseIcon size={20} />;
+                default:
+                  return null;
               }
             })()}
             <p className="font-semibold text-sm">{capitalizedModality}</p>

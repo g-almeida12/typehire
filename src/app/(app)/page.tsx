@@ -6,13 +6,15 @@ import { getUserData } from "@/lib/data";
 import { Suspense } from "react";
 
 export default async function HomePage() {
-  const user = (await getUserData())!;
+  const [user, jobsResult] = await Promise.all([
+    getUserData(),
+    getJobsAction(1, 10),
+  ]);
 
-  const jobsResult = await getJobsAction(1, 10);
-  const jobs = jobsResult.success ? jobsResult.data.jobs : [];
-  const hasMoreJobs = jobsResult.success
-    ? jobsResult.data.pagination.hasNextPage
-    : false;
+  const isError = !jobsResult.success;
+
+  const jobs = !isError ? jobsResult.data.jobs : [];
+  const hasMoreJobs = !isError ? jobsResult.data.pagination.hasNextPage : false;
 
   return (
     <>
@@ -26,13 +28,24 @@ export default async function HomePage() {
         </section>
 
         <section>
-          <Suspense fallback={JobListViewFallback()}>
-            <JobListView
-              initialJobs={jobs}
-              initialHasMore={hasMoreJobs}
-              key={jobs.map((j) => j.id).join(",")}
-            />
-          </Suspense>
+          {isError ? (
+            <div className="flex flex-col items-center justify-center px-4 text-center">
+              <p className="text-background-300 text-lg/[22px]">
+                Não foi possível carregar as vagas no momento.
+              </p>
+              <p className="text-sm text-background-400 mt-2">
+                Tente recarregar a página mais tarde.
+              </p>
+            </div>
+          ) : (
+            <Suspense fallback={JobListViewFallback()}>
+              <JobListView
+                initialJobs={jobs}
+                initialHasMore={hasMoreJobs}
+                key={jobs.map((j) => j.id).join(",")}
+              />
+            </Suspense>
+          )}
         </section>
       </main>
     </>
