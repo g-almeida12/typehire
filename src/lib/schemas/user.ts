@@ -12,25 +12,25 @@ export const UserPublicResponseSchema = z.object({
   id: z.string(),
   name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
   email: z.email("Email inválido."),
-});
-export type UserPublicResponsePayload = z.infer<
-  typeof UserPublicResponseSchema
->;
-
-export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
-  email: z.email("Email inválido."),
-  cpf: z
-    .string()
-    .transform((val) => val.replace(/\D+/g, ""))
-    .refine((val) => val.length === 11, "CPF inválido digitado."),
   location: z.string().nullable(),
   phoneNumber: z.string().nullable(),
   bio: z.string().nullable(),
   githubUrl: z.string().nullable(),
   linkedinUrl: z.string().nullable(),
   portfolioUrl: z.string().nullable(),
+  resumeUrl: z.string().nullable(),
   skills: z.array(z.enum(Skill)),
   companies: z.array(CompanySnippetSchema),
+});
+export type UserPublicResponsePayload = z.infer<
+  typeof UserPublicResponseSchema
+>;
+
+export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
+  cpf: z
+    .string()
+    .transform((val) => val.replace(/\D+/g, ""))
+    .refine((val) => val.length === 11, "CPF inválido digitado."),
 });
 export type UserPrivateResponsePayload = z.infer<
   typeof UserPrivateResponseSchema

@@ -126,6 +126,7 @@ export async function getUserById(
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
+      include: userWithDetailsInclude,
     });
 
     if (!user) {
@@ -163,6 +164,7 @@ export async function getUsersByEmailPrefix(
         },
       },
       take: 7,
+      include: userWithDetailsInclude,
     });
 
     return {

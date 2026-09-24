@@ -24,12 +24,21 @@ export type UserEntity = Prisma.UserGetPayload<{
 }>;
 
 export function mapPublicUserEntity(
-  user: Omit<UserEntity, 'companies'>,
+  user: UserEntity,
 ): UserPublicResponsePayload {
   return {
     id: user.id,
     name: user.name,
     email: user.email,
+    location: user.location,
+    phoneNumber: user.phoneNumber,
+    skills: user.skills,
+    bio: user.bio,
+    githubUrl: user.githubUrl,
+    linkedinUrl: user.linkedinUrl,
+    portfolioUrl: user.portfolioUrl,
+    resumeUrl: user.resumeUrl,
+    companies: user.companies.map((c) => c.company),
   };
 }
 
@@ -48,6 +57,7 @@ export function mapPrivateUserEntity(
     githubUrl: user.githubUrl,
     linkedinUrl: user.linkedinUrl,
     portfolioUrl: user.portfolioUrl,
+    resumeUrl: user.resumeUrl,
     companies: user.companies.map((c) => c.company),
   };
 }
