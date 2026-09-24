@@ -29,6 +29,21 @@ export default function ProfileLoading() {
         </div>
       </div>
 
+      {/* Resume */}
+      <div className="w-full h-8 mt-2 rounded-md border border-background-500 bg-background-500 animate-pulse"></div>
+
+      {/* Bio */}
+      {Array.from({ length: 2 }).map((_, idx) => (
+        <div className="flex flex-col gap-1 mb-2" key={`description-${idx}`}>
+          <span className="block w-full h-5 rounded-sm bg-background-600 animate-pulse"></span>
+          <span className="block w-[80%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
+          <span className="block w-[95%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
+          <span className="block w-[70%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
+          <span className="block w-[93%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
+          <span className="block w-[73%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
+        </div>
+      ))}
+
       <hr className="mt-4 mb-8" />
 
       {/* Social medias */}
@@ -36,9 +51,9 @@ export default function ProfileLoading() {
         <span className="block w-80 h-6 mb-4 rounded-md bg-background-200 animate-pulse"></span>
 
         <div className="flex flex-col gap-2">
-          <div className="w-80 h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
-          <div className="w-80 h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
-          <div className="w-80 h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
+          <div className="w-full h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
+          <div className="w-full h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
+          <div className="w-full h-8 rounded-md border border-background-600 bg-background-800 animate-pulse"></div>
         </div>
       </div>
 

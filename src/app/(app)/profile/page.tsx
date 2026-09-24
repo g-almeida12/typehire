@@ -7,6 +7,7 @@ import {
   LinkedInIcon,
   PhoneIcon,
   PinIcon,
+  FileIcon,
 } from "@/components/icons";
 import { DeleteUserButton } from "@/components/profile/DeleteUserButton";
 import { SignOutUserButton } from "@/components/profile/SignOutUserButton";
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
+  await new Promise(resolve => setTimeout(resolve, 5_000))
   const user = (await getUserData())!;
 
   const userSocialMedias = [
@@ -63,6 +65,31 @@ export default async function ProfilePage() {
             <PinIcon size={18} />
             {user.location ? user.location : "Não informado"}
           </p>
+        </div>
+
+        {/* Resume */}
+        <div className="mt-2">
+          <a
+            href={user.resumeUrl ?? ""}
+            target="_blank"
+            download={`${user.name.replaceAll(" ", "-")}.pdf`}
+            className="flex flex-row items-center justify-between w-full px-2 py-1 rounded-md border border-background-500 bg-background-500"
+            style={{ pointerEvents: user.resumeUrl ? "auto" : "none" }}
+          >
+            <div className="flex flex-row items-center gap-2">
+              <FileIcon size={20} className="text-background-900" />
+              <span
+                className={`font-medium text-background-900 ${user.resumeUrl ? "" : " italic"}`}
+              >
+                {user.resumeUrl
+                  ? "Acessar currículo"
+                  : `Currículo não informado`}
+              </span>
+            </div>
+            {user.resumeUrl && (
+              <ArrowUpRightIcon className="text-background-900" size={20} />
+            )}
+          </a>
         </div>
 
         {/* Bio */}
@@ -145,7 +172,11 @@ export default async function ProfilePage() {
         )}
 
         <div className="mt-2">
-          <Button text="Registrar uma nova empresa" variant="ghost" href={APP_URLS.companyCreate} />
+          <Button
+            text="Registrar uma nova empresa"
+            variant="ghost"
+            href={APP_URLS.companyCreate}
+          />
         </div>
       </section>
 

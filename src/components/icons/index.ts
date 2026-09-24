@@ -33,6 +33,7 @@ export {
   MoreHorizontal as MoreOptionsIcon,
   Trash2 as TrashIcon,
   Info as InfoIcon,
+  FileText as FileIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";
