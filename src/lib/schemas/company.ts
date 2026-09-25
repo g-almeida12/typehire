@@ -28,7 +28,6 @@ const CompanyBaseSchema = z.object({
       id: true,
     }),
   ),
-  createdBy: z.string(),
 });
 
 export const CompanyCreateSchema = CompanyBaseSchema.extend({
@@ -37,6 +36,9 @@ export const CompanyCreateSchema = CompanyBaseSchema.extend({
   bio: z.string().optional().nullable(),
 });
 export type CompanyCreatePayload = z.infer<typeof CompanyCreateSchema>;
+
+export const CompanyUpdateSchema = CompanyBaseSchema.partial();
+export type CompanyUpdatePayload = z.infer<typeof CompanyUpdateSchema>;
 
 export const CompanyResponseSchema = CompanyBaseSchema.extend({
   id: z.string(),
