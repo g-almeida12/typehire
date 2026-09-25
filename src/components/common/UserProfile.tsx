@@ -4,7 +4,7 @@ import { ArrowUpRightIcon, EditIcon } from "../icons";
 import { APP_URLS } from "@/utils/constants";
 
 interface UserProfileProps {
-  user: UserPublicResponsePayload;
+  user: Pick<UserPublicResponsePayload, "name" | "email" | "id">;
   type: "readonly" | "edit" | "link" | "list";
 }
 

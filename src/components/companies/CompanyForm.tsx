@@ -13,13 +13,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../common/Button";
-import { createCompanyAction } from "@/lib/actions";
+import { createCompanyAction, updateCompanyByIdAction } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 import {
   CompanyCreatePayload,
   CompanyCreateSchema,
   CompanyResponsePayload,
+  CompanyUpdatePayload,
+  CompanyUpdateSchema,
 } from "@/lib/schemas/company";
 import { UserPublicResponsePayload } from "@/lib/schemas";
 import { UsersDropdownSelect } from "./UserDropdownSelect";
@@ -36,9 +38,16 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
     setError,
     handleSubmit,
     register,
-    reset,
-  } = useForm<CompanyCreatePayload>({
-    resolver: zodResolver(CompanyCreateSchema),
+  } = useForm<CompanyCreatePayload | CompanyUpdatePayload>({
+    defaultValues: company ?? {
+      name: "",
+      bio: "",
+      cnpj: "",
+      size: "STARTUP",
+      website: "",
+      members: [],
+    },
+    resolver: zodResolver(company ? CompanyUpdateSchema : CompanyCreateSchema),
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedUsers, setSelectedUsers] = useState<
@@ -46,23 +55,23 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
   >([]);
   const router = useRouter();
 
-  useEffect(() => {
-    if (company) {
-      reset({});
-    }
-  }, [company, reset]);
-
-  const handleButtonClick = async (data: CompanyCreatePayload) => {
+  const handleButtonClick = async (
+    data: CompanyCreatePayload | CompanyUpdatePayload,
+  ) => {
     try {
+      setIsLoading(true);
+      // Update action
       if (company) {
-        //TODO: adicionar server action para update de empresas
-      } else {
-        const response = await createCompanyAction({
-          ...data,
-          members: selectedUsers,
-        });
-        if (!response.success) {
-          if (response.status === 409 && response.field === "cnpj") {
+        const updateResponse = await updateCompanyByIdAction(
+          company.id,
+          data as CompanyUpdatePayload,
+        );
+
+        if (!updateResponse.success) {
+          if (
+            updateResponse.status === 409 &&
+            updateResponse.field === "cnpj"
+          ) {
             setError("cnpj", { message: "CNPJ já cadastrado." });
             return;
           }
@@ -70,7 +79,27 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           throw new Error();
         }
 
-        router.replace(APP_URLS.company(response.data.id));
+        router.replace(APP_URLS.company(updateResponse.data.id));
+      }
+      // Create action
+      else {
+        const createResponse = await createCompanyAction({
+          ...(data as CompanyCreatePayload),
+          members: selectedUsers,
+        });
+        if (!createResponse.success) {
+          if (
+            createResponse.status === 409 &&
+            createResponse.field === "cnpj"
+          ) {
+            setError("cnpj", { message: "CNPJ já cadastrado." });
+            return;
+          }
+
+          throw new Error();
+        }
+
+        router.replace(APP_URLS.company(createResponse.data.id));
       }
     } catch (err) {
       setError("root", {
