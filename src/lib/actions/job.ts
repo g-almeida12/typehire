@@ -7,11 +7,16 @@ import { jobWithDetailsInclude, mapJobEntity } from "../entities";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { cacheLife, cacheTag, updateTag } from "next/cache";
+import { getUserId } from "../data";
 
 export async function createJobAction(
   jobData: JobCreatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
+    if (!getUserId()) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       const isMember = await tx.companyMember.findFirst({
         where: { userId: jobData.createdBy, companyId: jobData.companyId },
@@ -65,6 +70,10 @@ export async function getJobsAction(
   pagination: PaginationResponsePayload;
 }> {
   try {
+    if (!getUserId()) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
     const jobs = await prisma.job.findMany({
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -93,6 +102,15 @@ export async function getJobsAction(
       },
     };
   } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        message: err.message,
+        status: err.statusCode,
+        field: err.field,
+      };
+    }
+
     return {
       success: false,
       status: 500,
@@ -104,11 +122,11 @@ export async function getJobsAction(
 export async function getJobByIdAction(
   jobId: string,
 ): ServerActionResponse<JobResponsePayload> {
-  "use cache";
-  cacheTag(`job-${jobId}`);
-  cacheLife("default");
-
   try {
+    if (!getUserId()) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
     const job = await prisma.job.findUnique({
       where: { id: jobId },
       include: jobWithDetailsInclude,

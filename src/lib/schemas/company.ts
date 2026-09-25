@@ -37,7 +37,7 @@ export const CompanyCreateSchema = CompanyBaseSchema.extend({
 });
 export type CompanyCreatePayload = z.infer<typeof CompanyCreateSchema>;
 
-export const CompanyUpdateSchema = CompanyBaseSchema.partial();
+export const CompanyUpdateSchema = CompanyBaseSchema.omit({cnpj: true}).partial();
 export type CompanyUpdatePayload = z.infer<typeof CompanyUpdateSchema>;
 
 export const CompanyResponseSchema = CompanyBaseSchema.extend({

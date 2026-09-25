@@ -20,3 +20,22 @@ export async function getUserData(): Promise<UserPrivateResponsePayload | null> 
 
   return mapPrivateUserEntity(user);
 }
+
+export async function getUserId(): Promise<string | null> {
+  const session = await authServer.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!user) return null;
+
+  return user.id;
+}

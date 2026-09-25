@@ -17,7 +17,7 @@ import {
 import { mapPrivateUserEntity } from "../entities";
 import { prisma } from "@/database";
 import { headers } from "next/headers";
-import { getUserData } from "@/lib/data";
+import { getUserData, getUserId } from "@/lib/data";
 import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
@@ -124,6 +124,10 @@ export async function getUserById(
   userId: string,
 ): ServerActionResponse<UserPublicResponsePayload> {
   try {
+    if (!getUserId()) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: userWithDetailsInclude,
@@ -156,6 +160,10 @@ export async function getUsersByEmailPrefix(
   prefix: string,
 ): ServerActionResponse<UserPublicResponsePayload[]> {
   try {
+    if (!getUserId()) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
     const users = await prisma.user.findMany({
       where: {
         email: {
@@ -172,7 +180,16 @@ export async function getUsersByEmailPrefix(
       status: 200,
       data: users.map((u) => mapPublicUserEntity(u)),
     };
-  } catch (_err) {
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        message: err.message,
+        status: err.statusCode,
+        field: err.field,
+      };
+    }
+
     return {
       success: false,
       status: 500,
@@ -233,7 +250,7 @@ export async function updateUserAction(
   }
 }
 
-export async function deleteUserAction(): ServerActionResponse<boolean> {
+export async function deleteUserAction(): ServerActionResponse<null> {
   try {
     const user = await getUserData();
     if (!user) {
@@ -244,7 +261,7 @@ export async function deleteUserAction(): ServerActionResponse<boolean> {
       where: { id: user.id },
     });
 
-    return { success: true, status: 200, data: true };
+    return { success: true, status: 200, data: null };
   } catch (err) {
     if (err instanceof AppError) {
       return {
@@ -253,17 +270,6 @@ export async function deleteUserAction(): ServerActionResponse<boolean> {
         message: err.message,
         field: err.field,
       };
-    }
-
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      const leanErr = PrismaClientError.getLeanError(err);
-      if (leanErr.errType === "NOT_FOUND") {
-        return {
-          success: false,
-          status: 404,
-          message: "Usuário não encontrado.",
-        };
-      }
     }
 
     return {
