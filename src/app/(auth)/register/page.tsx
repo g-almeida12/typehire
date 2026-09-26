@@ -1,6 +1,10 @@
 "use client";
 
-import { type UserRegisterPayload, UserRegisterSchema } from "@/lib/schemas";
+import {
+  type UserRegisterPayload,
+  UserRegisterSchema,
+  signUpByEmailAction,
+} from "@/lib/modules/user/index";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -9,7 +13,6 @@ import {
   IdCardIcon,
   KeyRoundIcon,
 } from "@/components/icons";
-import { signUpByEmailAction } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

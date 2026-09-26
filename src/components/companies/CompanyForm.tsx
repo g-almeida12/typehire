@@ -10,20 +10,21 @@ import {
   XIcon,
 } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../common/Button";
-import { createCompanyAction, updateCompanyByIdAction } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 import {
-  CompanyCreatePayload,
+  type CompanyCreatePayload,
   CompanyCreateSchema,
-  CompanyResponsePayload,
-  CompanyUpdatePayload,
+  type CompanyResponsePayload,
+  type CompanyUpdatePayload,
   CompanyUpdateSchema,
-} from "@/lib/schemas/company";
-import { UserPublicResponsePayload } from "@/lib/schemas";
+  createCompanyAction,
+  updateCompanyByIdAction,
+} from "@/lib/modules/company/index";
+import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
 import { UsersDropdownSelect } from "./UserDropdownSelect";
 import { UserProfile } from "../common/UserProfile";
 
@@ -136,14 +137,17 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             error={errors.name?.message}
             disabled={isLoading}
           />
-          <Input
-            {...register("cnpj")}
-            Icon={BuildingIcon}
-            label="CNPJ"
-            placeholder="Ex.: 12.345.678/0001-99"
-            error={errors.cnpj?.message}
-            disabled={isLoading}
-          />
+          {company && (
+            <Input
+              {...register("cnpj")}
+              Icon={BuildingIcon}
+              label="CNPJ"
+              placeholder="Ex.: 12.345.678/0001-99"
+              error={"cnpj" in errors ? errors.cnpj?.message : undefined}
+              disabled={isLoading}
+            />
+          )}
+
           <Input
             {...register("size")}
             Icon={PackageIcon}

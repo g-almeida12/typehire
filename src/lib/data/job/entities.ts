@@ -1,5 +1,5 @@
 import { Prisma } from "@/database/generated/client";
-import { JobResponsePayload } from "@/lib/schemas";
+import { JobResponsePayload } from "@/lib/modules/job/index";
 
 export const jobWithDetailsInclude = {
   company: {

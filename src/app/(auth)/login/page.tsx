@@ -1,10 +1,13 @@
 "use client";
 
-import { UserLoginSchema, type UserLoginPayload } from "@/lib/schemas";
+import {
+  UserLoginSchema,
+  type UserLoginPayload,
+  signInByEmailAction,
+} from "@/lib/modules/user/index";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailIcon, KeyRoundIcon } from "@/components/icons";
-import { signInByEmailAction } from "@/lib/actions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

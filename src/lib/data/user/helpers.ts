@@ -1,8 +1,8 @@
 import { prisma } from "@/database";
 import { authServer } from "@/lib/auth/auth-server";
 import { headers } from "next/headers";
-import { mapPrivateUserEntity, userWithDetailsInclude } from "../entities";
-import { UserPrivateResponsePayload } from "../schemas";
+import { mapPrivateUserEntity, userWithDetailsInclude } from "./index";
+import { UserPrivateResponsePayload } from "@/lib/modules/user/index";
 
 export async function getUserData(): Promise<UserPrivateResponsePayload | null> {
   const session = await authServer.api.getSession({

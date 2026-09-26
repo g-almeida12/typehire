@@ -1,9 +1,9 @@
 "use client";
 
-import { deleteUserAction } from "@/lib/actions";
+import { APP_URLS } from "@/utils/constants";
+import { deleteUserAction } from "@/lib/modules/user/index";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
-import { APP_URLS } from "@/utils/constants";
 
 export function DeleteUserButton() {
   const router = useRouter();

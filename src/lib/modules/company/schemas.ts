@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserPublicResponseSchema } from "./user";
+import { UserPublicResponseSchema } from "@/lib/modules/user/index";
 import { JobLevel, JobModality, CompanySize } from "@/database/generated/enums";
 
 const JobSnippetSchema = z.object({
@@ -37,7 +37,9 @@ export const CompanyCreateSchema = CompanyBaseSchema.extend({
 });
 export type CompanyCreatePayload = z.infer<typeof CompanyCreateSchema>;
 
-export const CompanyUpdateSchema = CompanyBaseSchema.omit({cnpj: true}).partial();
+export const CompanyUpdateSchema = CompanyBaseSchema.omit({
+  cnpj: true,
+}).partial();
 export type CompanyUpdatePayload = z.infer<typeof CompanyUpdateSchema>;
 
 export const CompanyResponseSchema = CompanyBaseSchema.extend({

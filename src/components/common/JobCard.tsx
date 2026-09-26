@@ -1,4 +1,4 @@
-import { JobResponsePayload } from "@/lib/schemas";
+import { type JobResponsePayload } from "@/lib/modules/job/index";
 import {
   SproutIcon,
   CircleFadingArrowUpIcon,

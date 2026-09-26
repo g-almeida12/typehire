@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRightIcon, EditIcon } from "../icons";
 import { APP_URLS } from "@/utils/constants";
-import { CompanyResponsePayload } from "@/lib/schemas/company";
+import { CompanyResponsePayload } from "@/lib/modules/company/index";
 import { companySizeMapper } from "@/utils/mappers";
 
 interface CompanyProfileProps {

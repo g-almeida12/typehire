@@ -1,6 +1,6 @@
 "use client";
 
-import { signOutAction } from "@/lib/actions";
+import { signOutAction } from "@/lib/modules/user/index";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";

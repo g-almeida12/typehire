@@ -2,12 +2,12 @@
 
 import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
-import { JobCreatePayload, JobResponsePayload } from "@/lib/schemas";
-import { jobWithDetailsInclude, mapJobEntity } from "../entities";
+import { JobCreatePayload, JobResponsePayload } from "./schemas";
+import { jobWithDetailsInclude, mapJobEntity } from "@/lib/data/job/entities";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { cacheLife, cacheTag, updateTag } from "next/cache";
-import { getUserId } from "../data";
+import { getUserId } from "@/lib/data/user/index";
 
 export async function createJobAction(
   jobData: JobCreatePayload,

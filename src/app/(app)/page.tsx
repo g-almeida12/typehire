@@ -1,8 +1,8 @@
 import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/ui/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
-import { getJobsAction } from "@/lib/actions";
-import { getUserData } from "@/lib/data";
+import { getJobsAction } from "@/lib/modules/job/index";
+import { getUserData } from "@/lib/data/user/index";
 import { Suspense } from "react";
 
 export default async function HomePage() {

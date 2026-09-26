@@ -2,7 +2,7 @@ import { Prisma } from "@/database/generated/client";
 import {
   UserPrivateResponsePayload,
   UserPublicResponsePayload,
-} from "@/lib/schemas/user";
+} from "@/lib/modules/user/index";
 
 export const userWithDetailsInclude = {
   companies: {

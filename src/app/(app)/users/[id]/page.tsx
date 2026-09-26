@@ -11,7 +11,7 @@ import {
 import { UserProfile } from "@/components/common/UserProfile";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
-import { getUserById } from "@/lib/actions";
+import { getUserByIdAction } from "@/lib/modules/user/index";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage(props: PageProps<"/users/[id]">) {
-  const userResult = (await getUserById((await props.params).id))!;
+  const userResult = (await getUserByIdAction((await props.params).id))!;
 
   if (!userResult.success) {
     if (userResult.status === 404) {

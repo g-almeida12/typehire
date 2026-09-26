@@ -1,7 +1,7 @@
 "use client";
 
 import { MailIcon } from "@/components/icons";
-import { UserPublicResponsePayload } from "@/lib/schemas";
+import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
 import {
   forwardRef,
   InputHTMLAttributes,
@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import { UserProfile } from "../common/UserProfile";
-import { getUsersByEmailPrefix } from "@/lib/actions";
+import { getUsersByEmailPrefixAction } from "@/lib/modules/user/index";
 
 interface UsersDropdownSelectProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -74,7 +74,7 @@ export const UsersDropdownSelect = forwardRef<
 
       const debounceId = setTimeout(async () => {
         try {
-          const response = await getUsersByEmailPrefix(search);
+          const response = await getUsersByEmailPrefixAction(search);
           if (!response.success) {
             setError("Não foi possível buscar usuários.");
             return;

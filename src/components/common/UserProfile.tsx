@@ -1,4 +1,4 @@
-import { UserPublicResponsePayload } from "@/lib/schemas";
+import { UserPublicResponsePayload } from "@/lib/modules/user/index";
 import Link from "next/link";
 import { ArrowUpRightIcon, EditIcon } from "../icons";
 import { APP_URLS } from "@/utils/constants";

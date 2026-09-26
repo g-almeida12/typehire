@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyForm } from "@/components/companies/CompanyForm";
-import { getCompanyByIdAction } from "@/lib/actions";
-import { getUserData } from "@/lib/data";
+import { getCompanyByIdAction } from "@/lib/modules/company/index";
+import { getUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

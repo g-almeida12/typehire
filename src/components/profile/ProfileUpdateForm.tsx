@@ -10,10 +10,11 @@ import {
   XIcon,
 } from "@/components/icons";
 import {
-  UserPrivateResponsePayload,
-  UserUpdatePayload,
+  type UserPrivateResponsePayload,
+  type UserUpdatePayload,
   UserUpdateSchema,
-} from "@/lib/schemas";
+  updateUserAction,
+} from "@/lib/modules/user/index";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UserCircleIcon,
@@ -27,7 +28,6 @@ import { useForm } from "react-hook-form";
 import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
 import { skillMapper } from "@/utils/mappers";
 import { Button } from "../common/Button";
-import { updateUserAction } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 

@@ -1,6 +1,6 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyForm } from "@/components/companies/CompanyForm";
-import { getUserData } from "@/lib/data";
+import { getUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
 export default async function CompanyCreatePage() {

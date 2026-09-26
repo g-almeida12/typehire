@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/common/BackButton";
 import { ProfileUpdateForm } from "@/components/profile/ProfileUpdateForm";
 import { Skill } from "@/database/generated/enums";
-import { getUserData } from "@/lib/data";
+import { getUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

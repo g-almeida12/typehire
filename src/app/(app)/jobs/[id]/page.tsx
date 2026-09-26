@@ -13,8 +13,8 @@ import {
   XIcon,
 } from "@/components/icons";
 import { Navbar } from "@/components/ui/Navbar";
-import { getJobByIdAction } from "@/lib/actions";
-import { getUserData } from "@/lib/data";
+import { getJobByIdAction } from "@/lib/modules/job/index";
+import { getUserData } from "@/lib/data/user/index";
 import {
   jobLevelMapper,
   jobModalityMapper,

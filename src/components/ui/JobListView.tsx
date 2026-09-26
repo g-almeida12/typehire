@@ -1,8 +1,8 @@
 "use client";
 
-import { JobResponsePayload } from "@/lib/schemas";
+import { JobResponsePayload } from "@/lib/modules/job/index";
 import { useEffect, useRef, useState } from "react";
-import { getJobsAction } from "@/lib/actions";
+import { getJobsAction } from "@/lib/modules/job/index";
 import { Button } from "../common/Button";
 import { JobCard } from "../common/JobCard";
 import { LoadingSpinner } from "../common/LoadingSpinner";

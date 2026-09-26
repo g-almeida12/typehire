@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useTransition } from "react";
+import { useTransition } from "react";
 import { Dialog, DialogRef } from "../common/Dialog";
-import { deleteCompanyByIdAction } from "@/lib/actions";
+import { deleteCompanyByIdAction } from "@/lib/modules/company/index";
 import { useRouter } from "next/navigation";
-import { APP_URLS } from "@/utils/constants";
 
 interface CompanyDeleteDialogProps {
   companyId: string;

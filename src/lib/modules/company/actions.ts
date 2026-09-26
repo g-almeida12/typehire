@@ -6,13 +6,16 @@ import {
   CompanyCreatePayload,
   CompanyResponsePayload,
   CompanyUpdatePayload,
-} from "@/lib/schemas/company";
-import { companyWithDetailsInclude, mapCompanyEntity } from "../entities";
+} from "@/lib/modules/company/schemas";
+import {
+  companyWithDetailsInclude,
+  mapCompanyEntity,
+} from "@/lib/data/company/index";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
-import { getUserId } from "../data";
+import { getUserId } from "@/lib/data/user/index";
 
 export async function createCompanyAction(
   companyData: CompanyCreatePayload,

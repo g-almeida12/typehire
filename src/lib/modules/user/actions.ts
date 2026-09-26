@@ -1,23 +1,24 @@
 "use server";
 
-import {
-  mapPublicUserEntity,
-  UserEntity,
-  userWithDetailsInclude,
-} from "@/lib/entities";
-import { ServerActionResponse } from "@/utils/types";
-import { authServer } from "@/lib/auth/auth-server";
+import { headers } from "next/headers";
 import {
   UserLoginPayload,
   UserRegisterPayload,
   UserPrivateResponsePayload,
   UserUpdatePayload,
   UserPublicResponsePayload,
-} from "@/lib/schemas";
-import { mapPrivateUserEntity } from "../entities";
+} from "./schemas";
+import {
+  mapPublicUserEntity,
+  UserEntity,
+  userWithDetailsInclude,
+} from "@/lib/data/user/entities";
+import { ServerActionResponse } from "@/utils/types";
+import { authServer } from "@/lib/auth/auth-server";
+
+import { mapPrivateUserEntity } from "@/lib/data/user/entities";
 import { prisma } from "@/database";
-import { headers } from "next/headers";
-import { getUserData, getUserId } from "@/lib/data";
+import { getUserData, getUserId } from "@/lib/data/user/index";
 import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
@@ -120,7 +121,7 @@ export async function signOutAction(): ServerActionResponse<boolean> {
   }
 }
 
-export async function getUserById(
+export async function getUserByIdAction(
   userId: string,
 ): ServerActionResponse<UserPublicResponsePayload> {
   try {
@@ -156,7 +157,7 @@ export async function getUserById(
   }
 }
 
-export async function getUsersByEmailPrefix(
+export async function getUsersByEmailPrefixAction(
   prefix: string,
 ): ServerActionResponse<UserPublicResponsePayload[]> {
   try {
