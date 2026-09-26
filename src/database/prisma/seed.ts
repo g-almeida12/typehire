@@ -4,7 +4,7 @@ async function main() {
   await prisma.job.deleteMany();
   await prisma.companyMember.deleteMany();
   await prisma.company.deleteMany();
-  
+
   await prisma.user.createMany({
     data: [
       {
@@ -106,7 +106,15 @@ Estamos em busca de um **Desenvolvedor FullStack Júnior** para compor nosso tim
 * Ambiente 100% remoto.
 * Mentoria contínua com devs seniores.
         `.trim(),
-        skills: ["ANGULAR", "ARCHITECTURE", "POSTGRESQL", "PYTHON", "FASTAPI", "CSS", "HTML"],
+        skills: [
+          "ANGULAR",
+          "ARCHITECTURE",
+          "POSTGRESQL",
+          "PYTHON",
+          "FASTAPI",
+          "CSS",
+          "HTML",
+        ],
       },
       {
         companyId: company1.id,
@@ -180,6 +188,7 @@ Procuramos um **Analista de Dados Estagiário** para atuar presencialmente em S�
         create: [
           { userId: userJulia.id },
           { userId: "user125" }, // Juliana Costa
+          { userId: user.id },
         ],
       },
       bio: `

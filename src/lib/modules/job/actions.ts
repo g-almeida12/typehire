@@ -2,11 +2,15 @@
 
 import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
-import { JobCreatePayload, JobResponsePayload, JobUpdatePayload } from "./schemas";
+import {
+  JobCreatePayload,
+  JobResponsePayload,
+  JobUpdatePayload,
+} from "./schemas";
 import { jobWithDetailsInclude, mapJobEntity } from "@/lib/data/job/entities";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
-import { cacheLife, cacheTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { getCachedJobById } from "@/lib/data/job/caches";
 
@@ -123,10 +127,6 @@ export async function getJobsAction(
 export async function getJobByIdAction(
   jobId: string,
 ): ServerActionResponse<JobResponsePayload> {
-  "use cache";
-  cacheLife("days");
-  cacheTag(`job-${jobId}`);
-
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Portal de empregos focado em TI com transparência salarial obrigatória e retorno garantido aos candidatos. Encontre vagas para Devs, Designers e Analistas.",
 };
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="pt-br"

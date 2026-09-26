@@ -22,7 +22,7 @@ import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { getCachedUser } from "@/lib/data/user/caches";
-import { cacheLife, cacheTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export async function signUpByEmailAction(
   userData: UserRegisterPayload,
@@ -125,10 +125,6 @@ export async function signOutAction(): ServerActionResponse<boolean> {
 export async function getUserByIdAction(
   userId: string,
 ): ServerActionResponse<UserPublicResponsePayload> {
-  "use cache";
-  cacheLife("days");
-  cacheTag(`user-${userId}`);
-
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);

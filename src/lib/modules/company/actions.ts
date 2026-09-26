@@ -13,7 +13,7 @@ import {
 } from "@/lib/data/company/index";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
-import { cacheLife, cacheTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { getCachedCompanyById } from "@/lib/data/company/caches";
@@ -78,10 +78,6 @@ export async function createCompanyAction(
 export async function getCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<CompanyResponsePayload> {
-  "use cache";
-  cacheLife("weeks");
-  cacheTag(`company-${companyId}`);
-
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);

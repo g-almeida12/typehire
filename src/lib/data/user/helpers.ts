@@ -4,7 +4,7 @@ import { mapPrivateUserEntity } from "./index";
 import { UserPrivateResponsePayload } from "@/lib/modules/user/index";
 import { getCachedUser, getCachedUserId } from "./caches";
 
-export async function getUserData(): Promise<UserPrivateResponsePayload | null> {
+export async function getCurrentUserData(): Promise<UserPrivateResponsePayload | null> {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
@@ -19,7 +19,7 @@ export async function getUserData(): Promise<UserPrivateResponsePayload | null> 
   }
 }
 
-export async function getUserId(): Promise<string | null> {
+export async function getCurrentUserId(): Promise<string | null> {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
