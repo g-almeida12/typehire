@@ -14,7 +14,7 @@ import {
 } from "@/components/icons";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobByIdAction } from "@/lib/modules/job/index";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import {
   jobLevelMapper,
   jobModalityMapper,
@@ -28,7 +28,7 @@ import ReactMarkdown from "react-markdown";
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   const jobId = (await props.params).id;
   const [user, response] = await Promise.all([
-    getUserData(),
+    getCurrentUserData(),
     getJobByIdAction(jobId),
   ]);
 

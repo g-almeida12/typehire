@@ -1,8 +1,8 @@
-import { prisma } from "@/database";
 import { authServer } from "@/lib/auth/auth-server";
 import { headers } from "next/headers";
-import { mapPrivateUserEntity, userWithDetailsInclude } from "./index";
+import { mapPrivateUserEntity } from "./index";
 import { UserPrivateResponsePayload } from "@/lib/modules/user/index";
+import { getCachedUser, getCachedUserId } from "./caches";
 
 export async function getUserData(): Promise<UserPrivateResponsePayload | null> {
   const session = await authServer.api.getSession({
@@ -11,14 +11,12 @@ export async function getUserData(): Promise<UserPrivateResponsePayload | null> 
 
   if (!session) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: userWithDetailsInclude,
-  });
-
-  if (!user) return null;
-
-  return mapPrivateUserEntity(user);
+  const user = await getCachedUser(session.user.id);
+  if (!user) {
+    return null;
+  } else {
+    return mapPrivateUserEntity(user);
+  }
 }
 
 export async function getUserId(): Promise<string | null> {
@@ -28,14 +26,10 @@ export async function getUserId(): Promise<string | null> {
 
   if (!session) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-    },
-  });
-
-  if (!user) return null;
-
-  return user.id;
+  const userId = await getCachedUserId(session.user.id);
+  if (!userId) {
+    return null;
+  } else {
+    return userId;
+  }
 }

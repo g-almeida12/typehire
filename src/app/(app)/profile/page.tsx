@@ -12,7 +12,7 @@ import {
 import { DeleteUserButton } from "@/components/profile/DeleteUserButton";
 import { SignOutUserButton } from "@/components/profile/SignOutUserButton";
 import { UserProfile } from "@/components/common/UserProfile";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { APP_URLS } from "@/utils/constants";
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const user = (await getUserData())!;
+  const user = (await getCurrentUserData())!;
 
   const userSocialMedias = [
     {

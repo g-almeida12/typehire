@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/common/BackButton";
 import { ProfileUpdateForm } from "@/components/profile/ProfileUpdateForm";
 import { Skill } from "@/database/generated/enums";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfileUpdate() {
-  const user = (await getUserData())!;
+  const user = (await getCurrentUserData())!;
 
   return (
-    <main  className="pb-4">
+    <main className="pb-4">
       <div className="size-6 mt-4">
         <BackButton />
       </div>

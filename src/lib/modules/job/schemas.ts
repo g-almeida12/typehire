@@ -1,14 +1,17 @@
 import { z } from "zod";
-import { Skill, JobStatus, JobLevel, JobModality, JobType } from '@/database/generated/enums';
+import {
+  Skill,
+  JobStatus,
+  JobLevel,
+  JobModality,
+  JobType,
+} from "@/database/generated/enums";
 
 const JobBaseSchema = z.object({
   title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
   description: z.string().min(100, "Descrição não pode ser curta demais."),
   fixedSalary: z.number().optional().nullable(),
-  intervalSalary: z
-    .tuple([z.number(), z.number()])
-    .optional()
-    .nullable(),
+  intervalSalary: z.tuple([z.number(), z.number()]).optional().nullable(),
   hourlySalary: z.number().optional().nullable(),
   status: z.enum(JobStatus),
   type: z.enum(JobType),
@@ -70,6 +73,7 @@ export type JobCreatePayload = z.infer<typeof JobCreateSchema>;
 
 export const JobUpdateSchema =
   JobBaseSchema.partial().superRefine(validateJobSchema);
+export type JobUpdatePayload = z.infer<typeof JobUpdateSchema>;
 
 export const JobResponseSchema = JobBaseSchema.extend({
   id: z.string(),

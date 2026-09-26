@@ -2,12 +2,12 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/ui/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobsAction } from "@/lib/modules/job/index";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import { Suspense } from "react";
 
 export default async function HomePage() {
   const [user, jobsResult] = await Promise.all([
-    getUserData(),
+    getCurrentUserData(),
     getJobsAction(1, 10),
   ]);
 

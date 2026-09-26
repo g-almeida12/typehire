@@ -15,13 +15,14 @@ import {
 } from "@/lib/data/user/entities";
 import { ServerActionResponse } from "@/utils/types";
 import { authServer } from "@/lib/auth/auth-server";
-
 import { mapPrivateUserEntity } from "@/lib/data/user/entities";
 import { prisma } from "@/database";
-import { getUserData, getUserId } from "@/lib/data/user/index";
+import { getCurrentUserData, getCurrentUserId } from "@/lib/data/user/index";
 import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
+import { getCachedUser } from "@/lib/data/user/caches";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 
 export async function signUpByEmailAction(
   userData: UserRegisterPayload,
@@ -124,15 +125,16 @@ export async function signOutAction(): ServerActionResponse<boolean> {
 export async function getUserByIdAction(
   userId: string,
 ): ServerActionResponse<UserPublicResponsePayload> {
+  "use cache";
+  cacheLife("days");
+  cacheTag(`user-${userId}`);
+
   try {
-    if (!getUserId()) {
+    if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: userWithDetailsInclude,
-    });
+    const user = await getCachedUser(userId);
 
     if (!user) {
       throw new AppError("Usuário não encontrado.", 404);
@@ -161,7 +163,7 @@ export async function getUsersByEmailPrefixAction(
   prefix: string,
 ): ServerActionResponse<UserPublicResponsePayload[]> {
   try {
-    if (!getUserId()) {
+    if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
@@ -203,7 +205,7 @@ export async function updateUserAction(
   newUserData: UserUpdatePayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
-    const user = await getUserData();
+    const user = await getCurrentUserData();
     if (!user) {
       throw new AppError("Usuário não encontrado.", 404);
     }
@@ -215,6 +217,7 @@ export async function updateUserAction(
       include: userWithDetailsInclude,
     });
 
+    updateTag(`user-${user.id}`);
     return {
       success: true,
       status: 200,
@@ -253,7 +256,7 @@ export async function updateUserAction(
 
 export async function deleteUserAction(): ServerActionResponse<null> {
   try {
-    const user = await getUserData();
+    const user = await getCurrentUserData();
     if (!user) {
       throw new AppError("Usuário não encontrado.", 404);
     }
@@ -262,6 +265,7 @@ export async function deleteUserAction(): ServerActionResponse<null> {
       where: { id: user.id },
     });
 
+    updateTag(`user-${user.id}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
     if (err instanceof AppError) {

@@ -15,13 +15,14 @@ import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
-import { getUserId } from "@/lib/data/user/index";
+import { getCurrentUserId } from "@/lib/data/user/index";
+import { getCachedCompanyById } from "@/lib/data/company/caches";
 
 export async function createCompanyAction(
   companyData: CompanyCreatePayload,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
-    const userId = await getUserId();
+    const userId = await getCurrentUserId();
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
@@ -77,15 +78,16 @@ export async function createCompanyAction(
 export async function getCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<CompanyResponsePayload> {
+  "use cache";
+  cacheLife("weeks");
+  cacheTag(`company-${companyId}`);
+
   try {
-    if (!getUserId()) {
+    if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const company = await prisma.company.findUnique({
-      where: { id: companyId },
-      include: companyWithDetailsInclude,
-    });
+    const company = await getCachedCompanyById(companyId);
     if (!company) {
       throw new AppError("Empresa não encontrada", 404);
     }
@@ -114,7 +116,7 @@ export async function updateCompanyByIdAction(
   newData: CompanyUpdatePayload,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
-    const userId = await getUserId();
+    const userId = await getCurrentUserId();
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
@@ -125,7 +127,7 @@ export async function updateCompanyByIdAction(
 
     const updatedCompany = await prisma.$transaction(async (tx) => {
       // Verify if the user has permission to update the company
-      const company = await prisma.company.findUnique({
+      const company = await tx.company.findUnique({
         where: { id: companyId },
         select: { createdBy: true },
       });
@@ -234,7 +236,7 @@ export async function deleteCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<null> {
   try {
-    const userId = await getUserId();
+    const userId = await getCurrentUserId();
     if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }

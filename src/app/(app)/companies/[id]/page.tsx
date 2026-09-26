@@ -5,7 +5,7 @@ import { UserProfile } from "@/components/common/UserProfile";
 import { Navbar } from "@/components/ui/Navbar";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
 import { InfoIcon } from "@/components/icons";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -17,7 +17,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
 
   const [user, response] = await Promise.all([
-    getUserData(),
+    getCurrentUserData(),
     getCompanyByIdAction(companyId),
   ]);
 

@@ -1,10 +1,10 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyForm } from "@/components/companies/CompanyForm";
-import { getUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
 export default async function CompanyCreatePage() {
-  const user = (await getUserData())!
+  const user = (await getCurrentUserData())!;
 
   return (
     <main className="pb-4">
