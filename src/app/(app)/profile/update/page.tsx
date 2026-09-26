@@ -27,6 +27,7 @@ export default async function ProfileUpdate() {
         <ProfileUpdateForm
           user={user}
           skills={Object.values(Skill).toSorted()}
+          key={user.id}
         />
       </section>
     </main>

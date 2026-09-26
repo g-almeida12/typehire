@@ -24,7 +24,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  await new Promise(resolve => setTimeout(resolve, 5_000))
   const user = (await getUserData())!;
 
   const userSocialMedias = [

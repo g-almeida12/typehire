@@ -37,7 +37,7 @@ export default async function CompanyUpdate(
         <CompanyForm
           company={company}
           currentUserEmail={user!.email}
-          key={company?.id ?? `new-${Date.now()}`}
+          key={company?.id}
         />
       </section>
     </main>

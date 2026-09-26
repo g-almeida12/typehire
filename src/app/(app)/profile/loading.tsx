@@ -34,7 +34,7 @@ export default function ProfileLoading() {
 
       {/* Bio */}
       {Array.from({ length: 2 }).map((_, idx) => (
-        <div className="flex flex-col gap-1 mb-2" key={`description-${idx}`}>
+        <div className="flex flex-col gap-1 mb-2 mt-4" key={`description-${idx}`}>
           <span className="block w-full h-5 rounded-sm bg-background-600 animate-pulse"></span>
           <span className="block w-[80%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
           <span className="block w-[95%] h-5 rounded-sm bg-background-600 animate-pulse"></span>

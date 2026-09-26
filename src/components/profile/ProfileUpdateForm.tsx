@@ -42,29 +42,12 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
     setError,
     handleSubmit,
     register,
-    reset,
   } = useForm<UserUpdatePayload>({
     resolver: zodResolver(UserUpdateSchema),
   });
   const [selectedSkills, setSelectedSkills] = useState<Skill[]>(user.skills);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-
-  useEffect(() => {
-    if (user) {
-      reset({
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        location: user.location,
-        bio: user.bio,
-        githubUrl: user.githubUrl,
-        linkedinUrl: user.linkedinUrl,
-        portfolioUrl: user.portfolioUrl,
-        cpf: user.cpf,
-      });
-    }
-  }, [user, reset]);
 
   const skillsInfo = skills.map((s) => ({
     text: skillMapper[s],

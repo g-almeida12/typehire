@@ -52,6 +52,14 @@ export const UserRegisterSchema = UserPrivateResponseSchema.pick({
 });
 export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
 
+export const UserCompleteCPFSchema = z.object({
+  cpf: z
+    .string()
+    .transform((val) => val.replace(/\D+/g, ""))
+    .refine((val) => val.length === 11, "CPF inválido."),
+});
+export type UserCompleteCPFPayload = z.infer<typeof UserCompleteCPFSchema>;
+
 export const UserLoginSchema = z.object({
   email: z.email("Email inválido."),
   password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
