@@ -1,5 +1,5 @@
 import { BackButton } from "@/components/common/BackButton";
-import { CompanyForm } from "@/components/companies/CompanyForm";
+import { CompanyForm } from "@/components/company/CompanyForm";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";

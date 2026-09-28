@@ -4,36 +4,41 @@ import { JobCard } from "@/components/common/JobCard";
 import { UserProfile } from "@/components/common/UserProfile";
 import { Navbar } from "@/components/ui/Navbar";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
-import { InfoIcon } from "@/components/icons";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/common/Button";
 import { APP_URLS } from "@/utils/constants";
-import { CompanyActionsWrapper } from "@/components/companies/CompanyActionsWrapper";
+import { CompanyActionsWrapper } from "@/components/company/CompanyActionsWrapper";
+import { InfoTag } from "@/components/common/InfoTag";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
 
-  const [user, response] = await Promise.all([
+  const [user, companyResponse] = await Promise.all([
     getCurrentUserData(),
     getCompanyByIdAction(companyId),
   ]);
 
-  if (!response.success) {
-    if (response.status === 404) {
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) {
       notFound();
     } else {
       throw new Error();
     }
   }
 
-  const company = response.data;
+  const company = companyResponse.data;
   const companyCreator = company.members.filter(
     (m) => m.id === company.createdBy,
   )[0];
-  const isUserCreator = companyCreator.id === user?.id;
+  const USER_ROLE =
+    companyCreator.id === user!.id
+      ? "CREATOR"
+      : company.members.map((m) => m.id).includes(user!.id)
+        ? "MEMBER"
+        : "USER";
 
   return (
     <>
@@ -43,7 +48,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
           <div className="size-6">
             <BackButton />
           </div>
-          {isUserCreator && (
+          {USER_ROLE === "CREATOR" && (
             <div className="size-6">
               <CompanyActionsWrapper companyId={companyId} />
             </div>
@@ -52,11 +57,14 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
 
         {/* Company info */}
         <section className="mt-4">
-          {isUserCreator && (
-            <span className="w-max flex flex-row items-center gap-2 px-2 py-1 mb-2 rounded-md bg-accent-400">
-              <InfoIcon size={18} />
-              <span className="text-sm font-medium">Sua empresa</span>
-            </span>
+          {USER_ROLE !== "USER" && (
+            <InfoTag
+              label={
+                USER_ROLE === "CREATOR"
+                  ? "Sua empresa"
+                  : "Associado nessa empresa"
+              }
+            />
           )}
           <CompanyProfile company={company} type="readonly" />
 
@@ -73,7 +81,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
           <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
             {company.jobs.length === 0 ? (
               <p className="text-center text-sm text-background-300">
-                {isUserCreator
+                {USER_ROLE === "CREATOR"
                   ? "Que tal postar sua primeira vaga?"
                   : "Essa empresa não postou nenhuma vaga ainda."}
               </p>
@@ -86,7 +94,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
             )}
           </ul>
 
-          {isUserCreator && (
+          {USER_ROLE !== "CREATOR" && (
             <div className="mt-4">
               <Button text="Criar nova vaga" href={APP_URLS.jobCreate} />
             </div>
@@ -96,15 +104,15 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
         {/* Memberships */}
         <section className="mt-8">
           <h2 className="mb-2 text-xl font-medium">
-            {isUserCreator ? "Sua equipe" : "Nossa equipe"}
+            {USER_ROLE !== "USER" ? "Sua equipe" : "Nossa equipe"}
           </h2>
 
           <h3 className="mb-2 font-medium text-background-300">
-            Criador {isUserCreator && "(você)"}
+            Criador {USER_ROLE === "CREATOR" && "(você)"}
           </h3>
           <UserProfile
             user={companyCreator}
-            type={isUserCreator ? "readonly" : "link"}
+            type={USER_ROLE === "CREATOR" ? "readonly" : "link"}
           />
 
           <h3 className="mb-2 mt-4 font-medium text-background-300">
@@ -120,7 +128,11 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
                 .filter((m) => m.id !== company.createdBy)
                 .map((m, idx) => (
                   <li key={`user-${idx}`}>
-                    <UserProfile user={m} type="link" />
+                    <UserProfile
+                      user={m}
+                      type="link"
+                      isCurrentUserProfile={m.id === user!.id}
+                    />
                   </li>
                 ))
             )}

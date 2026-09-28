@@ -6,9 +6,14 @@ import { APP_URLS } from "@/utils/constants";
 interface UserProfileProps {
   user: Pick<UserPublicResponsePayload, "name" | "email" | "id">;
   type: "readonly" | "edit" | "link" | "list";
+  isCurrentUserProfile?: boolean;
 }
 
-export function UserProfile({ user, type }: UserProfileProps) {
+export function UserProfile({
+  user,
+  type,
+  isCurrentUserProfile = false,
+}: UserProfileProps) {
   const userAvatar =
     user.name.split(" ").length >= 2
       ? user.name.split(" ")[0][0] + user.name.split(" ")[1][0]
@@ -37,7 +42,7 @@ export function UserProfile({ user, type }: UserProfileProps) {
           <p
             className={`font-medium truncate text-bg-1000 ${type === "list" ? "text-base" : "text-lg"}`}
           >
-            {user.name}
+            {user.name} {isCurrentUserProfile && "(Você)"}
           </p>
           <p
             className={`-mt-px text-sm italic truncate ${type === "list" && "font-normal text-back"}`}

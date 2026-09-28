@@ -24,6 +24,8 @@ import {
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import { InfoTag } from "@/components/common/InfoTag";
+import { JobActionsWrapper } from "@/components/job/JobActionsWrapper";
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   const jobId = (await props.params).id;
@@ -42,12 +44,20 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   }
 
   const job = response.data;
+  const isUserCreator = job.creator.id === user?.id;
   return (
     <>
       <Navbar />
       <main className="pb-4">
-        <div className="size-6 mt-4">
-          <BackButton />
+        <div className="w-full flex flex-row items-center justify-between mt-4">
+          <div className="size-6">
+            <BackButton />
+          </div>
+          {isUserCreator && (
+            <div className="size-6">
+              <JobActionsWrapper jobId={jobId} />
+            </div>
+          )}
         </div>
 
         {/* Job and company main info */}
@@ -55,6 +65,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           <CompanyProfile company={job.company} type="link" />
 
           <div className="mt-10">
+            {isUserCreator && <InfoTag label="Criada por você" />}
             <h1 className="text-2xl font-semibold">{job.title}</h1>
 
             {/* Job level and modality tags */}
@@ -127,7 +138,10 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           </div>
 
           <div className="mt-6">
-            <Button text="Candidate-se agora" />
+            <Button
+              text={isUserCreator ? "Ação bloqueada" : "Candidate-se agora"}
+              disabled={isUserCreator}
+            />
           </div>
         </section>
 

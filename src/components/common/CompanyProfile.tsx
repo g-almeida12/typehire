@@ -5,14 +5,26 @@ import { CompanyResponsePayload } from "@/lib/modules/company/index";
 import { companySizeMapper } from "@/utils/mappers";
 
 interface CompanyProfileProps {
-  company: Pick<
-    CompanyResponsePayload,
-    "image" | "name" | "website" | "size" | "id"
-  > & { createdBy?: CompanyResponsePayload["createdBy"] };
+  company: Pick<CompanyResponsePayload, "image" | "name" | "id"> & {
+    website?: CompanyResponsePayload["website"];
+    size?: CompanyResponsePayload["size"];
+  };
   type: "readonly" | "edit" | "link";
+  showCompanySize?: boolean;
+  showUserMembership?: "CREATOR" | "MEMBER";
 }
 
-export async function CompanyProfile({ company, type }: CompanyProfileProps) {
+const USER_MEMBERSHIP_MAP = {
+  CREATOR: "Criador",
+  MEMBER: "Associado",
+};
+
+export async function CompanyProfile({
+  company,
+  type,
+  showCompanySize = true,
+  showUserMembership = undefined,
+}: CompanyProfileProps) {
   const companyAvatar =
     company.name.split(" ").length >= 2
       ? company.name.split(" ")[0][0] + company.name.split(" ")[1][0]
@@ -39,28 +51,37 @@ export async function CompanyProfile({ company, type }: CompanyProfileProps) {
         {/* Company name and website */}
         <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0">
           <p className="font-medium truncate">
-            {company.name} ({companySizeMapper[company.size]})
+            {company.name} (
+            {showCompanySize && companySizeMapper[company.size!]})
           </p>
+
           <p className="-mt-px text-sm text-background-300 italic truncate">
-            <a
-              target="_blank"
-              href={
-                company.website
-                  ? company.website.startsWith("http")
-                    ? company.website
-                    : `https://${company.website}`
-                  : ""
-              }
-            >
-              {company.website}
-            </a>
+            {showUserMembership ? (
+              USER_MEMBERSHIP_MAP[showUserMembership]
+            ) : (
+              <a
+                target="_blank"
+                href={
+                  company.website
+                    ? company.website.startsWith("http")
+                      ? company.website
+                      : `https://${company.website}`
+                    : ""
+                }
+              >
+                {company.website}
+              </a>
+            )}
           </p>
         </div>
       </div>
 
       {/* Action buttons */}
       {type === "edit" ? (
-        <Link href={APP_URLS.companyUpdate(company.id)} className="shrink-0 mt-1">
+        <Link
+          href={APP_URLS.companyUpdate(company.id)}
+          className="shrink-0 mt-1"
+        >
           <EditIcon size={20} className="shrink-0 text-background-300" />
         </Link>
       ) : (
