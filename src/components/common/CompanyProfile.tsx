@@ -51,8 +51,8 @@ export async function CompanyProfile({
         {/* Company name and website */}
         <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0">
           <p className="font-medium truncate">
-            {company.name} (
-            {showCompanySize && companySizeMapper[company.size!]})
+            {company.name}
+            {showCompanySize && `(${companySizeMapper[company.size!]})`}
           </p>
 
           <p className="-mt-px text-sm text-background-300 italic truncate">
