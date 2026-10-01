@@ -22,8 +22,8 @@ import {
   IdCardIcon,
   PhoneIcon,
   GlobeIcon,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+} from "@/components/icons";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
 import { skillMapper } from "@/utils/mappers";

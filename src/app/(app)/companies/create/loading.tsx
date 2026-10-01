@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon } from "@/components/icons";
 
 export default function CompanyCreateLoading() {
   return (

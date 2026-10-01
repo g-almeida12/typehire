@@ -16,6 +16,7 @@ import { getCurrentUserData } from "@/lib/data/user/index";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { APP_URLS } from "@/utils/constants";
+import { CompanyProfile } from "@/components/common/CompanyProfile";
 
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",
@@ -154,13 +155,14 @@ export default async function ProfilePage() {
           <ul className="flex flex-col gap-1">
             {user.companies.map((c) => (
               <li className="flex flex-row gap-2" key={c.id}>
-                <div className="shrink-0 size-10 bg-background-100 rounded-md"></div>
-                <div className="flex flex-col gap-0">
-                  <p className="font-medium">{c.name}</p>
-                  <p className="text-background-300 text-sm">
-                    {c.createdBy === user.id ? "Criador" : "Associado"}
-                  </p>
-                </div>
+                <CompanyProfile
+                  company={c}
+                  type="link"
+                  showCompanySize={false}
+                  showUserMembership={
+                    c.createdBy === user.id ? "CREATOR" : "MEMBER"
+                  }
+                />
               </li>
             ))}
           </ul>
