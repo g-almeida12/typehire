@@ -155,7 +155,7 @@ export const UsersDropdownSelect = forwardRef<
           <div className="flex flex-row gap-2 w-full">
             <MailIcon
               size={24}
-              className={`shrink-0 ${isOpen ? "text-background-800" : "text-background-400"}`}
+              className={`shrink-0 text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`}
             />
             <input
               {...props}

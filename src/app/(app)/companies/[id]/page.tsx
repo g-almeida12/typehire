@@ -94,9 +94,12 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
             )}
           </ul>
 
-          {USER_ROLE !== "CREATOR" && (
+          {USER_ROLE !== "USER" && (
             <div className="mt-4">
-              <Button text="Criar nova vaga" href={APP_URLS.jobCreate} />
+              <Button
+                text="Criar nova vaga"
+                href={`${APP_URLS.jobCreate}?companyId=${company.id}`}
+              />
             </div>
           )}
         </section>

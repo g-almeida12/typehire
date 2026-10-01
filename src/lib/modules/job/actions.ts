@@ -3,7 +3,7 @@
 import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
 import {
-  JobCreatePayload,
+  JobServerCreatePayload,
   JobResponsePayload,
   JobUpdatePayload,
 } from "./schemas";
@@ -15,16 +15,17 @@ import { getCurrentUserId } from "@/lib/data/user/index";
 import { getCachedJobById } from "@/lib/data/job/caches";
 
 export async function createJobAction(
-  jobData: JobCreatePayload,
+  jobData: JobServerCreatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    if (!(await getCurrentUserId())) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
     const result = await prisma.$transaction(async (tx) => {
       const isMember = await tx.companyMember.findFirst({
-        where: { userId: jobData.createdBy, companyId: jobData.companyId },
+        where: { userId, companyId: jobData.companyId },
       });
 
       if (!isMember) {
@@ -41,6 +42,8 @@ export async function createJobAction(
           minSalary: jobData.intervalSalary?.at(0) ?? null,
           maxSalary: jobData.intervalSalary?.at(1) ?? null,
           status: "ABERTA",
+          createdBy: userId
+
         },
         include: jobWithDetailsInclude,
       });

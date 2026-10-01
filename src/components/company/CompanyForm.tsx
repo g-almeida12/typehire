@@ -137,7 +137,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             error={errors.name?.message}
             disabled={isLoading}
           />
-          {company && (
+          {!company && (
             <Input
               {...register("cnpj")}
               Icon={BuildingIcon}

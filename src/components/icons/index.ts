@@ -34,6 +34,8 @@ export {
   Trash2 as TrashIcon,
   Info as InfoIcon,
   FileText as FileIcon,
+  DollarSign as DollarIcon,
+  Clock as ClockIcon
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

@@ -9,8 +9,8 @@ import {
 import { forwardRef, InputHTMLAttributes, useState } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
   Icon: IconKey;
+  label?: string;
   error?: string;
   helperText?: string;
   showVisibilityToggle?: boolean;
@@ -19,8 +19,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      label,
       Icon,
+      label = undefined,
       error,
       helperText,
       showVisibilityToggle,
@@ -34,12 +34,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="group w-full flex flex-col items-start gap-1">
-        <label
+        {label && <label
           htmlFor={props.id}
           className="w-full text-left text-sm text-background-300"
         >
           {label}
-        </label>
+        </label>}
         <div className="w-full flex flex-row gap-2 items-center justify-between border-2 border-background-800 px-2 py-1 rounded-md disabled:bg-background-300 disabled:text-background-800 disabled:border-background-300 disabled:hover:border-background-300 bg-background-800 hover:border-background-300 focus-within:bg-background-300 focus-within:text-background-800 focus-within:border-background-300  transition-all">
           <div className="flex flex-row gap-2 w-full">
             <Icon

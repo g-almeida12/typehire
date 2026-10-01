@@ -52,7 +52,7 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
   const skillsInfo = skills.map((s) => ({
     text: skillMapper[s],
     value: s,
-    isInUserSkills: selectedSkills.includes(s) || user.skills.includes(s),
+    isSelected: selectedSkills.includes(s) || user.skills.includes(s),
   }));
 
   const handleUserUpdate = async (data: UserUpdatePayload) => {

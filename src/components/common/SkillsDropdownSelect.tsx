@@ -12,7 +12,7 @@ import {
 
 interface SkillsDropdownSelectProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  skills: { text: string; value: Skill; isInUserSkills: boolean }[];
+  skills: { text: string; value: Skill; isSelected: boolean }[];
   onSkillClick: (skill: Skill) => void;
   error?: string;
 }
@@ -86,7 +86,7 @@ export const SkillsDropdownSelect = forwardRef<
         e.preventDefault();
         if (
           filteredSkills[selectedIndex] &&
-          !filteredSkills[selectedIndex].isInUserSkills
+          !filteredSkills[selectedIndex].isSelected
         ) {
           handleSkillClick(filteredSkills[selectedIndex].value);
           if (inputInternalRef.current) {
@@ -118,7 +118,7 @@ export const SkillsDropdownSelect = forwardRef<
         <div className="flex flex-row gap-2 w-full">
           <BookmarkIcon
             size={24}
-            className={`shrink-0 ${isOpen ? "text-background-800" : "text-background-400"}`}
+            className={`shrink-0 text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`}
           />
           <input
             {...props}
@@ -166,7 +166,7 @@ export const SkillsDropdownSelect = forwardRef<
           ) : (
             <ul>
               {filteredSkills.map((s, idx) => {
-                const styles = s.isInUserSkills
+                const styles = s.isSelected
                   ? idx === selectedIndex
                     ? "bg-green-600 text-green-950"
                     : "bg-green-500 text-green-950"
@@ -178,7 +178,7 @@ export const SkillsDropdownSelect = forwardRef<
                   <li
                     className={`w-full ${styles} cursor-pointer`}
                     onClick={() => {
-                      if (!s.isInUserSkills) {
+                      if (!s.isSelected) {
                         handleSkillClick(s.value);
                       }
                     }}

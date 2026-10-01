@@ -17,7 +17,11 @@ const JobBaseSchema = z.object({
   type: z.enum(JobType),
   level: z.enum(JobLevel),
   modality: z.enum(JobModality),
-  location: z.string().optional().nullable(),
+  location: z
+    .string()
+    .min(5, "Insira a localização no formato 'cidade, UF'")
+    .optional()
+    .nullable(),
   skills: z.array(z.enum(Skill)),
 });
 
@@ -27,7 +31,7 @@ function validateJobSchema(
 ) {
   if (!data) return;
 
-  // Ensure that a salary is provided, if isn't a freelancer or internship job
+  // Ensure that when salary is provided, if isn't a freelancer or internship job
   if (
     data.type !== "FREELANCER" &&
     data.level !== "ESTAGIÁRIO" &&
@@ -37,6 +41,20 @@ function validateJobSchema(
       code: "custom",
       path: ["root"],
       message: "Um tipo de salário deve ser fornecido.",
+    });
+  }
+
+  // Ensure that salary is a positive value
+  if (
+    (data.fixedSalary && data.fixedSalary < 0) ||
+    (data.hourlySalary && data.hourlySalary < 0) ||
+    (data.intervalSalary &&
+      (data.intervalSalary[0] < 0 || data.intervalSalary[1] < 0))
+  ) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["root"],
+      message: "Valores para salários devem ser positivos.",
     });
   }
 
@@ -53,6 +71,16 @@ function validateJobSchema(
     });
   }
 
+  // Ensure that when interval salary is provided, the minimun salary is
+  // less than the maximum salary
+  if (data.intervalSalary && data.intervalSalary[0] > data.intervalSalary[1]) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["intervalSalary"],
+      message: "Salário mínimo não pode ser maior que o salário máximo.",
+    });
+  }
+
   // Ensure that a remote job does not has a location
   if (data.modality === "REMOTO" && data.location) {
     ctx.addIssue({
@@ -63,13 +91,17 @@ function validateJobSchema(
   }
 }
 
-export const JobCreateSchema = JobBaseSchema.omit({ status: true })
+export const JobClientCreateSchema = JobBaseSchema.omit({
+  status: true,
+}).superRefine(validateJobSchema);
+export type JobClientCreatePayload = z.infer<typeof JobClientCreateSchema>;
+
+export const JobServerCreateSchema = JobBaseSchema.omit({ status: true })
   .extend({
     companyId: z.string(),
-    createdBy: z.string(),
   })
   .superRefine(validateJobSchema);
-export type JobCreatePayload = z.infer<typeof JobCreateSchema>;
+export type JobServerCreatePayload = z.infer<typeof JobServerCreateSchema>;
 
 export const JobUpdateSchema =
   JobBaseSchema.partial().superRefine(validateJobSchema);
