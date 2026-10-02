@@ -136,13 +136,19 @@ export default function RegisterPage() {
                 className="text-sm text-background-300 text-left"
               >
                 Concordo que li e aceito os{" "}
-                <a className="font-medium text-accent-100 cursor-pointer">
+                <Link
+                  href={APP_URLS.conditions}
+                  className="font-medium text-accent-100 cursor-pointer"
+                >
                   Termos de Condições
-                </a>{" "}
+                </Link>{" "}
                 e a{" "}
-                <a className="font-medium text-accent-100 cursor-pointer">
+                <Link
+                  href={APP_URLS.privacy}
+                  className="font-medium text-accent-100 cursor-pointer"
+                >
                   Política de Privacidade
-                </a>
+                </Link>
                 .
               </label>
             </div>

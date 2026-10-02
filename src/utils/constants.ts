@@ -1,5 +1,7 @@
 export const APP_URLS = {
   root: "/",
+  privacy: "/privacy",
+  conditions: "/conditions",
   register: "/register",
   login: "/login",
   home: "/",
