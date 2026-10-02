@@ -1,4 +1,9 @@
 import { ArrowLeftIcon } from "@/components/icons";
+import {
+  SkeletonInput,
+  SkeletonText,
+  SkeletonUserProfile,
+} from "@/components/skeletons";
 
 export default function CompanyUpdateLoading() {
   return (
@@ -6,34 +11,44 @@ export default function CompanyUpdateLoading() {
       <ArrowLeftIcon className="mt-4 animate-pulse" />
 
       {/* Title */}
-      <span className="block w-80 h-6 mb-6 mt-8 rounded-md bg-background-200 animate-pulse"></span>
+      <SkeletonText customClassName="w-80 h-6 mt-8 rounded-md bg-background-200" />
 
       {/* Form */}
       <div className="mt-6">
-        <span className="block w-60 h-5 mb-6 rounded-md bg-background-200 animate-pulse"></span>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8">
           {/* Company base info */}
-          {Array.from({ length: 4 }).map((_, idx) => (
-            <div className="flex flex-col gap-1" key={`personal-input-${idx}`}>
-              <span className="block w-40 h-3 rounded-md bg-background-400 animate-pulse"></span>
-              <div className="block w-full h-8 rounded-md bg-background-600 animate-pulse"></div>
+          <div>
+            <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
+
+            <div className="flex flex-col gap-2 mb-2">
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <SkeletonInput variant="input" key={`input-${idx}`} />
+              ))}
             </div>
-          ))}
-          <div className="flex flex-col gap-1">
-            <span className="block w-40 h-3 rounded-md bg-background-400 animate-pulse"></span>
-            <div className="block w-full h-30 rounded-md bg-background-600 animate-pulse"></div>
+            <SkeletonInput variant="textarea" />
           </div>
 
           {/* Memberships */}
-          <span className="block w-60 h-5 mt-8 rounded-md bg-background-200 animate-pulse"></span>
-          <div className="flex flex-col gap-1 mb-2">
-            <span className="block w-full h-5 rounded-sm bg-background-600 animate-pulse"></span>
-            <span className="block w-[97%] h-5 rounded-sm bg-background-600 animate-pulse"></span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="block w-40 h-3 rounded-md bg-background-400 animate-pulse"></span>
-            <div className="block w-full h-8 rounded-md bg-background-600 animate-pulse"></div>
+          <div>
+            <SkeletonText customClassName="w-60 h-5 mb-3 rounded-md bg-background-200" />
+            <SkeletonText customClassName="w-full h-4 mb-1 rounded-sm bg-background-200" />
+            <SkeletonText customClassName="w-40 h-4 mb-5 rounded-sm bg-background-200" />
+  
+            <SkeletonInput variant="input" />
+            <ul className="flex flex-row flex-wrap gap-0 mt-4 rounded-md bg-background-700">
+              {Array.from({ length: 2 }).map((_, idx) => (
+                <li
+                  className="w-full rounded-sm px-2 py-1 bg-background-700"
+                  key={`user-${idx}`}
+                >
+                  {idx >= 1 && (
+                    <hr className="mb-2 mx-2 text-background-500" />
+                  )}
+  
+                  <SkeletonUserProfile />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

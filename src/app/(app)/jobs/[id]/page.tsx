@@ -27,7 +27,8 @@ import ReactMarkdown from "react-markdown";
 import { InfoTag } from "@/components/common/InfoTag";
 import { JobActionsWrapper } from "@/components/job/JobActionsWrapper";
 
-export default async function JobPage(props: PageProps<"/jobs/[id]">) {
+export default async function JobPage(props: PageProps<"/jobs/[id]">)
+{
   const jobId = (await props.params).id;
   const [user, response] = await Promise.all([
     getCurrentUserData(),

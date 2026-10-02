@@ -15,7 +15,6 @@ import { InfoTag } from "@/components/common/InfoTag";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
-
   const [user, companyResponse] = await Promise.all([
     getCurrentUserData(),
     getCompanyByIdAction(companyId),
