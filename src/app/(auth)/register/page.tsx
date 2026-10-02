@@ -97,6 +97,8 @@ export default function RegisterPage() {
             placeholder="exemplo@gmail.com"
             error={errors.email?.message}
             disabled={isLoading}
+            type="email"
+            inputMode="email"
           />
           <Input
             {...register("cpf")}
@@ -105,6 +107,8 @@ export default function RegisterPage() {
             placeholder="123.456.789-00"
             error={errors.cpf?.message}
             disabled={isLoading}
+            type="number"
+            inputMode="numeric"
           />
           <Input
             {...register("password")}

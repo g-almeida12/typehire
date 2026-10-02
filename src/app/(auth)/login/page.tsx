@@ -75,6 +75,8 @@ export default function LoginPage() {
         <div className="flex flex-col gap-2">
           <Input
             {...register("email")}
+            type="email"
+            inputMode="email"
             label="Email"
             Icon={MailIcon}
             placeholder="exemplo@gmail.com"
