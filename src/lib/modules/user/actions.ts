@@ -201,19 +201,19 @@ export async function updateUserAction(
   newUserData: UserUpdatePayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
-    const user = await getCurrentUserData();
-    if (!user) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não encontrado.", 404);
     }
 
     const { companies, ...data } = newUserData;
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { id: userId },
       data,
       include: userWithDetailsInclude,
     });
 
-    updateTag(`user-${user.id}`);
+    updateTag(`user-${userId}`);
     return {
       success: true,
       status: 200,
@@ -252,16 +252,16 @@ export async function updateUserAction(
 
 export async function deleteUserAction(): ServerActionResponse<null> {
   try {
-    const user = await getCurrentUserData();
-    if (!user) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não encontrado.", 404);
     }
 
     await prisma.user.delete({
-      where: { id: user.id },
+      where: { id: userId },
     });
 
-    updateTag(`user-${user.id}`);
+    updateTag(`user-${userId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
     if (err instanceof AppError) {

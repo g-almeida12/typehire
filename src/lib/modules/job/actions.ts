@@ -26,6 +26,7 @@ export async function createJobAction(
     const result = await prisma.$transaction(async (tx) => {
       const isMember = await tx.companyMember.findFirst({
         where: { userId, companyId: jobData.companyId },
+        select: { userId: true },
       });
 
       if (!isMember) {
@@ -42,8 +43,7 @@ export async function createJobAction(
           minSalary: jobData.intervalSalary?.at(0) ?? null,
           maxSalary: jobData.intervalSalary?.at(1) ?? null,
           status: "ABERTA",
-          createdBy: userId
-
+          createdBy: userId,
         },
         include: jobWithDetailsInclude,
       });

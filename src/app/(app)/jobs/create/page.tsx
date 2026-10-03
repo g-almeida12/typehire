@@ -6,9 +6,7 @@ import { getCompanyByIdAction } from "@/lib/modules/company";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export default async function CompanyCreatePage(
-  props: PageProps<"/jobs/create">,
-) {
+export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
   const companyId = (await props.searchParams).companyId as string;
   const companyResponse = await getCompanyByIdAction(companyId);
 
@@ -48,6 +46,28 @@ export default async function CompanyCreatePage(
   );
 }
 
-export const metadata: Metadata = {
-  title: "Criar uma nova empresa | Typehire",
-};
+export async function generateMetadata(
+  props: PageProps<"/jobs/create">,
+): Promise<Metadata> {
+  try {
+    const companyId = (await props.searchParams).companyId as string;
+    const companyResponse = await getCompanyByIdAction(companyId);
+
+    if (!companyResponse.success) {
+      return {
+        title: "Empresa não encontrada | TypeHire",
+        description:
+          "A empresa para criar a vaga pode ter sido desligada ou não existe.",
+      };
+    }
+
+    return {
+      title: `Criar vaga na empresa ${companyResponse.data.name} | TypeHire`,
+      description: "Crie uma nova vaga para sua empresa.",
+    };
+  } catch (_err) {
+    return {
+      title: "TypeHire - Portal de Vagas",
+    };
+  }
+}
