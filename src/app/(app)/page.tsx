@@ -8,7 +8,7 @@ import { Suspense } from "react";
 export default async function HomePage() {
   const [user, jobsResult] = await Promise.all([
     getCurrentUserData(),
-    getJobsAction(1, 10),
+    getJobsAction({}, 1, 10),
   ]);
 
   const isError = !jobsResult.success;
@@ -42,6 +42,7 @@ export default async function HomePage() {
               <JobListView
                 initialJobs={jobs}
                 initialHasMore={hasMoreJobs}
+                filter={{}}
                 key={jobs.map((j) => j.id).join(",")}
               />
             </Suspense>

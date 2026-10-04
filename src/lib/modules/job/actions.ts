@@ -6,6 +6,7 @@ import {
   JobServerCreatePayload,
   JobResponsePayload,
   JobUpdatePayload,
+  JobFilterPayload,
 } from "./schemas";
 import { jobWithDetailsInclude, mapJobEntity } from "@/lib/data/job/entities";
 import { AppError } from "@/utils/errors/app-error";
@@ -71,6 +72,7 @@ export async function createJobAction(
 }
 
 export async function getJobsAction(
+  filter: JobFilterPayload,
   page: number = 1,
   pageSize: number = 10,
 ): ServerActionResponse<{
@@ -83,6 +85,11 @@ export async function getJobsAction(
     }
 
     const jobs = await prisma.job.findMany({
+      where: {
+        ...filter,
+        title: filter.title ? { startsWith: filter.title } : undefined,
+        skills: filter.skills ? { hasEvery: filter.skills } : undefined,
+      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: {

@@ -91,6 +91,15 @@ function validateJobSchema(
   }
 }
 
+export const JobFilterSchema = z.object({
+  title: z.string(),
+  type: z.enum(JobType),
+  level: z.enum(JobLevel),
+  modality: z.enum(JobModality),
+  skills: z.array(z.enum(Skill))
+}).partial();
+export type JobFilterPayload = z.infer<typeof JobFilterSchema>;
+
 export const JobClientCreateSchema = JobBaseSchema.omit({
   status: true,
 }).superRefine(validateJobSchema);

@@ -1,6 +1,6 @@
 "use client";
 
-import { JobResponsePayload } from "@/lib/modules/job/index";
+import { JobFilterPayload, JobResponsePayload } from "@/lib/modules/job/index";
 import { useEffect, useRef, useState } from "react";
 import { getJobsAction } from "@/lib/modules/job/index";
 import { Button } from "../common/Button";
@@ -10,9 +10,10 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 interface JobListViewProps {
   initialJobs: JobResponsePayload[];
   initialHasMore: boolean;
+  filter: JobFilterPayload;
 }
 
-export function JobListView({ initialJobs, initialHasMore }: JobListViewProps) {
+export function JobListView({ initialJobs, initialHasMore, filter }: JobListViewProps) {
   const [jobs, setJobs] = useState<JobResponsePayload[]>(initialJobs);
   const [page, setPage] = useState<number>(2);
   const [hasMore, setHasMore] = useState<boolean>(initialHasMore);
@@ -24,7 +25,7 @@ export function JobListView({ initialJobs, initialHasMore }: JobListViewProps) {
     if (isLoading || !hasMore) return;
 
     setIsLoading(true);
-    const result = await getJobsAction(page, 10);
+    const result = await getJobsAction(filter, page, 10);
 
     if (result.success) {
       setPage((prev) => prev + 1);
