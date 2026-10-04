@@ -3,6 +3,7 @@ import { CompanyProfile } from "@/components/common/CompanyProfile";
 import { JobCard } from "@/components/common/JobCard";
 import { UserProfile } from "@/components/common/UserProfile";
 import { Navbar } from "@/components/ui/Navbar";
+import { ArrowUpRightIcon } from "@/components/icons";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
@@ -12,6 +13,7 @@ import { Button } from "@/components/common/Button";
 import { APP_URLS } from "@/utils/constants";
 import { CompanyActionsWrapper } from "@/components/company/CompanyActionsWrapper";
 import { InfoTag } from "@/components/common/InfoTag";
+import Link from "next/link";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
@@ -43,7 +45,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
     <>
       <Navbar />
       <main className="pb-4">
-        <div className="w-full flex flex-row items-center justify-between mt-4">
+        <section className="w-full flex flex-row items-center justify-between mt-4">
           <div className="size-6">
             <BackButton />
           </div>
@@ -52,7 +54,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               <CompanyActionsWrapper companyId={companyId} />
             </div>
           )}
-        </div>
+        </section>
 
         {/* Company info */}
         <section className="mt-4">
@@ -93,14 +95,21 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
             )}
           </ul>
 
-          {USER_ROLE !== "USER" && (
-            <div className="mt-4">
+          <div className="flex flex-col gap-2 items-center mt-4">
+            {USER_ROLE !== "USER" && (
               <Button
                 text="Criar nova vaga"
-                href={`${APP_URLS.jobCreate}?companyId=${company.id}`}
+                href={APP_URLS.jobCreate(companyId)}
               />
-            </div>
-          )}
+            )}
+            <Link
+              href={APP_URLS.companyJobs(company.id)}
+              className="flex flex-row gap-2 items-center justify-center text-center text-accent-100 text-sm"
+            >
+              Ver todas as vagas{" "}
+              <ArrowUpRightIcon size={20} className="text-accent-200" />
+            </Link>
+          </div>
         </section>
 
         {/* Memberships */}

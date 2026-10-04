@@ -11,8 +11,9 @@ export const APP_URLS = {
   user: (id: string) => `/users/${id}` as const,
   job: (id: string) => `/jobs/${id}` as const,
   jobUpdate: (id: string) => `/jobs/${id}/update` as const,
-  jobCreate: "/jobs/create",
+  jobCreate: (id: string) => `/jobs/create?companyId=${id}` as const,
   company: (id: string) => `/companies/${id}` as const,
   companyUpdate: (id: string) => `/companies/${id}/update` as const,
   companyCreate: "/companies/create",
+  companyJobs: (id: string) => `/companies/${id}/jobs` as const,
 } as const;

@@ -25,13 +25,15 @@ export default async function CompanyUpdate(
   const company = companyResponse.data;
   return (
     <main className="pb-4">
-      <div className="size-6 mt-4">
-        <BackButton />
-      </div>
-
-      <h1 className="mt-8 mb-6 text-2xl font-semibold">
-        Atualize os dados da sua empresa
-      </h1>
+      <section>
+        <div className="size-6 mt-4">
+          <BackButton />
+        </div>
+  
+        <h1 className="mt-8 mb-6 text-2xl font-semibold">
+          Atualize os dados da sua empresa
+        </h1>
+      </section>
 
       <section>
         <CompanyForm

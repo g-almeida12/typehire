@@ -35,7 +35,8 @@ export {
   Info as InfoIcon,
   FileText as FileIcon,
   DollarSign as DollarIcon,
-  Clock as ClockIcon
+  Clock as ClockIcon,
+  SquarePlus as CreateIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

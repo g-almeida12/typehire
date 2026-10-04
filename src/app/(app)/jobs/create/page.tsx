@@ -20,20 +20,23 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
 
   return (
     <main className="pb-4">
-      <div className="size-6 mt-4">
-        <BackButton />
-      </div>
+      <section>
+        <div className="size-6 mt-4">
+          <BackButton />
+        </div>
 
-      <div className="my-8">
-        <CompanyProfile company={companyResponse.data} type="readonly" />
-      </div>
+        <div className="my-8">
+          <CompanyProfile company={companyResponse.data} type="readonly" />
+        </div>
 
-      <h1 className="mt-8 mb-4 text-2xl font-semibold">
-        Crie uma nova vaga para sua empresa
-      </h1>
-      <p>
-        Mantenha sua vaga atualizada e dê feedback aos candidatos regularmente.
-      </p>
+        <h1 className="mt-8 mb-4 text-2xl font-semibold">
+          Crie uma nova vaga para sua empresa
+        </h1>
+        <p>
+          Mantenha sua vaga atualizada e dê feedback aos candidatos
+          regularmente.
+        </p>
+      </section>
 
       <section>
         <JobForm

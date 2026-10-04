@@ -96,7 +96,8 @@ export const JobFilterSchema = z.object({
   type: z.enum(JobType),
   level: z.enum(JobLevel),
   modality: z.enum(JobModality),
-  skills: z.array(z.enum(Skill))
+  skills: z.array(z.enum(Skill)),
+  companyId: z.string()
 }).partial();
 export type JobFilterPayload = z.infer<typeof JobFilterSchema>;
 

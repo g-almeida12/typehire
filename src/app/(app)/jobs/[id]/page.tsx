@@ -50,7 +50,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">)
     <>
       <Navbar />
       <main className="pb-4">
-        <div className="w-full flex flex-row items-center justify-between mt-4">
+        <section className="w-full flex flex-row items-center justify-between mt-4">
           <div className="size-6">
             <BackButton />
           </div>
@@ -59,7 +59,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">)
               <JobActionsWrapper jobId={jobId} />
             </div>
           )}
-        </div>
+        </section>
 
         {/* Job and company main info */}
         <section className="mt-6">

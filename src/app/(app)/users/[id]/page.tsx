@@ -53,9 +53,11 @@ export default async function ProfilePage(props: PageProps<"/users/[id]">) {
 
   return (
     <main className="pb-4">
-      <div className="size-6 mt-4">
-        <BackButton />
-      </div>
+      <section>
+        <div className="size-6 mt-4">
+          <BackButton />
+        </div>
+      </section>
 
       {/* Profile */}
       <section className="mt-8">

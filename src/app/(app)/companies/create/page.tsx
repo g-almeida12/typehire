@@ -8,18 +8,20 @@ export default async function CompanyCreatePage() {
 
   return (
     <main className="pb-4">
-      <div className="size-6 mt-4">
-        <BackButton />
-      </div>
-
-      <h1 className="mt-8 mb-4 text-2xl font-semibold">
-        Crie a conta da sua empresa no TypeHire
-      </h1>
-      <p>
-        Ao registrar uma nova empresa, você se torna o responsável por ela no
-        TypeHire, pode gerenciar vagas e convidar outros para trabalhar com
-        você.
-      </p>
+      <section>
+        <div className="size-6 mt-4">
+          <BackButton />
+        </div>
+  
+        <h1 className="mt-8 mb-4 text-2xl font-semibold">
+          Crie a conta da sua empresa no TypeHire
+        </h1>
+        <p>
+          Ao registrar uma nova empresa, você se torna o responsável por ela no
+          TypeHire, pode gerenciar vagas e convidar outros para trabalhar com
+          você.
+        </p>
+      </section>
 
       <section>
         <CompanyForm currentUserEmail={user.email} />
