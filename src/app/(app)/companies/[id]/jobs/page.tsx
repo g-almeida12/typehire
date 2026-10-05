@@ -1,7 +1,7 @@
 import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/ui/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
-import { getJobsAction } from "@/lib/modules/job/index";
+import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { Suspense } from "react";
 import { BackButton } from "@/components/common/BackButton";
@@ -12,14 +12,21 @@ import { notFound } from "next/navigation";
 import { InfoTag } from "@/components/common/InfoTag";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
+import { SkeletonJobCard } from "@/components/skeletons";
 
 export default async function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
 ) {
-  const companyId = (await props.params).id;
+  const [searchParams, params] = await Promise.all([
+    props.searchParams,
+    props.params,
+  ]);
+  const filter = JobURLFilterSchema.parse(searchParams);
+  const companyId = params.id;
+
   const [userId, jobsResponse, companyResponse] = await Promise.all([
     getCurrentUserId(),
-    getJobsAction({ companyId }, 1, 10),
+    getJobsAction({ ...filter, companyId }, 1, 10),
     getCompanyByIdAction(companyId),
   ]);
 
@@ -30,8 +37,8 @@ export default async function CompanyJobsPage(
       throw new Error();
     }
   }
-  const isError = !jobsResponse.success;
 
+  const isError = !jobsResponse.success;
   const jobs = !isError ? jobsResponse.data.jobs : [];
   const hasMoreJobs = !isError
     ? jobsResponse.data.pagination.hasNextPage
@@ -123,31 +130,7 @@ function JobListViewFallback() {
     <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
       {/* Job card list */}
       {Array.from({ length: 4 }).map((_, idx) => (
-        <div
-          className="px-4 py-4 border-y border-y-background-700 not-first:-mt-px"
-          key={idx}
-        >
-          {/* Company profile */}
-          <div className="flex flex-row gap-2">
-            <div className="shrink-0 size-10 bg-background-100 rounded-md animate-pulse"></div>
-            <div className="flex flex-col gap-1 w-full">
-              <span className="block h-5 w-[80%] rounded-sm bg-background-200 animate-pulse"></span>
-              <span className="block h-3 w-40 rounded-sm bg-background-300 animate-pulse"></span>
-            </div>
-          </div>
-
-          {/* Job tags */}
-          <div className="flex flex-row gap-2 mt-3">
-            <span className="w-25 h-7 rounded-md bg-background-700 animate-pulse"></span>
-            <span className="w-25 h-7 rounded-md bg-background-700 animate-pulse"></span>
-          </div>
-
-          {/* Job salary and creation date */}
-          <div className="flex flex-row justify-between items-baseline mt-6">
-            <span className="h-7 w-30 rounded-md bg-background-100 animate-pulse"></span>
-            <span className="h-3 w-15 rounded-sm bg-background-300 animate-pulse"></span>
-          </div>
-        </div>
+        <SkeletonJobCard key={`job-${idx}`} />
       ))}
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { JobFilterPayload, JobResponsePayload } from "@/lib/modules/job/index";
+import { JobFormFilterPayload, JobResponsePayload } from "@/lib/modules/job/index";
 import { useEffect, useRef, useState } from "react";
 import { getJobsAction } from "@/lib/modules/job/index";
 import { Button } from "../common/Button";
@@ -10,7 +10,7 @@ import { LoadingSpinner } from "../common/LoadingSpinner";
 interface JobListViewProps {
   initialJobs: JobResponsePayload[];
   initialHasMore: boolean;
-  filter: JobFilterPayload;
+  filter: JobFormFilterPayload;
 }
 
 export function JobListView({ initialJobs, initialHasMore, filter }: JobListViewProps) {

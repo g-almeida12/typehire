@@ -120,7 +120,7 @@ export const skillMapper: Record<Skill, string> = {
 };
 
 export const jobLevelMapper: Record<JobLevel, string> = {
-  ESTAGIÁRIO: "Estágio",
+  ESTAGIÁRIO: "Estagiário",
   JÚNIOR: "Júnior",
   PLENO: "Pleno",
   SÊNIOR: "Sênior",

@@ -91,15 +91,40 @@ function validateJobSchema(
   }
 }
 
-export const JobFilterSchema = z.object({
-  title: z.string(),
-  type: z.enum(JobType),
-  level: z.enum(JobLevel),
-  modality: z.enum(JobModality),
-  skills: z.array(z.enum(Skill)),
-  companyId: z.string()
-}).partial();
-export type JobFilterPayload = z.infer<typeof JobFilterSchema>;
+export const JobFormFilterSchema = z
+  .object({
+    title: z.string(),
+    type: z
+      .enum(JobType)
+      .nullish()
+      .transform((val) => val ?? undefined),
+    level: z
+      .enum(JobLevel)
+      .nullish()
+      .transform((val) => val ?? undefined),
+    modality: z
+      .enum(JobModality)
+      .nullish()
+      .transform((val) => val ?? undefined),
+    skills: z.array(z.enum(Skill)),
+    companyId: z.string(),
+  })
+  .partial();
+export type JobFormFilterInputPayload = z.input<typeof JobFormFilterSchema>;
+export type JobFormFilterOutputPayload = z.output<typeof JobFormFilterSchema>;
+
+export const JobURLFilterSchema = z.object({
+  title: z.string().optional().catch(undefined),
+  type: z.enum(JobType).optional().catch(undefined),
+  level: z.enum(JobLevel).optional().catch(undefined),
+  modality: z.enum(JobModality).optional().catch(undefined),
+  skills: z.preprocess(
+    (v: unknown) => (v === undefined ? [] : [v].flat()),
+    z.array(z.enum(Skill)).optional().catch([]),
+  ),
+  companyId: z.string().optional().catch(undefined),
+});
+export type JobURLFilterPayload = z.infer<typeof JobURLFilterSchema>;
 
 export const JobClientCreateSchema = JobBaseSchema.omit({
   status: true,
