@@ -6,7 +6,7 @@ import { Navbar } from "@/components/ui/Navbar";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 
-export default function AppNotFound() {
+export default function AppNotFoundPage() {
   const router = useRouter();
 
   return (

@@ -5,6 +5,7 @@ import {
   JobStatus,
   JobType,
   CompanySize,
+  ApplicationStatus,
 } from "@/database/generated/enums";
 
 export const skillMapper: Record<Skill, string> = {
@@ -150,4 +151,12 @@ export const companySizeMapper: Record<CompanySize, string> = {
   MÉDIA: "Média empresa",
   GRANDE: "Grande empresa",
   MULTINACIONAL: "Multinacional",
+};
+
+export const applicationStatusMapper: Record<ApplicationStatus, string> = {
+  PENDING: "Pendente",
+  REVIEW: "Em análise",
+  INTERVIEW: "Em entrevista",
+  HIRED: "Contratado(a)",
+  REJECTED: "Não selecionado(a)",
 };

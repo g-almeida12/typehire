@@ -49,10 +49,10 @@ export async function createJobAction(
         include: jobWithDetailsInclude,
       });
 
-      return mapJobEntity(createdJob);
+      return createdJob;
     });
 
-    return { success: true, status: 201, data: result };
+    return { success: true, status: 201, data: mapJobEntity(result) };
   } catch (err) {
     if (err instanceof AppError) {
       return {
@@ -202,7 +202,7 @@ export async function updateJobByIdAction(
         );
       }
 
-      // Delete the job
+      // Update the job
       return await tx.job.update({
         where: { id: jobId },
         data: newData,

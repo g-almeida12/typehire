@@ -14,11 +14,7 @@ export const getCachedUser = cache(
       include: userWithDetailsInclude,
     });
 
-    if (!user) {
-      return null;
-    } else {
-      return user;
-    }
+    return user ?? null;
   },
 );
 
@@ -35,10 +31,6 @@ export const getCachedUserId = cache(
       },
     });
 
-    if (!user) {
-      return null;
-    } else {
-      return user.id;
-    }
+    return user?.id ?? null;
   },
 );

@@ -14,10 +14,6 @@ export const getCachedJobById = cache(
       include: jobWithDetailsInclude,
     });
 
-    if (!job) {
-      return null;
-    } else {
-      return job;
-    }
+    return job ?? null;
   },
 );

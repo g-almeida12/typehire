@@ -34,7 +34,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isRouterLoading, startRouterTransition] = useTransition();
-  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(true);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [resetKey, setResetKey] = useState<number>(0);
 
   const handleSearchSubmit = (filter: JobFormFilterOutputPayload) => {

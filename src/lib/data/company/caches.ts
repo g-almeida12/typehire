@@ -13,10 +13,7 @@ export const getCachedCompanyById = cache(
       where: { id: companyId },
       include: companyWithDetailsInclude,
     });
-    if (!company) {
-      return null;
-    } else {
-      return company;
-    }
+
+    return company ?? null;
   },
 );
