@@ -170,6 +170,7 @@ export default async function ProfilePage(props: PageProps<"/users/[id]">) {
                   showUserMembership={
                     c.createdBy === user.id ? "CREATOR" : "MEMBER"
                   }
+                  visualOnlyWebsiteLink={false}
                 />
               </li>
             ))}

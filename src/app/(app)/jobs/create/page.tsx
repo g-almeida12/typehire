@@ -26,7 +26,11 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
         </div>
 
         <div className="my-8">
-          <CompanyProfile company={companyResponse.data} type="readonly" />
+          <CompanyProfile
+            company={companyResponse.data}
+            type="readonly"
+            visualOnlyWebsiteLink={false}
+          />
         </div>
 
         <h1 className="mt-8 mb-4 text-2xl font-semibold">

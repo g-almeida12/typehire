@@ -12,6 +12,7 @@ interface CompanyProfileProps {
   type: "readonly" | "edit" | "link";
   showCompanySize?: boolean;
   showUserMembership?: "CREATOR" | "MEMBER";
+  visualOnlyWebsiteLink?: boolean;
 }
 
 const USER_MEMBERSHIP_MAP = {
@@ -19,11 +20,12 @@ const USER_MEMBERSHIP_MAP = {
   MEMBER: "Associado",
 };
 
-export async function CompanyProfile({
+export function CompanyProfile({
   company,
   type,
   showCompanySize = true,
   showUserMembership = undefined,
+  visualOnlyWebsiteLink = true,
 }: CompanyProfileProps) {
   const companyAvatar =
     company.name.split(" ").length >= 2
@@ -58,6 +60,8 @@ export async function CompanyProfile({
           <p className="-mt-px text-sm text-background-300 italic truncate">
             {showUserMembership ? (
               USER_MEMBERSHIP_MAP[showUserMembership]
+            ) : visualOnlyWebsiteLink ? (
+              <span>{company.website}</span>
             ) : (
               <a
                 target="_blank"

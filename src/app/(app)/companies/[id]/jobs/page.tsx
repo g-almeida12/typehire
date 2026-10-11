@@ -1,9 +1,8 @@
 import { SearchInput } from "@/components/common/SearchInput";
-import { JobListView } from "@/components/ui/JobListView";
+import { JobListView } from "@/components/job/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserId } from "@/lib/data/user/index";
-import { Suspense } from "react";
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/common/CompanyProfile";
 import { CreateIcon } from "@/components/icons";
@@ -12,7 +11,6 @@ import { notFound } from "next/navigation";
 import { InfoTag } from "@/components/common/InfoTag";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
-import { SkeletonJobCard } from "@/components/skeletons";
 
 export default async function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
@@ -76,7 +74,7 @@ export default async function CompanyJobsPage(
             )}
           </div>
 
-          <div className="my-6">
+          <div className="mt-6 mb-12">
             {USER_ROLE !== "USER" && (
               <InfoTag
                 label={
@@ -90,10 +88,11 @@ export default async function CompanyJobsPage(
               company={company}
               type="readonly"
               showCompanySize={false}
+              visualOnlyWebsiteLink={false}
             />
 
             <div className="mt-8">
-              <h1 className="mb-4 text-xl font-medium">Pesquise por vagas</h1>
+              <h1 className="mb-2 text-xl font-medium">Pesquise por vagas</h1>
               <SearchInput placeholder="Digite o título da vaga" />
             </div>
           </div>
@@ -110,28 +109,15 @@ export default async function CompanyJobsPage(
               </p>
             </div>
           ) : (
-            <Suspense fallback={JobListViewFallback()}>
-              <JobListView
-                initialJobs={jobs}
-                initialHasMore={hasMoreJobs}
-                filter={{}}
-                key={jobs.map((j) => j.id).join(",")}
-              />
-            </Suspense>
+            <JobListView
+              initialJobs={jobs}
+              initialHasMore={hasMoreJobs}
+              filter={filter}
+              key={JSON.stringify(filter)}
+            />
           )}
         </section>
       </main>
     </>
-  );
-}
-
-function JobListViewFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {/* Job card list */}
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonJobCard key={`job-${idx}`} />
-      ))}
-    </div>
   );
 }

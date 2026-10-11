@@ -90,7 +90,10 @@ export function Dropdown({
   };
 
   return (
-    <div className="group w-full flex flex-col items-start" ref={containerRef}>
+    <div
+      className="relative group w-full flex flex-col items-start"
+      ref={containerRef}
+    >
       <span className="w-full mb-1 text-left text-sm text-background-300">
         {label}
       </span>
@@ -129,7 +132,7 @@ export function Dropdown({
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="w-full max-h-70 overflow-y-scroll rounded-b-md border-t border-background-700 bg-background-300 text-background-700"
+          className={`absolute top-full w-full max-h-70 overflow-y-scroll rounded-b-md border-t border-background-700 bg-background-300 text-background-700 ${isOpen ? "shadow-lg" : ""}`}
           id={label}
           role="listbox"
         >

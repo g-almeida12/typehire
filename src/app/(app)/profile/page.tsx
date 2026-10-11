@@ -164,6 +164,7 @@ export default async function ProfilePage() {
                   showUserMembership={
                     c.createdBy === user.id ? "CREATOR" : "MEMBER"
                   }
+                  visualOnlyWebsiteLink={false}
                 />
               </li>
             ))}

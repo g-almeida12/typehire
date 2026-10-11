@@ -7,7 +7,7 @@ import {
 
 export default function CompanyCreateLoading() {
   return (
-    <main className="pb-4">
+    <main className="pb-4" aria-busy="true">
       <ArrowLeftIcon className="mt-4 animate-pulse" />
 
       {/* Title */}

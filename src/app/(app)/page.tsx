@@ -1,10 +1,8 @@
 import { SearchInput } from "@/components/common/SearchInput";
-import { JobListView } from "@/components/ui/JobListView";
+import { JobListView } from "@/components/job/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
-import { Suspense } from "react";
-import { SkeletonJobCard } from "@/components/skeletons";
 
 export default async function HomePage(props: PageProps<"/">) {
   const searchParams = await props.searchParams;
@@ -41,28 +39,15 @@ export default async function HomePage(props: PageProps<"/">) {
               </p>
             </div>
           ) : (
-            <Suspense fallback={JobListViewFallback()}>
-              <JobListView
-                initialJobs={jobs}
-                initialHasMore={hasMoreJobs}
-                filter={filter}
-                key={JSON.stringify(filter)}
-              />
-            </Suspense>
+            <JobListView
+              initialJobs={jobs}
+              initialHasMore={hasMoreJobs}
+              filter={filter}
+              key={JSON.stringify(filter)}
+            />
           )}
         </section>
       </main>
     </>
-  );
-}
-
-function JobListViewFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {/* Job card list */}
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonJobCard key={`job-${idx}`} />
-      ))}
-    </div>
   );
 }
