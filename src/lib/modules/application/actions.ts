@@ -3,7 +3,7 @@
 import { PaginationResponsePayload, ServerActionResponse } from "@/utils/types";
 import {
   ApplicationCreatePayload,
-  ApplicationFormOutputFilterPayload,
+  ApplicationFormFilterOutputPayload,
   ApplicationResponsePayload,
   ApplicationUpdatePayload,
 } from "./schemas";
@@ -128,7 +128,7 @@ export async function getApplicationByIdAction(
 }
 
 export async function getApplicationsAction(
-  filter: ApplicationFormOutputFilterPayload,
+  filter: ApplicationFormFilterOutputPayload,
   page: number = 1,
   pageSize: number = 10,
 ): ServerActionResponse<{

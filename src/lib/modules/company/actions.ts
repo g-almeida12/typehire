@@ -10,13 +10,13 @@ import {
 import {
   companyWithDetailsInclude,
   mapCompanyEntity,
+  getCachedCompanyById
 } from "@/lib/data/company/index";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
 import { getCurrentUserId } from "@/lib/data/user/index";
-import { getCachedCompanyById } from "@/lib/data/company/caches";
 
 export async function createCompanyAction(
   companyData: CompanyCreatePayload,

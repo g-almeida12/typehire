@@ -8,12 +8,11 @@ import {
   JobUpdatePayload,
   JobFormFilterOutputPayload,
 } from "./schemas";
-import { jobWithDetailsInclude, mapJobEntity } from "@/lib/data/job/entities";
+import { jobWithDetailsInclude, mapJobEntity, getCachedJobById } from "@/lib/data/job/index";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { updateTag } from "next/cache";
 import { getCurrentUserId } from "@/lib/data/user/index";
-import { getCachedJobById } from "@/lib/data/job/caches";
 
 export async function createJobAction(
   jobData: JobServerCreatePayload,

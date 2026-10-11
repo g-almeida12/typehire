@@ -12,16 +12,16 @@ import {
   mapPublicUserEntity,
   UserEntity,
   userWithDetailsInclude,
-} from "@/lib/data/user/entities";
+  getCachedUser,
+  getCurrentUserId,
+  mapPrivateUserEntity
+} from "@/lib/data/user/index";
 import { ServerActionResponse } from "@/utils/types";
 import { authServer } from "@/lib/auth/auth-server";
-import { mapPrivateUserEntity } from "@/lib/data/user/entities";
 import { prisma } from "@/database";
-import { getCurrentUserData, getCurrentUserId } from "@/lib/data/user/index";
 import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
-import { getCachedUser } from "@/lib/data/user/caches";
 import { updateTag } from "next/cache";
 
 export async function signUpByEmailAction(
