@@ -25,7 +25,6 @@ export function ApplicationFilterDropdown() {
     if (status) {
       searchParams.set("status", status);
     }
-    console.log(searchParams.toString());
 
     router.push(`?${searchParams.toString()}`);
   };

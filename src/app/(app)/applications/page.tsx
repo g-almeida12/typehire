@@ -6,6 +6,7 @@ import {
 } from "@/lib/modules/application";
 import { ApplicationListView } from "@/components/applications/ApplicationListView";
 import { ApplicationFilterDropdown } from "@/components/applications/ApplicationFilterDropdown";
+import { Metadata } from "next";
 
 export default async function ApplicationsPage(
   props: PageProps<"/applications">,
@@ -62,3 +63,9 @@ export default async function ApplicationsPage(
     </>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Suas aplicações | Typehire",
+  description:
+    "Visualize todas as suas candidaturas organizando por filtro para melhores resultados.",
+};

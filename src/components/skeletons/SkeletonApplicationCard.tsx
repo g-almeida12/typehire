@@ -20,7 +20,7 @@ export function SkeletonApplicationCard() {
       </div>
 
       {/* Application status tag */}
-      <SkeletonText customClassName="w-25 h-7 rounded-md bg-pink-400" />
+      <SkeletonText customClassName="w-25 h-7 rounded-md mt-6 bg-background-400" />
     </div>
   );
 }
