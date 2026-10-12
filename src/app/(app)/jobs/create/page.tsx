@@ -1,5 +1,5 @@
 import { BackButton } from "@/components/common/BackButton";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobForm } from "@/components/job/JobForm";
 import { Skill } from "@/database/generated/enums";
 import { getCompanyByIdAction } from "@/lib/modules/company";

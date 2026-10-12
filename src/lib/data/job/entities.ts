@@ -24,7 +24,9 @@ export type JobEntity = Prisma.JobGetPayload<{
   include: typeof jobWithDetailsInclude;
 }>;
 
-export function mapJobEntity(job: JobEntity): JobResponsePayload {
+export function mapJobEntity(
+  job: JobEntity & { userHasApplied: boolean },
+): JobResponsePayload {
   return {
     id: job.id,
     title: job.title,
@@ -38,6 +40,7 @@ export function mapJobEntity(job: JobEntity): JobResponsePayload {
     status: job.status,
     fixedSalary: job.fixedSalary,
     hourlySalary: job.hourlySalary,
+    userHasApplied: job.userHasApplied,
     intervalSalary:
       job.minSalary && job.maxSalary ? [job.minSalary, job.maxSalary] : null,
     location: job.location,

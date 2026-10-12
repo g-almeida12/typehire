@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { UserProfile } from "../common/UserProfile";
+import { UserProfile } from "../user/UserProfile";
 import { getUsersByEmailPrefixAction } from "@/lib/modules/user/index";
 
 interface UsersDropdownSelectProps extends InputHTMLAttributes<HTMLInputElement> {

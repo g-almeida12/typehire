@@ -21,7 +21,7 @@ model User {
   githubUrl        String?
   linkedinUrl      String?
   portfolioUrl     String?
-  resumeUrl     String?
+  resumeUrl        String?
   skills           Skill[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
@@ -128,7 +128,7 @@ model Job {
 
   company        Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
   creator        User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  application    Application[]
+  applications    Application[]
 
   @@map("job")
 }

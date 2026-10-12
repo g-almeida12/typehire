@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/common/BackButton";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobCard } from "@/components/job/JobCard";
-import { UserProfile } from "@/components/common/UserProfile";
+import { UserProfile } from "@/components/user/UserProfile";
 import { Navbar } from "@/components/ui/Navbar";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
@@ -67,7 +67,11 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               }
             />
           )}
-          <CompanyProfile company={company} type="readonly" visualOnlyWebsiteLink={false} />
+          <CompanyProfile
+            company={company}
+            type="readonly"
+            visualOnlyWebsiteLink={false}
+          />
 
           <h2 className="mt-8 mb-4 text-xl font-medium">Sobre a empresa</h2>
           <div className="space-y-4 leading-relaxed">

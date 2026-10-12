@@ -1,6 +1,5 @@
 import { BackButton } from "@/components/common/BackButton";
-import { Button } from "@/components/common/Button";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 import {
   AwardIcon,
   BriefcaseIcon,
@@ -26,6 +25,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { InfoTag } from "@/components/common/InfoTag";
 import { JobActionsWrapper } from "@/components/job/JobActionsWrapper";
+import { ApplicationCreateWrapper } from "@/components/applications/ApplicationCreateWrapper";
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   const jobId = (await props.params).id;
@@ -62,7 +62,11 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 
         {/* Job and company main info */}
         <section className="mt-6">
-          <CompanyProfile company={job.company} type="link" visualOnlyWebsiteLink={false} />
+          <CompanyProfile
+            company={job.company}
+            type="link"
+            visualOnlyWebsiteLink={false}
+          />
 
           <div className="mt-10">
             {isUserCreator && <InfoTag label="Criada por você" />}
@@ -138,9 +142,10 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           </div>
 
           <div className="mt-6">
-            <Button
-              text={isUserCreator ? "Ação bloqueada" : "Candidate-se agora"}
-              disabled={isUserCreator}
+            <ApplicationCreateWrapper
+              jobId={jobId}
+              isUserCreator={isUserCreator}
+              userHasApplied={job.userHasApplied}
             />
           </div>
         </section>

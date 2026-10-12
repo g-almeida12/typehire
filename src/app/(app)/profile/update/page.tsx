@@ -1,5 +1,5 @@
 import { BackButton } from "@/components/common/BackButton";
-import { ProfileUpdateForm } from "@/components/profile/ProfileUpdateForm";
+import { ProfileUpdateForm } from "@/components/user/ProfileUpdateForm";
 import { Skill } from "@/database/generated/enums";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
@@ -19,7 +19,7 @@ export default async function ProfileUpdate() {
         <div className="size-6 mt-4">
           <BackButton />
         </div>
-  
+
         <h1 className="mt-8 mb-6 text-2xl font-semibold">
           Atualize seus dados pessoais
         </h1>

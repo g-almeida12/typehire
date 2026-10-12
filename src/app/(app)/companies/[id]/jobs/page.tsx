@@ -4,13 +4,14 @@ import { Navbar } from "@/components/ui/Navbar";
 import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { BackButton } from "@/components/common/BackButton";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { CreateIcon } from "@/components/icons";
 import { getCompanyByIdAction } from "@/lib/modules/company";
 import { notFound } from "next/navigation";
 import { InfoTag } from "@/components/common/InfoTag";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
+import { Metadata } from "next";
 
 export default async function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
@@ -120,4 +121,33 @@ export default async function CompanyJobsPage(
       </main>
     </>
   );
+}
+
+export async function generateMetadata(
+  props: PageProps<"/companies/[id]/jobs">,
+): Promise<Metadata> {
+  try {
+    const companyId = (await props.params).id;
+    const response = await getCompanyByIdAction(companyId);
+
+    if (!response.success) {
+      return {
+        title: "Empresa não encontrada | TypeHire",
+        description:
+          "A empresa que você está procurando pode ter sido desligada ou não existe.",
+      };
+    }
+
+    return {
+      title: `Vagas da ${response.data.name} | TypeHire`,
+      description: response.data.bio
+        ? response.data.bio.slice(0, 150) +
+          (response.data.bio.length > 150 ? "..." : "")
+        : `Veja todas as vagas da empresa ${response.data.name}.`,
+    };
+  } catch (_err) {
+    return {
+      title: "TypeHire - Portal de Vagas",
+    };
+  }
 }

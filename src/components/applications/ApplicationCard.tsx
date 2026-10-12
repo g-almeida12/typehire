@@ -11,7 +11,7 @@ import { formatRelativeTime } from "@/utils/date";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { ApplicationResponsePayload } from "@/lib/modules/application";
-import { CompanyProfile } from "../common/CompanyProfile";
+import { CompanyProfile } from "../company/CompanyProfile";
 import { ApplicationStatusTag } from "./ApplicationStatus";
 
 export function ApplicationCard({

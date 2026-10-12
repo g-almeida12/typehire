@@ -8,12 +8,12 @@ import {
   PinIcon,
   FileIcon,
 } from "@/components/icons";
-import { UserProfile } from "@/components/common/UserProfile";
+import { UserProfile } from "@/components/user/UserProfile";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { getUserByIdAction } from "@/lib/modules/user/index";
 import { notFound } from "next/navigation";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",

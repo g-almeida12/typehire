@@ -9,14 +9,14 @@ import {
   PinIcon,
   FileIcon,
 } from "@/components/icons";
-import { DeleteUserButton } from "@/components/profile/DeleteUserButton";
-import { SignOutUserButton } from "@/components/profile/SignOutUserButton";
-import { UserProfile } from "@/components/common/UserProfile";
+import { DeleteUserButton } from "@/components/user/DeleteUserButton";
+import { SignOutUserButton } from "@/components/user/SignOutUserButton";
+import { UserProfile } from "@/components/user/UserProfile";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { APP_URLS } from "@/utils/constants";
-import { CompanyProfile } from "@/components/common/CompanyProfile";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
 
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",

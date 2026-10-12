@@ -150,6 +150,7 @@ export const JobResponseSchema = JobBaseSchema.extend({
   intervalSalary: z.tuple([z.number(), z.number()]).nullable(),
   hourlySalary: z.number().nullable(),
   location: z.string().nullable(),
+  userHasApplied: z.boolean(),
   company: z.object({
     id: z.string(),
     name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),

@@ -8,7 +8,11 @@ import {
   JobUpdatePayload,
   JobFormFilterOutputPayload,
 } from "./schemas";
-import { jobWithDetailsInclude, mapJobEntity, getCachedJobById } from "@/lib/data/job/index";
+import {
+  jobWithDetailsInclude,
+  mapJobEntity,
+  getCachedJobById,
+} from "@/lib/data/job/index";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { updateTag } from "next/cache";
@@ -51,7 +55,11 @@ export async function createJobAction(
       return createdJob;
     });
 
-    return { success: true, status: 201, data: mapJobEntity(result) };
+    return {
+      success: true,
+      status: 201,
+      data: mapJobEntity({ ...result, userHasApplied: false }),
+    };
   } catch (err) {
     if (err instanceof AppError) {
       return {
@@ -79,7 +87,8 @@ export async function getJobsAction(
   pagination: PaginationResponsePayload;
 }> {
   try {
-    if (!(await getCurrentUserId())) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
@@ -96,7 +105,10 @@ export async function getJobsAction(
       orderBy: {
         createdAt: "desc",
       },
-      include: jobWithDetailsInclude,
+      include: {
+        ...jobWithDetailsInclude,
+        applications: { where: { candidateId: userId }, select: { id: true } },
+      },
     });
 
     const total = await prisma.job.count();
@@ -106,7 +118,9 @@ export async function getJobsAction(
       success: true,
       status: 200,
       data: {
-        jobs: jobs.map((j) => mapJobEntity(j)),
+        jobs: jobs.map((j) =>
+          mapJobEntity({ ...j, userHasApplied: j.applications.length > 0 }),
+        ),
         pagination: {
           page,
           pageSize,
@@ -139,16 +153,24 @@ export async function getJobByIdAction(
   jobId: string,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    if (!(await getCurrentUserId())) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const job = await getCachedJobById(jobId);
+    const job = await getCachedJobById(jobId, userId);
     if (!job) {
       throw new AppError("Vaga não encontrada.", 404);
     }
 
-    return { success: true, status: 200, data: mapJobEntity(job) };
+    return {
+      success: true,
+      status: 200,
+      data: mapJobEntity({
+        ...job,
+        userHasApplied: job.applications.length > 0,
+      }),
+    };
   } catch (err) {
     if (err instanceof AppError) {
       return {
@@ -172,8 +194,8 @@ export async function updateJobByIdAction(
   newData: JobUpdatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    const currentUserId = await getCurrentUserId();
-    if (!currentUserId) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
@@ -191,10 +213,7 @@ export async function updateJobByIdAction(
         throw new AppError("Vaga não encontrada.", 404);
       }
 
-      if (
-        currentUserId !== job.createdBy &&
-        currentUserId !== job.company.createdBy
-      ) {
+      if (userId !== job.createdBy && userId !== job.company.createdBy) {
         throw new AppError(
           "Usuário não tem permissão para atualizar a vaga.",
           403,
@@ -205,12 +224,25 @@ export async function updateJobByIdAction(
       return await tx.job.update({
         where: { id: jobId },
         data: newData,
-        include: jobWithDetailsInclude,
+        include: {
+          ...jobWithDetailsInclude,
+          applications: {
+            where: { candidateId: userId },
+            select: { id: true },
+          },
+        },
       });
     });
 
     updateTag(`job-${jobId}`);
-    return { success: true, status: 200, data: mapJobEntity(updatedJob) };
+    return {
+      success: true,
+      status: 200,
+      data: mapJobEntity({
+        ...updatedJob,
+        userHasApplied: updatedJob.applications.length > 0,
+      }),
+    };
   } catch (err) {
     if (err instanceof AppError) {
       return {

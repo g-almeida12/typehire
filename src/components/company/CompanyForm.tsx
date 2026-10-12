@@ -26,7 +26,7 @@ import {
 } from "@/lib/modules/company/index";
 import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
 import { UsersDropdownSelect } from "./UserDropdownSelect";
-import { UserProfile } from "../common/UserProfile";
+import { UserProfile } from "../user/UserProfile";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
