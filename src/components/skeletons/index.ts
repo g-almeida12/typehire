@@ -7,3 +7,5 @@ export * from './SkeletonJobCard';
 export * from './SkeletonUserProfile';
 export * from './SkeletonSkills';
 export * from './SkeletonSocialMedias';
+export * from './SkeletonApplicationCard';
+export * from './SkeletonSearchInput';

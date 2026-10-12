@@ -5,6 +5,7 @@ import {
   JobLevel,
   JobModality,
   JobType,
+  CompanySize,
 } from "@/database/generated/enums";
 
 const JobBaseSchema = z.object({
@@ -154,7 +155,7 @@ export const JobResponseSchema = JobBaseSchema.extend({
     name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
     image: z.string().optional().nullable().default(null),
     website: z.string().optional().nullable().default(null),
-    size: z.enum(["STARTUP", "PEQUENA", "MÉDIA", "GRANDE", "MULTINACIONAL"]),
+    size: z.enum(CompanySize),
   }),
   creator: z.object({
     id: z.string(),

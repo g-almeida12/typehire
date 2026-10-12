@@ -3,7 +3,7 @@ import {
   SkeletonNavbar,
   SkeletonText,
 } from "@/components/skeletons";
-import { SkeletonSearchInput } from "@/components/skeletons/SkeletonSearchInput";
+import { SkeletonSearchInput } from "@/components/skeletons";
 
 export default function AppLoading() {
   return (

@@ -92,19 +92,19 @@ Buscamos constantemente talentos apaixonados por tecnologia que queiram construi
 Estamos em busca de um **Desenvolvedor FullStack Júnior** para compor nosso time de engenharia de forma remota. Se você gosta de desafios e quer crescer construindo produtos escaláveis, essa vaga é para você!
 
 ### Responsabilidades
-* Desenvolver novas funcionalidades no frontend e backend.
-* Participar de reuniões de alinhamento com o time de produto.
-* Escrever códigos limpos e testáveis.
+- Desenvolver novas funcionalidades no frontend e backend.
+- Participar de reuniões de alinhamento com o time de produto.
+- Escrever códigos limpos e testáveis.
 
 ### Requisitos Obrigatórios
-* Experiência prévia com projetos usando Python e FastAPI.
-* Conhecimento sólido em bancos de dados relacionais como PostgreSQL.
-* Familiaridade com HTML, CSS e arquitetura de software.
+- Experiência prévia com projetos usando Python e FastAPI.
+- Conhecimento sólido em bancos de dados relacionais como PostgreSQL.
+- Familiaridade com HTML, CSS e arquitetura de software.
 
 ### Benefícios
-* Horário flexível.
-* Ambiente 100% remoto.
-* Mentoria contínua com devs seniores.
+- Horário flexível.
+- Ambiente 100% remoto.
+- Mentoria contínua com devs seniores.
         `.trim(),
         skills: [
           "ANGULAR",
@@ -131,14 +131,14 @@ Estamos em busca de um **Desenvolvedor FullStack Júnior** para compor nosso tim
 Buscamos um **Designer UI/UX Pleno** para atuar em formato híbrido em Recife, PE. Você será responsável por desenhar a experiência dos nossos principais fluxos de usuário.
 
 ### O que você vai fazer
-* Criar wireframes, protótipos de baixa e alta fidelidade no Figma.
-* Conduzir pesquisas e testes com usuários.
-* Colaborar diretamente com desenvolvedores para garantir a fidelidade do design.
+- Criar wireframes, protótipos de baixa e alta fidelidade no Figma.
+- Conduzir pesquisas e testes com usuários.
+- Colaborar diretamente com desenvolvedores para garantir a fidelidade do design.
 
 ### Requisitos da Vaga
-* Domínio absoluto do Figma.
-* Boa comunicação e foco em metodologias ágeis (Jira).
-* Noções básicas de HTML e CSS para melhor alinhamento com o front.
+- Domínio absoluto do Figma.
+- Boa comunicação e foco em metodologias ágeis (Jira).
+- Noções básicas de HTML e CSS para melhor alinhamento com o front.
         `.trim(),
         skills: ["FIGMA", "HTML", "CSS", "JIRA", "NETLIFY"],
       },
@@ -158,14 +158,14 @@ Buscamos um **Designer UI/UX Pleno** para atuar em formato híbrido em Recife, P
 Procuramos um **Analista de Dados Estagiário** para atuar presencialmente em São Paulo, SP. O estagiário trabalhará coletando, estruturando e analisando grandes volumes de dados.
 
 ### Principais Atividades
-* Apoiar na criação de pipelines de dados.
-* Desenvolver scripts de automação e testes.
-* Gerar relatórios periódicos para a diretoria.
+- Apoiar na criação de pipelines de dados.
+- Desenvolver scripts de automação e testes.
+- Gerar relatórios periódicos para a diretoria.
 
 ### O que esperamos de você
-* Cursando ensino superior em exatas ou áreas afins.
-* Conhecimento básico de Python e testes unitários.
-* Vontade de aprender sobre arquitetura de dados e cloud (AWS).
+- Cursando ensino superior em exatas ou áreas afins.
+- Conhecimento básico de Python e testes unitários.
+- Vontade de aprender sobre arquitetura de dados e cloud (AWS).
         `.trim(),
         skills: ["PYTEST", "PYTHON", "ARCHITECTURE", "AWS"],
       },
@@ -216,14 +216,14 @@ Nosso escritório respira tecnologia e criatividade. Aqui, cada membro da equipe
 Estamos contratando um **Arquiteto de Software Cloud Sênior** para desenhar, planejar e guiar a migração e evolução de sistemas de missão crítica para ambientes altamente escaláveis.
 
 ### Suas Missões
-* Desenhar arquiteturas serverless e baseadas em containers na AWS.
-* Garantir os mais altos padrões de segurança, resiliência e otimização de custos.
-* Apoiar e mentorar os times de desenvolvimento backend.
+- Desenhar arquiteturas serverless e baseadas em containers na AWS.
+- Garantir os mais altos padrões de segurança, resiliência e otimização de custos.
+- Apoiar e mentorar os times de desenvolvimento backend.
 
 ### O que buscamos
-* Ampla experiência com ecossistema AWS, Docker e Kubernetes.
-* Histórico comprovado em projetos de grande escala.
-* Domínio de padrões de arquitetura de software modernos.
+- Ampla experiência com ecossistema AWS, Docker e Kubernetes.
+- Histórico comprovado em projetos de grande escala.
+- Domínio de padrões de arquitetura de software modernos.
         `.trim(),
         skills: ["AWS", "DOCKER", "KUBERNETES", "ARCHITECTURE", "TYPESCRIPT"],
       },
@@ -242,14 +242,14 @@ Estamos contratando um **Arquiteto de Software Cloud Sênior** para desenhar, pl
 Procuramos um **Desenvolvedor Backend Node.js Pleno** focado em escrever códigos robustos, seguros e performáticos para alimentar nossos principais produtos digitais.
 
 ### Principais Desafios
-* Construir e manter APIs RESTful e serviços assíncronos.
-* Modelar esquemas complexos em bancos de dados relacionais.
-* Escrever testes automatizados garantindo cobertura e confiabilidade.
+- Construir e manter APIs RESTful e serviços assíncronos.
+- Modelar esquemas complexos em bancos de dados relacionais.
+- Escrever testes automatizados garantindo cobertura e confiabilidade.
 
 ### Requisitos Técnicos
-* Experiência sólida com Node.js, TypeScript e Express ou NestJS.
-* Conexão e otimização de consultas em PostgreSQL.
-* Familiaridade com práticas de CI/CD e testes com Jest.
+- Experiência sólida com Node.js, TypeScript e Express ou NestJS.
+- Conexão e otimização de consultas em PostgreSQL.
+- Familiaridade com práticas de CI/CD e testes com Jest.
         `.trim(),
         skills: ["POSTGRESQL", "TYPESCRIPT", "DOCKER", "JEST"],
       },
@@ -301,14 +301,14 @@ Nossa cultura é pautada na experimentação rápida, no aprendizado constante e
 Buscamos um **Engenheiro de Machine Learning Sênior** para atuar em modelo híbrido em Florianópolis, SC, liderando a criação de pipelines preditivos e modelos generativos aplicados aos nossos produtos.
 
 ### Responsabilidades do Cargo
-* Desenvolver, treinar e otimizar modelos de IA para produção.
-* Integrar modelos inteligentes com aplicações web escaláveis.
-* Colaborar com cientistas de dados e engenheiros de software.
+- Desenvolver, treinar e otimizar modelos de IA para produção.
+- Integrar modelos inteligentes com aplicações web escaláveis.
+- Colaborar com cientistas de dados e engenheiros de software.
 
 ### Requisitos Indispensáveis
-* Domínio avançado de Python e bibliotecas de machine learning.
-* Experiência com implantação de modelos em nuvem (AWS).
-* Boa base em bancos de dados relacionais e engenharia de dados.
+- Domínio avançado de Python e bibliotecas de machine learning.
+- Experiência com implantação de modelos em nuvem (AWS).
+- Boa base em bancos de dados relacionais e engenharia de dados.
         `.trim(),
         skills: ["PYTHON", "AWS", "DOCKER", "POSTGRESQL"],
       },
@@ -327,14 +327,14 @@ Buscamos um **Engenheiro de Machine Learning Sênior** para atuar em modelo híb
 Estamos à procura de um **Desenvolvedor Frontend React Júnior** cheio de energia para ajudar a construir as interfaces responsivas e de altíssima performance dos nossos novos softwares.
 
 ### O que você fará no dia a dia
-* Desenvolver componentes reutilizáveis utilizando React e Next.js.
-* Consumir APIs RESTful e integrar estados globais e locais.
-* Garantir uma experiência de usuário (UX) fluida em múltiplos dispositivos.
+- Desenvolver componentes reutilizáveis utilizando React e Next.js.
+- Consumir APIs RESTful e integrar estados globais e locais.
+- Garantir uma experiência de usuário (UX) fluida em múltiplos dispositivos.
 
 ### O que esperamos de você
-* Conhecimento prático em React, TypeScript e Tailwind CSS.
-* Noções de semântica HTML e estilização CSS moderna.
-* Vontade enorme de aprender e evoluir rápido no ecossistema frontend.
+- Conhecimento prático em React, TypeScript e Tailwind CSS.
+- Noções de semântica HTML e estilização CSS moderna.
+- Vontade enorme de aprender e evoluir rápido no ecossistema frontend.
         `.trim(),
         skills: ["REACT", "TYPESCRIPT", "TAILWINDCSS", "HTML", "CSS"],
       },
@@ -352,18 +352,67 @@ Estamos à procura de um **Desenvolvedor Frontend React Júnior** cheio de energ
 Procuramos um **QA Engineer Pleno** para atuar em meio período, estruturando processos de testes automatizados e garantindo a estabilidade contínua dos nossos releases.
 
 ### Atividades Principais
-* Desenvolver e executar planos de testes manuais e automatizados.
-* Implementar suítes de testes de ponta a ponta (E2E) e regressão.
-* Atuar lado a lado com os desenvolvedores na prevenção de bugs.
+- Desenvolver e executar planos de testes manuais e automatizados.
+- Implementar suítes de testes de ponta a ponta (E2E) e regressão.
+- Atuar lado a lado com os desenvolvedores na prevenção de bugs.
 
 ### O que exigimos da vaga
-* Experiência sólida com ferramentas de testes como Cypress e Jest.
-* Familiaridade com automação em Python ou JavaScript.
-* Boa comunicação e atenção aos detalhes.
+- Experiência sólida com ferramentas de testes como Cypress e Jest.
+- Familiaridade com automação em Python ou JavaScript.
+- Boa comunicação e atenção aos detalhes.
         `.trim(),
         skills: ["CYPRESS", "JEST", "PYTHON", "GITHUB"],
       },
     ],
+  });
+
+  await prisma.application.createMany({
+    data: [
+      {
+        id: "app_1",
+        jobId: "job1",
+        candidateId: user.id,
+        status: "PENDING",
+        feedback: null,
+        feedbackAt: null,
+      },
+      {
+        id: "app_2",
+        jobId: "job2",
+        candidateId: user.id,
+        status: "REVIEW",
+        feedback:
+          "Currículo interessante, aguardando alinhamento com o tech lead.",
+        feedbackAt: new Date("2026-04-10T10:00:00Z"),
+      },
+      {
+        id: "app_3",
+        jobId: "job3",
+        candidateId: user.id,
+        status: "INTERVIEW",
+        feedback:
+          "Parabéns! Entrevista técnica agendada para a próxima terça-feira.",
+        feedbackAt: new Date("2026-04-11T14:30:00Z"),
+      },
+      {
+        id: "app_4",
+        jobId: "job4",
+        candidateId: user.id,
+        status: "REJECTED",
+        feedback:
+          "No momento estamos buscando um perfil com mais experiência na stack específica.",
+        feedbackAt: new Date("2026-04-08T16:00:00Z"),
+      },
+      {
+        id: "app_5",
+        jobId: "job5",
+        candidateId: user.id,
+        status: "HIRED",
+        feedback: "Contratado! Seja muito bem-vindo à equipe.",
+        feedbackAt: new Date("2026-04-09T09:00:00Z"),
+      },
+    ],
+    skipDuplicates: true,
   });
 }
 
