@@ -29,22 +29,24 @@ import { ApplicationCreateWrapper } from "@/components/applications/ApplicationC
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   const jobId = (await props.params).id;
-  const [user, response] = await Promise.all([
+  const [user, jobResponse] = await Promise.all([
     getCurrentUserData(),
     getJobByIdAction(jobId),
   ]);
 
   // Handle get job request exceptions
-  if (!response.success) {
-    if (response.status === 404) {
+  if (!jobResponse.success) {
+    if (jobResponse.status === 404) {
       notFound();
     } else {
       throw new Error("Não foi possível carregar os dados da vaga.");
     }
   }
 
-  const job = response.data;
+  const job = jobResponse.data;
   const isUserCreator = job.creator.id === user?.id;
+  console.log("DATA: ", job);
+
   return (
     <>
       <Navbar />

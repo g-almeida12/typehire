@@ -51,6 +51,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
   const {
     formState: { errors },
     setError,
+    setValue,
     handleSubmit,
     register,
     control,
@@ -65,11 +66,17 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-
   const selectedModality = useWatch({
     control,
     name: "modality",
   });
+  const salaryType = job
+    ? job.fixedSalary
+      ? "fixed"
+      : job.intervalSalary
+        ? "interval"
+        : "hourly"
+    : undefined;
 
   const handleButtonClick = async (
     data: JobClientCreatePayload | JobUpdatePayload,
@@ -126,7 +133,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
       {/* Job base info */}
       <fieldset>
         <legend className="text-xl font-medium mb-3">
-          {job ? "Atualize" : "Preencha"} os dados da sua vaga
+          Informações públicas
         </legend>
         <div className="flex flex-col gap-2">
           <Input
@@ -146,6 +153,8 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
           />
           <JobSalaryInput
             label="Selecione o tipo de salário"
+            defaultSalaryType={salaryType}
+            setValue={setValue}
             control={control}
             error={
               errors.fixedSalary?.message ||

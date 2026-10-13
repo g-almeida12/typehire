@@ -8,7 +8,7 @@ export function SkeletonDescription({
   customKey?: string;
 }) {
   return Array.from({ length }).map((_, idx) => (
-    <div className="flex flex-col gap-1 mb-2 mt-4">
+    <div className="flex flex-col gap-1 mb-2 mt-4" key={`${customKey}-${idx}`}>
       {[100, 80, 95, 70, 93, 73].map((w) => (
         <SkeletonText
           customClassName={`w-[${w}%] h-5 bg-background-600`}

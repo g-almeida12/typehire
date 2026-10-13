@@ -3,24 +3,28 @@
 import { InputHTMLAttributes, useState } from "react";
 import { Input } from "../common/Input";
 import { DollarIcon } from "../icons";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, UseFormSetValue } from "react-hook-form";
 import { JobClientCreatePayload, JobUpdatePayload } from "@/lib/modules/job";
 
 interface JobSalaryInputProps extends InputHTMLAttributes<HTMLInputElement> {
   control: Control<JobClientCreatePayload | JobUpdatePayload>;
   label: string;
+  setValue: UseFormSetValue<JobClientCreatePayload | JobUpdatePayload>;
   error?: string;
+  defaultSalaryType?: "fixed" | "hourly" | "interval";
 }
 
 export function JobSalaryInput({
   control,
   label,
+  setValue,
   error,
+  defaultSalaryType,
   ...props
 }: JobSalaryInputProps) {
   const [selectedSalaryType, setSelectedSalaryType] = useState<
     "fixed" | "hourly" | "interval"
-  >("fixed");
+  >(defaultSalaryType ?? "fixed");
 
   const parseStrictNumber = (value: string) => {
     if (!value) return NaN;
@@ -43,7 +47,12 @@ export function JobSalaryInput({
             <button
               className={`flex-1 rounded-md py-1 text-sm font-medium cursor-pointer ${selectedSalaryType === type ? "bg-background-600" : "text-background-300"}`}
               type="button"
-              onClick={() => setSelectedSalaryType(type)}
+              onClick={() => {
+                setSelectedSalaryType(type);
+                setValue("fixedSalary", null);
+                setValue("hourlySalary", null);
+                setValue("intervalSalary", null);
+              }}
               key={type}
             >
               {type === "fixed" && "Fixo"}

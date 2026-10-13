@@ -22,7 +22,6 @@ export default async function CompanyUpdate(
     }
   }
 
-  const company = companyResponse.data;
   return (
     <main className="pb-4">
       <section>
@@ -37,9 +36,9 @@ export default async function CompanyUpdate(
 
       <section>
         <CompanyForm
-          company={company}
+          company={companyResponse.data}
           currentUserEmail={user!.email}
-          key={company?.id}
+          key={companyResponse.data.id}
         />
       </section>
     </main>
@@ -51,9 +50,9 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   try {
     const companyId = (await props.params).id;
-    const response = await getCompanyByIdAction(companyId);
+    const companyResponse = await getCompanyByIdAction(companyId);
 
-    if (!response.success) {
+    if (!companyResponse.success) {
       return {
         title: "Empresa não encontrada | TypeHire",
         description:
@@ -62,7 +61,7 @@ export async function generateMetadata(
     }
 
     return {
-      title: `Atualizar empresa ${response.data.name} | TypeHire`,
+      title: `Atualizar empresa ${companyResponse.data.name} | TypeHire`,
       description:
         "Atualize os dados da sua empresa para dar total transparência aos candidatos.",
     };

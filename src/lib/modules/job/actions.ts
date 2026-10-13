@@ -41,9 +41,10 @@ export async function createJobAction(
         );
       }
 
+      const { intervalSalary, ...leanNewData } = jobData;
       const createdJob = await tx.job.create({
         data: {
-          ...jobData,
+          ...leanNewData,
           minSalary: jobData.intervalSalary?.at(0) ?? null,
           maxSalary: jobData.intervalSalary?.at(1) ?? null,
           status: "ABERTA",
@@ -219,11 +220,16 @@ export async function updateJobByIdAction(
           403,
         );
       }
-
+      
       // Update the job
+      const { intervalSalary, ...leanNewData } = newData;
       return await tx.job.update({
         where: { id: jobId },
-        data: newData,
+        data: {
+          ...leanNewData,
+          minSalary: newData.intervalSalary?.at(0) ?? null,
+          maxSalary: newData.intervalSalary?.at(1) ?? null,
+        },
         include: {
           ...jobWithDetailsInclude,
           applications: {
@@ -256,7 +262,7 @@ export async function updateJobByIdAction(
     return {
       success: false,
       status: 500,
-      message: "Não foi possível retornar os dados da vaga.",
+      message: "Não foi possível atualizar os dados da vaga.",
     };
   }
 }

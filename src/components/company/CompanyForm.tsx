@@ -126,7 +126,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
       {/* Company base info */}
       <fieldset>
         <legend className="text-xl font-medium mb-3">
-          {company ? "Atualize" : "Preencha"} os dados da sua empresa
+          Informações públicas
         </legend>
         <div className="flex flex-col gap-2">
           <Input
