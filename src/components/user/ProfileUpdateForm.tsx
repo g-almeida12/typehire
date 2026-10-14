@@ -44,6 +44,7 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
     register,
   } = useForm<UserUpdatePayload>({
     resolver: zodResolver(UserUpdateSchema),
+    defaultValues: user,
   });
   const [selectedSkills, setSelectedSkills] = useState<Skill[]>(user.skills);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -187,18 +188,20 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
             <ul className="flex flex-row flex-wrap gap-2">
               {selectedSkills.map((s) => (
                 <li
-                  className="flex flex-row items-center gap-2 px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold"
+                  className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm  text-sm  font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
                   key={s}
                 >
                   <span>{skillMapper[s]}</span>
                   <button
-                    className="cursor-pointer"
+                    className={isLoading ? "cursor-default" : "cursor-pointer"}
                     type="button"
-                    onClick={() =>
+                    onClick={() => {
+                      if (isLoading) return;
+
                       setSelectedSkills(
                         selectedSkills.filter((skill) => skill !== s),
-                      )
-                    }
+                      );
+                    }}
                     aria-label="Remover habilidade"
                   >
                     <XIcon size={18} />

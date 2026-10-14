@@ -10,6 +10,7 @@ interface JobSalaryInputProps extends InputHTMLAttributes<HTMLInputElement> {
   control: Control<JobClientCreatePayload | JobUpdatePayload>;
   label: string;
   setValue: UseFormSetValue<JobClientCreatePayload | JobUpdatePayload>;
+  disabled?: boolean;
   error?: string;
   defaultSalaryType?: "fixed" | "hourly" | "interval";
 }
@@ -18,6 +19,7 @@ export function JobSalaryInput({
   control,
   label,
   setValue,
+  disabled = false,
   error,
   defaultSalaryType,
   ...props
@@ -41,13 +43,17 @@ export function JobSalaryInput({
         {label}
       </label>
 
-      <div className="w-full flex flex-col gap-2 px-2 py-1 mb-1 rounded-md border-background-800 bg-background-800">
+      <div
+        className={`w-full flex flex-col gap-2 px-2 py-1 mb-1 rounded-md ${disabled ? "border-background-900 bg-background-900" : "border-background-800 bg-background-800"}`}
+      >
         <div className="flex flex-row gap-2">
           {(["fixed", "hourly", "interval"] as const).map((type) => (
             <button
-              className={`flex-1 rounded-md py-1 text-sm font-medium cursor-pointer ${selectedSalaryType === type ? "bg-background-600" : "text-background-300"}`}
+              className={`flex-1 rounded-md py-1 text-sm font-medium ${selectedSalaryType === type ? (disabled ? "bg-background-700 text-background-400" : "bg-background-600") : "text-background-300"} ${disabled ? "cursor-default" : "cursor-pointer"}`}
               type="button"
               onClick={() => {
+                if (disabled) return;
+
                 setSelectedSalaryType(type);
                 setValue("fixedSalary", null);
                 setValue("hourlySalary", null);
@@ -82,6 +88,7 @@ export function JobSalaryInput({
               error={error}
               inputMode="decimal"
               type="number"
+              disabled={disabled}
             />
           )}
         />
@@ -106,6 +113,7 @@ export function JobSalaryInput({
               error={error}
               inputMode="decimal"
               type="number"
+              disabled={disabled}
             />
           )}
         />
@@ -136,6 +144,7 @@ export function JobSalaryInput({
                   error={error}
                   inputMode="decimal"
                   type="number"
+                  disabled={disabled}
                 />
                 <Input
                   Icon={DollarIcon}
@@ -150,6 +159,7 @@ export function JobSalaryInput({
                   error={error}
                   inputMode="decimal"
                   type="number"
+                  disabled={disabled}
                 />
               </div>
             );

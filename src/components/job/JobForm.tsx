@@ -161,6 +161,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
               errors.hourlySalary?.message ||
               errors.intervalSalary?.message
             }
+            disabled={isLoading}
           />
           <Controller
             name="modality"
@@ -181,6 +182,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
                   field.onChange(enumKey);
                 }}
                 error={errors.modality?.message}
+                disabled={isLoading}
               />
             )}
           />
@@ -210,6 +212,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
                   field.onChange(enumKey);
                 }}
                 error={errors.type?.message}
+                disabled={isLoading}
               />
             )}
           />
@@ -231,6 +234,7 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
                   field.onChange(enumKey);
                 }}
                 error={errors.level?.message}
+                disabled={isLoading}
               />
             )}
           />
@@ -268,18 +272,22 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
                     <ul className="flex flex-row flex-wrap gap-2">
                       {currentSkills.map((s) => (
                         <li
-                          className="flex flex-row items-center gap-2 px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold"
+                          className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm  text-sm  font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
                           key={s}
                         >
                           <span>{skillMapper[s]}</span>
                           <button
-                            className="cursor-pointer"
+                            className={
+                              isLoading ? "cursor-default" : "cursor-pointer"
+                            }
                             type="button"
-                            onClick={() =>
+                            onClick={() => {
+                              if (isLoading) return;
+
                               field.onChange(
                                 currentSkills.filter((skill) => skill !== s),
-                              )
-                            }
+                              );
+                            }}
                             aria-label="Remover habilidade"
                           >
                             <XIcon size={18} />

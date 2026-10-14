@@ -25,7 +25,7 @@ import {
   updateCompanyByIdAction,
 } from "@/lib/modules/company/index";
 import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
-import { UsersDropdownSelect } from "./UserDropdownSelect";
+import { UsersDropdownSelect } from "../user/UsersDropdownSelect";
 import { UserProfile } from "../user/UserProfile";
 
 interface CompanyFormProps {
@@ -188,6 +188,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           currentUserEmail={currentUserEmail}
           selectedUsersEmail={selectedUsers.map((u) => u.email)}
           onUserClick={(user) => setSelectedUsers((prev) => [...prev, user])}
+          disabled={isLoading}
         />
 
         <div className="mt-4">
@@ -197,16 +198,20 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
                 <li className="w-full" key={`user-${user.id}`}>
                   {idx >= 1 && <hr className="my-1 mx-2 text-background-500" />}
 
-                  <div className="flex flex-row w-full items-start gap-2 px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold">
+                  <div className={`flex flex-row w-full items-start gap-2 px-2 py-1 rounded-sm  text-sm font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}>
                     <UserProfile user={user} type="list" />
                     <button
-                      className="cursor-pointer"
+                      className={
+                        isLoading ? "cursor-default" : "cursor-pointer"
+                      }
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
+                        if (isLoading) return;
+
                         setSelectedUsers(
                           selectedUsers.filter((u) => u.id !== user.id),
-                        )
-                      }
+                        );
+                      }}
                       aria-label="Remover usuário da associação"
                     >
                       <XIcon size={20} className="mt-1" />

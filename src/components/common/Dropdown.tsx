@@ -8,6 +8,7 @@ interface DropdownProps {
   Icon: IconKey;
   options: string[];
   onOptionClick: (option: string) => void;
+  disabled?: boolean;
   value?: string;
   error?: string;
 }
@@ -17,6 +18,7 @@ export function Dropdown({
   Icon,
   options,
   onOptionClick,
+  disabled = false,
   value,
   error,
 }: DropdownProps) {
@@ -100,17 +102,19 @@ export function Dropdown({
 
       {/* Selected option */}
       <div
-        className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 group-hover:border-background-300 group-focus-within:bg-background-300 group-focus-within:text-background-800 group-focus-within:border-background-300 transition-colors ${isOpen ? "rounded-md rounded-b-none bg-background-300 text-background-800 border-background-300" : "rounded-md border-background-800 bg-background-800"}`}
+        className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 transition-colors ${disabled ? "rounded-md border-background-900 bg-background-900 text-background-200" : `group-hover:border-background-300 group-focus-within:bg-background-300 group-focus-within:text-background-800 group-focus-within:border-background-300 ${isOpen ? "rounded-md rounded-b-none bg-background-300 text-background-800 border-background-300" : "rounded-md border-background-800 bg-background-800"}`}`}
       >
         <div className="flex flex-row gap-2 w-full">
           <Icon
             size={24}
-            className={`shrink-0 text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`}
+            className={`shrink-0 ${disabled ? "text-background-500" : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`} `}
           />
 
           <button
             className="flex flex-row items-center justify-between w-full text-left cursor-pointer"
             onClick={(e) => {
+              if (disabled) return;
+
               e.preventDefault();
               setIsOpen((prev) => !prev);
             }}
@@ -123,14 +127,14 @@ export function Dropdown({
             {selectedOption}
             <ChevronDownIcon
               size={24}
-              className={`shrink-0 text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`}
+              className={`shrink-0 ${disabled ? "text-background-500" : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`} `}
             />
           </button>
         </div>
       </div>
 
       {/* Dropdown */}
-      {isOpen && (
+      {isOpen && !disabled && (
         <div
           className={`absolute top-full w-full max-h-70 overflow-y-scroll rounded-b-md border-t border-background-700 bg-background-300 text-background-700 ${isOpen ? "shadow-lg" : ""}`}
           id={label}

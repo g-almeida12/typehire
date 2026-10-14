@@ -45,7 +45,6 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 
   const job = jobResponse.data;
   const isUserCreator = job.creator.id === user?.id;
-  console.log("DATA: ", job);
 
   return (
     <>

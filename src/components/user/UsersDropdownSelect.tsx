@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { UserProfile } from "../user/UserProfile";
+import { UserProfile } from "./UserProfile";
 import { getUsersByEmailPrefixAction } from "@/lib/modules/user/index";
 
 interface UsersDropdownSelectProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -17,6 +17,7 @@ interface UsersDropdownSelectProps extends InputHTMLAttributes<HTMLInputElement>
   currentUserEmail: string;
   selectedUsersEmail: string[];
   onUserClick: (user: UserPublicResponsePayload) => void;
+  disabled?: boolean;
 }
 
 export const UsersDropdownSelect = forwardRef<
@@ -24,7 +25,14 @@ export const UsersDropdownSelect = forwardRef<
   UsersDropdownSelectProps
 >(
   (
-    { label, currentUserEmail, selectedUsersEmail, onUserClick, ...props },
+    {
+      label,
+      currentUserEmail,
+      selectedUsersEmail,
+      onUserClick,
+      disabled,
+      ...props
+    },
     ref,
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -101,6 +109,8 @@ export const UsersDropdownSelect = forwardRef<
 
     // Handle the native actions for navigation inside the dropdown
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (disabled) return;
+
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
@@ -150,12 +160,12 @@ export const UsersDropdownSelect = forwardRef<
 
         {/* Input */}
         <div
-          className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 group-hover:border-background-300 group-focus-within:bg-background-300 group-focus-within:text-background-800 group-focus-within:border-background-300 transition-colors ${isOpen ? "rounded-md rounded-b-none bg-background-300 text-background-800 border-background-300" : "rounded-md border-background-800 bg-background-800"}`}
+          className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 ${disabled ? "rounded-md  border-background-900 bg-background-900 text-background-200" : `group-hover:border-background-300 group-focus-within:bg-background-300 group-focus-within:text-background-800 group-focus-within:border-background-300 transition-colors ${isOpen ? "rounded-md rounded-b-none bg-background-300 text-background-800 border-background-300" : "rounded-md border-background-800 bg-background-800"}`}`}
         >
           <div className="flex flex-row gap-2 w-full">
             <MailIcon
               size={24}
-              className={`shrink-0 text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`}
+              className={`shrink-0 ${disabled ? "text-background-500" : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`} `}
             />
             <input
               {...props}
@@ -171,10 +181,14 @@ export const UsersDropdownSelect = forwardRef<
               }}
               value={search}
               onFocus={() => {
+                if (disabled) return;
+
                 setIsOpen(true);
                 setSelectedIndex(0);
               }}
               onChange={(e) => {
+                if (disabled) return;
+
                 setSearch(e.target.value);
                 setSelectedIndex(0);
               }}

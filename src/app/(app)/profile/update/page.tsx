@@ -4,12 +4,6 @@ import { Skill } from "@/database/generated/enums";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Atualizar perfil do usuário | TypeHire",
-  description:
-    "Atualize suas informações pessoais e melhore o seu resultado na hora da contratação.",
-};
-
 export default async function ProfileUpdate() {
   const user = (await getCurrentUserData())!;
 
@@ -35,3 +29,9 @@ export default async function ProfileUpdate() {
     </main>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Atualizar perfil do usuário | TypeHire",
+  description:
+    "Atualize suas informações pessoais e melhore o seu resultado na hora da contratação.",
+};
