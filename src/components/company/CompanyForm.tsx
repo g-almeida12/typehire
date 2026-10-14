@@ -7,11 +7,10 @@ import {
   AtSignIcon,
   PackageIcon,
   GlobeIcon,
-  XIcon,
 } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
@@ -26,7 +25,7 @@ import {
 } from "@/lib/modules/company/index";
 import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
 import { UsersDropdownSelect } from "../user/UsersDropdownSelect";
-import { UserProfile } from "../user/UserProfile";
+import { UserList } from "../user/UserList";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
@@ -39,6 +38,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
     setError,
     handleSubmit,
     register,
+    control,
   } = useForm<CompanyCreatePayload | CompanyUpdatePayload>({
     defaultValues: company ?? {
       name: "",
@@ -182,50 +182,30 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
         <p className="mb-3">
           Associe outras pessoas para lhe ajudar no gerenciamento de vagas.
         </p>
+        <Controller
+          name="members"
+          control={control}
+          render={({ field }) => (
+            <>
+              <UsersDropdownSelect
+                label="Digite o email do associado"
+                currentUserEmail={currentUserEmail}
+                selectedUsersEmail={selectedUsers.map((u) => u.email)}
+                onUserClick={(user) =>
+                  setSelectedUsers((prev) => [...prev, user])
+                }
+                disabled={isLoading}
+              />
 
-        <UsersDropdownSelect
-          label="Digite o email do associado"
-          currentUserEmail={currentUserEmail}
-          selectedUsersEmail={selectedUsers.map((u) => u.email)}
-          onUserClick={(user) => setSelectedUsers((prev) => [...prev, user])}
-          disabled={isLoading}
-        />
-
-        <div className="mt-4">
-          {selectedUsers.length > 0 ? (
-            <ul className="flex flex-row flex-wrap gap-0 rounded-md bg-background-700">
-              {selectedUsers.map((user, idx) => (
-                <li className="w-full" key={`user-${user.id}`}>
-                  {idx >= 1 && <hr className="my-1 mx-2 text-background-500" />}
-
-                  <div className={`flex flex-row w-full items-start gap-2 px-2 py-1 rounded-sm  text-sm font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}>
-                    <UserProfile user={user} type="list" />
-                    <button
-                      className={
-                        isLoading ? "cursor-default" : "cursor-pointer"
-                      }
-                      type="button"
-                      onClick={() => {
-                        if (isLoading) return;
-
-                        setSelectedUsers(
-                          selectedUsers.filter((u) => u.id !== user.id),
-                        );
-                      }}
-                      aria-label="Remover usuário da associação"
-                    >
-                      <XIcon size={20} className="mt-1" />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-background-300">
-              Que tal tentar adicionar algum membro para ajudar?
-            </p>
+              <div className="mt-4">
+                <UserList
+                  users={field.value ?? []}
+                  updateMode={{isLoading, setUsers: field.onChange}}
+                />
+              </div>
+            </>
           )}
-        </div>
+        />
       </fieldset>
 
       <div className="mt-10">

@@ -13,10 +13,10 @@ import { DeleteUserButton } from "@/components/user/DeleteUserButton";
 import { SignOutUserButton } from "@/components/user/SignOutUserButton";
 import { UserProfile } from "@/components/user/UserProfile";
 import { getCurrentUserData } from "@/lib/data/user/index";
-import { skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { APP_URLS } from "@/utils/constants";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
+import { SkillList } from "@/components/common/SkillList";
 
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",
@@ -132,22 +132,7 @@ export default async function ProfilePage() {
       {/* Skills */}
       <section className="mt-8">
         <h2 className="mb-2 text-xl font-medium">Suas habilidades</h2>
-        {user.skills.length > 0 ? (
-          <ul className="flex flex-row flex-wrap gap-2">
-            {user.skills.map((s) => (
-              <li
-                className="block px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold"
-                key={s}
-              >
-                <span>{skillMapper[s]}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-background-300">
-            Você ainda não adicionou nenhuma habilidade.
-          </p>
-        )}
+        <SkillList skills={user.skills} />
       </section>
 
       {/* Memberships */}

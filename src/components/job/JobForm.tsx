@@ -5,7 +5,6 @@ import { TextArea } from "@/components/common/TextArea";
 import {
   AtSignIcon,
   GlobeIcon,
-  XIcon,
   PinIcon,
   ClockIcon,
   AwardIcon,
@@ -40,6 +39,7 @@ import {
 } from "@/utils/mappers";
 import { JobSalaryInput } from "./JobSalaryInput";
 import { Dropdown } from "../common/Dropdown";
+import { SkillList } from "../common/SkillList";
 
 interface JobFormProps {
   skills: Skill[];
@@ -268,38 +268,10 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
                   disabled={isLoading}
                 />
                 <div className="mt-4">
-                  {currentSkills.length > 0 ? (
-                    <ul className="flex flex-row flex-wrap gap-2">
-                      {currentSkills.map((s) => (
-                        <li
-                          className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm  text-sm  font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
-                          key={s}
-                        >
-                          <span>{skillMapper[s]}</span>
-                          <button
-                            className={
-                              isLoading ? "cursor-default" : "cursor-pointer"
-                            }
-                            type="button"
-                            onClick={() => {
-                              if (isLoading) return;
-
-                              field.onChange(
-                                currentSkills.filter((skill) => skill !== s),
-                              );
-                            }}
-                            aria-label="Remover habilidade"
-                          >
-                            <XIcon size={18} />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-background-300">
-                      Que tal tentar adicionar uma nova habilidade?
-                    </p>
-                  )}
+                  <SkillList
+                    skills={currentSkills}
+                    updateMode={{ isLoading, setSkills: field.onChange }}
+                  />
                 </div>
               </>
             );

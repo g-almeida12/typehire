@@ -7,7 +7,6 @@ import {
   PinHouseIcon,
   GitHubIcon,
   LinkedInIcon,
-  XIcon,
 } from "@/components/icons";
 import {
   type UserPrivateResponsePayload,
@@ -24,12 +23,13 @@ import {
   GlobeIcon,
 } from "@/components/icons";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
 import { skillMapper } from "@/utils/mappers";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
+import { SkillList } from "../common/SkillList";
 
 interface ProfileUpdateFormProps {
   user: UserPrivateResponsePayload;
@@ -42,24 +42,18 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
     setError,
     handleSubmit,
     register,
+    control
   } = useForm<UserUpdatePayload>({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: user,
   });
-  const [selectedSkills, setSelectedSkills] = useState<Skill[]>(user.skills);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-
-  const skillsInfo = skills.map((s) => ({
-    text: skillMapper[s],
-    value: s,
-    isSelected: selectedSkills.includes(s) || user.skills.includes(s),
-  }));
 
   const handleUserUpdate = async (data: UserUpdatePayload) => {
     try {
       setIsLoading(true);
-      await updateUserAction({ ...data, skills: selectedSkills });
+      await updateUserAction(data);
 
       router.replace(APP_URLS.profile);
     } catch (err) {
@@ -173,48 +167,39 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
         <legend className="text-xl font-medium mb-3">
           Habilidades registradas
         </legend>
-        <SkillsDropdownSelect
-          label="Adicione uma nova habilidade"
-          skills={skillsInfo}
-          onSkillClick={(skill) =>
-            setSelectedSkills((prev) => [...prev, skill])
-          }
-          placeholder="Digite uma habilidade"
-          disabled={isLoading}
+        <Controller
+          name="skills"
+          control={control}
+          render={({ field }) => {
+            const currentSkills = field.value ?? [];
+
+            const skillsInfo = skills.map((s) => ({
+              text: skillMapper[s],
+              value: s,
+              isSelected: currentSkills.includes(s),
+            }));
+
+            return (
+              <>
+                <SkillsDropdownSelect
+                  label="Adicione uma nova habilidade"
+                  skills={skillsInfo}
+                  onSkillClick={(skill) =>
+                    field.onChange([...currentSkills, skill])
+                  }
+                  placeholder="Digite uma habilidade"
+                  disabled={isLoading}
+                />
+                <div className="mt-4">
+                  <SkillList
+                    skills={currentSkills}
+                    updateMode={{isLoading, setSkills: field.onChange}}
+                  />
+                </div>
+              </>
+            );
+          }}
         />
-
-        <div className="mt-4">
-          {selectedSkills.length > 0 ? (
-            <ul className="flex flex-row flex-wrap gap-2">
-              {selectedSkills.map((s) => (
-                <li
-                  className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm  text-sm  font-semibold ${isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
-                  key={s}
-                >
-                  <span>{skillMapper[s]}</span>
-                  <button
-                    className={isLoading ? "cursor-default" : "cursor-pointer"}
-                    type="button"
-                    onClick={() => {
-                      if (isLoading) return;
-
-                      setSelectedSkills(
-                        selectedSkills.filter((skill) => skill !== s),
-                      );
-                    }}
-                    aria-label="Remover habilidade"
-                  >
-                    <XIcon size={18} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-background-300">
-              Que tal tentar adicionar uma nova habilidade?
-            </p>
-          )}
-        </div>
       </fieldset>
 
       <div className="mt-10">
