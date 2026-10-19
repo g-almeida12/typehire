@@ -1,6 +1,5 @@
 import { BackButton } from "@/components/common/BackButton";
 import { ProfileUpdateForm } from "@/components/user/ProfileUpdateForm";
-import { Skill } from "@/database/generated/enums";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 
@@ -22,7 +21,6 @@ export default async function ProfileUpdate() {
       <section>
         <ProfileUpdateForm
           user={user}
-          skills={Object.values(Skill).toSorted()}
           key={user.id}
         />
       </section>

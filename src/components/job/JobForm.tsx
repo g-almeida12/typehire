@@ -2,13 +2,7 @@
 
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
-import {
-  AtSignIcon,
-  GlobeIcon,
-  PinIcon,
-  ClockIcon,
-  AwardIcon,
-} from "@/components/icons";
+import { AtSignIcon, PinIcon } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
@@ -24,30 +18,19 @@ import {
   createJobAction,
   updateJobByIdAction,
 } from "@/lib/modules/job/index";
-import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
-import {
-  JobLevel,
-  JobModality,
-  JobType,
-  Skill,
-} from "@/database/generated/enums";
-import {
-  jobLevelMapper,
-  jobModalityMapper,
-  jobTypeMapper,
-  skillMapper,
-} from "@/utils/mappers";
 import { JobSalaryInput } from "./JobSalaryInput";
-import { Dropdown } from "../common/Dropdown";
+import { JobLevelDropdown } from "./JobLevelDropdown";
+import { JobTypeDropdown } from "./JobTypeDropdown";
+import { JobModalityDropdown } from "./JobModalityDropdown";
+import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
 
 interface JobFormProps {
-  skills: Skill[];
   companyId?: string;
   job?: JobResponsePayload;
 }
 
-export function JobForm({ job, companyId, skills }: JobFormProps) {
+export function JobForm({ job, companyId }: JobFormProps) {
   const {
     formState: { errors },
     setError,
@@ -163,28 +146,10 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
             }
             disabled={isLoading}
           />
-          <Controller
-            name="modality"
+          <JobModalityDropdown
             control={control}
-            render={({ field }) => (
-              <Dropdown
-                label="Modalidade"
-                Icon={GlobeIcon}
-                options={Object.values(JobModality).map(
-                  (mod) => jobModalityMapper[mod],
-                )}
-                value={jobModalityMapper[field.value as JobModality]}
-                onOptionClick={(selectedOption) => {
-                  const enumKey = Object.keys(jobModalityMapper).find(
-                    (key) =>
-                      jobModalityMapper[key as JobModality] === selectedOption,
-                  );
-                  field.onChange(enumKey);
-                }}
-                error={errors.modality?.message}
-                disabled={isLoading}
-              />
-            )}
+            error={errors.modality?.message}
+            isLoading={isLoading}
           />
           {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
             <Input
@@ -196,47 +161,15 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
               disabled={isLoading}
             />
           )}
-          <Controller
-            name="type"
+          <JobTypeDropdown
             control={control}
-            render={({ field }) => (
-              <Dropdown
-                label="Período de duração do trabalho"
-                Icon={ClockIcon}
-                options={Object.values(JobType).map((tp) => jobTypeMapper[tp])}
-                value={jobTypeMapper[field.value as JobType]}
-                onOptionClick={(selectedOption) => {
-                  const enumKey = Object.keys(jobTypeMapper).find(
-                    (key) => jobTypeMapper[key as JobType] === selectedOption,
-                  );
-                  field.onChange(enumKey);
-                }}
-                error={errors.type?.message}
-                disabled={isLoading}
-              />
-            )}
+            error={errors.type?.message}
+            isLoading={isLoading}
           />
-          <Controller
-            name="level"
+          <JobLevelDropdown
             control={control}
-            render={({ field }) => (
-              <Dropdown
-                label="Experiência necessária"
-                Icon={AwardIcon}
-                options={Object.values(JobLevel).map(
-                  (lv) => jobLevelMapper[lv],
-                )}
-                value={jobLevelMapper[field.value as JobLevel]}
-                onOptionClick={(selectedOption) => {
-                  const enumKey = Object.keys(jobLevelMapper).find(
-                    (key) => jobLevelMapper[key as JobLevel] === selectedOption,
-                  );
-                  field.onChange(enumKey);
-                }}
-                error={errors.level?.message}
-                disabled={isLoading}
-              />
-            )}
+            error={errors.level?.message}
+            isLoading={isLoading}
           />
         </div>
       </fieldset>
@@ -244,38 +177,26 @@ export function JobForm({ job, companyId, skills }: JobFormProps) {
       {/* Skills */}
       <fieldset>
         <legend className="text-xl font-medium">Habilidades necessárias</legend>
-        <Controller
-          name="skills"
+        <SkillsDropdown
+          label="Adicione uma nova habilidade"
           control={control}
-          render={({ field }) => {
-            const currentSkills = field.value ?? [];
-
-            const skillsInfo = skills.map((s) => ({
-              text: skillMapper[s],
-              value: s,
-              isSelected: currentSkills.includes(s),
-            }));
-
-            return (
-              <>
-                <SkillsDropdownSelect
-                  label="Adicione uma nova habilidade"
-                  skills={skillsInfo}
-                  onSkillClick={(skill) =>
-                    field.onChange([...currentSkills, skill])
-                  }
-                  placeholder="Digite uma habilidade"
-                  disabled={isLoading}
-                />
-                <div className="mt-4">
-                  <SkillList
-                    skills={currentSkills}
-                    updateMode={{ isLoading, setSkills: field.onChange }}
-                  />
-                </div>
-              </>
-            );
-          }}
+          error={errors.skills?.message}
+          isLoading={isLoading}
+        />
+        <Controller
+          control={control}
+          name="skills"
+          render={({ field }) => (
+            <div className="mt-4">
+              <SkillList
+                skills={field.value ?? []}
+                updateMode={{
+                  isLoading,
+                  setSkills: (skills) => field.onChange(skills),
+                }}
+              />
+            </div>
+          )}
         />
       </fieldset>
 

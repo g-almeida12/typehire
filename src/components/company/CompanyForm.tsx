@@ -2,12 +2,7 @@
 
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
-import {
-  BuildingIcon,
-  AtSignIcon,
-  PackageIcon,
-  GlobeIcon,
-} from "@/components/icons";
+import { BuildingIcon, AtSignIcon, GlobeIcon } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +21,7 @@ import {
 import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
 import { UsersDropdownSelect } from "../user/UsersDropdownSelect";
 import { UserList } from "../user/UserList";
+import { CompanySizeDropdown } from "./CompanySizeDropdown";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
@@ -148,13 +144,10 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             />
           )}
 
-          <Input
-            {...register("size")}
-            Icon={PackageIcon}
-            label="Tamanho da empresa"
-            placeholder="Selecione o tamanho da empresa"
+          <CompanySizeDropdown
+            control={control}
             error={errors.size?.message}
-            disabled={isLoading}
+            isLoading={isLoading}
           />
           <Input
             {...register("website")}
@@ -200,7 +193,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
               <div className="mt-4">
                 <UserList
                   users={field.value ?? []}
-                  updateMode={{isLoading, setUsers: field.onChange}}
+                  updateMode={{ isLoading, setUsers: field.onChange }}
                 />
               </div>
             </>

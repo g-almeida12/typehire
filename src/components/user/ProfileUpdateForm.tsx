@@ -1,13 +1,8 @@
 "use client";
 
-import { Skill } from "@/database/generated/enums";
 import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
-import {
-  PinHouseIcon,
-  GitHubIcon,
-  LinkedInIcon,
-} from "@/components/icons";
+import { PinHouseIcon, GitHubIcon, LinkedInIcon } from "@/components/icons";
 import {
   type UserPrivateResponsePayload,
   type UserUpdatePayload,
@@ -24,25 +19,23 @@ import {
 } from "@/components/icons";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { SkillsDropdownSelect } from "../common/SkillsDropdownSelect";
-import { skillMapper } from "@/utils/mappers";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 import { SkillList } from "../common/SkillList";
+import { SkillsDropdown } from "../common/SkillsDropdown";
 
 interface ProfileUpdateFormProps {
   user: UserPrivateResponsePayload;
-  skills: Skill[];
 }
 
-export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
+export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
   const {
     formState: { errors },
     setError,
     handleSubmit,
     register,
-    control
+    control,
   } = useForm<UserUpdatePayload>({
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: user,
@@ -167,38 +160,26 @@ export function ProfileUpdateForm({ user, skills }: ProfileUpdateFormProps) {
         <legend className="text-xl font-medium mb-3">
           Habilidades registradas
         </legend>
-        <Controller
-          name="skills"
+        <SkillsDropdown
+          label="Adicione uma nova habilidade"
           control={control}
-          render={({ field }) => {
-            const currentSkills = field.value ?? [];
-
-            const skillsInfo = skills.map((s) => ({
-              text: skillMapper[s],
-              value: s,
-              isSelected: currentSkills.includes(s),
-            }));
-
-            return (
-              <>
-                <SkillsDropdownSelect
-                  label="Adicione uma nova habilidade"
-                  skills={skillsInfo}
-                  onSkillClick={(skill) =>
-                    field.onChange([...currentSkills, skill])
-                  }
-                  placeholder="Digite uma habilidade"
-                  disabled={isLoading}
-                />
-                <div className="mt-4">
-                  <SkillList
-                    skills={currentSkills}
-                    updateMode={{isLoading, setSkills: field.onChange}}
-                  />
-                </div>
-              </>
-            );
-          }}
+          error={errors.skills?.message}
+          isLoading={isLoading}
+        />
+        <Controller
+          control={control}
+          name="skills"
+          render={({ field }) => (
+            <div className="mt-4">
+              <SkillList
+                skills={field.value ?? []}
+                updateMode={{
+                  isLoading,
+                  setSkills: (skills) => field.onChange(skills),
+                }}
+              />
+            </div>
+          )}
         />
       </fieldset>
 

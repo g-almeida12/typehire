@@ -1,7 +1,6 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobForm } from "@/components/job/JobForm";
-import { Skill } from "@/database/generated/enums";
 import { getCompanyByIdAction } from "@/lib/modules/company";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -44,7 +43,6 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
 
       <section>
         <JobForm
-          skills={Object.values(Skill).toSorted()}
           companyId={companyId}
           key={companyId}
         />

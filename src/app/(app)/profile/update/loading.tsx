@@ -20,7 +20,7 @@ export default function ProfileUpdateLoading() {
         {/* Inputs */}
         <div className="flex flex-col gap-4">
           {Array.from({ length: 5 }).map((_, idx) => (
-            <SkeletonInput variant="input" />
+            <SkeletonInput variant="input" key={`input-${idx}`} />
           ))}
           <SkeletonInput variant="textarea" />
         </div>

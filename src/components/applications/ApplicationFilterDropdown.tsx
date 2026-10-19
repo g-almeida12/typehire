@@ -2,7 +2,7 @@
 
 import { BookmarkIcon } from "@/components/icons";
 import { ApplicationStatus } from "@/database/generated/enums";
-import { Dropdown } from "../common/Dropdown";
+import { Dropdown } from "../common/Dropdown/Dropdown";
 import { useRouter, useSearchParams } from "next/navigation";
 import { applicationStatusMapper } from "@/utils/mappers";
 
