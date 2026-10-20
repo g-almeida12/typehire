@@ -11,13 +11,11 @@ import { getCurrentUserId } from "@/lib/data/user";
 import { AppError } from "@/utils/errors/app-error";
 import { prisma } from "@/database";
 import {
-  ApplicationEntity,
   applicationWithDetailsInclude,
   mapApplicationEntity,
 } from "@/lib/data/application/entities";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
-import { TruckElectricIcon } from "lucide-react";
 
 export async function createApplicationAction(
   applicationData: ApplicationCreatePayload,
@@ -28,13 +26,41 @@ export async function createApplicationAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const application = await prisma.application.create({
-      data: {
-        candidateId: userId,
-        jobId: applicationData.jobId,
-        status: "PENDING",
-      },
-      include: applicationWithDetailsInclude,
+    const application = await prisma.$transaction(async (tx) => {
+      const jobData = await tx.job.findUnique({
+        where: { id: applicationData.jobId },
+        select: {
+          createdBy: true,
+          company: {
+            select: { createdBy: true },
+          },
+        },
+      });
+      if (!jobData) {
+        throw new AppError("Vaga não encontrada.", 404);
+      }
+
+      if (jobData.createdBy === userId) {
+        throw new AppError(
+          "O criador da vaga não pode se candidatar na própria vaga.",
+          403,
+        );
+      }
+      if (jobData.company.createdBy === userId) {
+        throw new AppError(
+          "O criador da empresa não pode se candidatar a nenhuma vaga da própria empresa.",
+          403,
+        );
+      }
+
+      return await tx.application.create({
+        data: {
+          candidateId: userId,
+          jobId: applicationData.jobId,
+          status: "PENDING",
+        },
+        include: applicationWithDetailsInclude,
+      });
     });
 
     return {
