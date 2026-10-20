@@ -24,6 +24,7 @@ import { JobTypeDropdown } from "./JobTypeDropdown";
 import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
+import { JobModality } from "@/database/generated/enums";
 
 interface JobFormProps {
   companyId?: string;
@@ -66,7 +67,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
   ) => {
     try {
       setIsLoading(true);
-
+      await new Promise((rsl) => setTimeout(rsl, 10000000));
+      return;
+      
       // Update action
       if (job) {
         const updateResponse = await updateJobByIdAction(
@@ -151,7 +154,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
             error={errors.modality?.message}
             isLoading={isLoading}
           />
-          {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
+          {(["PRESENCIAL", "HÍBRIDO"]).includes(
+            selectedModality || "",
+          ) && (
             <Input
               {...register("location")}
               Icon={PinIcon}

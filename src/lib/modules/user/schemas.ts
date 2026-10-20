@@ -19,7 +19,7 @@ export const UserPublicResponseSchema = z.object({
   linkedinUrl: z.string().nullable(),
   portfolioUrl: z.string().nullable(),
   resumeUrl: z.string().nullable(),
-  skills: z.array(z.enum(Skill)),
+  skills: z.array(z.enum(Skill)).transform((val) => [...new Set(val)]),
   companies: z.array(CompanySnippetSchema),
 });
 export type UserPublicResponsePayload = z.infer<

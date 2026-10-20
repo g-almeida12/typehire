@@ -28,7 +28,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               className={`shrink-0 ${props.disabled ? "text-background-500" : "text-background-400 group-focus-within:text-background-800"}`}
             />
             <textarea
-              className={`w-full min-h-30 max-h-70 resize-y focus:outline-none ${props.disabled ? "text-background-200" : "text-background-100"}`}
+              className={`w-full min-h-30 max-h-70 resize-y focus:outline-none ${props.disabled ? "text-background-200" : ""}`}
               ref={ref}
               {...props}
             />

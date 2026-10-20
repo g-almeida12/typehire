@@ -59,7 +59,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             />
             <input
               type={isVisible ? "text" : "password"}
-              className={`w-full focus:outline-none ${props.disabled ? "text-background-200" : "text-background-100"}`}
+              className={`w-full focus:outline-none ${props.disabled ? "text-background-200" : ""} group-focus-within:text-background-800`}
               ref={ref}
               {...props}
             />

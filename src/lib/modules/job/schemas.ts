@@ -23,7 +23,7 @@ const JobBaseSchema = z.object({
     .min(5, "Insira a localização no formato 'cidade, UF'")
     .optional()
     .nullable(),
-  skills: z.array(z.enum(Skill)),
+  skills: z.array(z.enum(Skill)).transform((arr) => [...new Set(arr)]),
 });
 
 function validateJobSchema(
@@ -107,7 +107,7 @@ export const JobFormFilterSchema = z
       .enum(JobModality)
       .nullish()
       .transform((val) => val ?? undefined),
-    skills: z.array(z.enum(Skill)),
+    skills: z.array(z.enum(Skill)).transform((arr) => [...new Set(arr)]),
     companyId: z.string(),
   })
   .partial();
@@ -121,7 +121,11 @@ export const JobURLFilterSchema = z.object({
   modality: z.enum(JobModality).optional().catch(undefined),
   skills: z.preprocess(
     (v: unknown) => (v === undefined ? [] : [v].flat()),
-    z.array(z.enum(Skill)).optional().catch([]),
+    z
+      .array(z.enum(Skill))
+      .optional()
+      .transform((arr) => [...new Set(arr)])
+      .catch([]),
   ),
   companyId: z.string().optional().catch(undefined),
 });
