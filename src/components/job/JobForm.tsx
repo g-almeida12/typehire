@@ -24,7 +24,6 @@ import { JobTypeDropdown } from "./JobTypeDropdown";
 import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
-import { JobModality } from "@/database/generated/enums";
 
 interface JobFormProps {
   companyId?: string;
@@ -67,8 +66,6 @@ export function JobForm({ job, companyId }: JobFormProps) {
   ) => {
     try {
       setIsLoading(true);
-      await new Promise((rsl) => setTimeout(rsl, 10000000));
-      return;
       
       // Update action
       if (job) {

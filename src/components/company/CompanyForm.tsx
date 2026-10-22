@@ -18,10 +18,9 @@ import {
   createCompanyAction,
   updateCompanyByIdAction,
 } from "@/lib/modules/company/index";
-import { type UserPublicResponsePayload } from "@/lib/modules/user/index";
-import { UsersDropdownSelect } from "../user/UsersDropdownSelect";
 import { UserList } from "../user/UserList";
 import { CompanySizeDropdown } from "./CompanySizeDropdown";
+import { UsersDropdown } from "../user/UsersDropdown";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
@@ -47,9 +46,6 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
     resolver: zodResolver(company ? CompanyUpdateSchema : CompanyCreateSchema),
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedUsers, setSelectedUsers] = useState<
-    UserPublicResponsePayload[]
-  >([]);
   const router = useRouter();
 
   const handleButtonClick = async (
@@ -82,7 +78,6 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
       else {
         const createResponse = await createCompanyAction({
           ...(data as CompanyCreatePayload),
-          members: selectedUsers,
         });
         if (!createResponse.success) {
           if (
@@ -175,28 +170,26 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
         <p className="mb-3">
           Associe outras pessoas para lhe ajudar no gerenciamento de vagas.
         </p>
-        <Controller
-          name="members"
+        <UsersDropdown
+          currentUserEmail={currentUserEmail}
+          label="Adicione uma nova habilidade"
           control={control}
+          error={errors.members?.message}
+          isLoading={isLoading}
+        />
+        <Controller
+          control={control}
+          name="members"
           render={({ field }) => (
-            <>
-              <UsersDropdownSelect
-                label="Digite o email do associado"
-                currentUserEmail={currentUserEmail}
-                selectedUsersEmail={selectedUsers.map((u) => u.email)}
-                onUserClick={(user) =>
-                  setSelectedUsers((prev) => [...prev, user])
-                }
-                disabled={isLoading}
+            <div className="mt-4">
+              <UserList
+                users={field.value ?? []}
+                updateMode={{
+                  isLoading,
+                  setUsers: (users) => field.onChange(users),
+                }}
               />
-
-              <div className="mt-4">
-                <UserList
-                  users={field.value ?? []}
-                  updateMode={{ isLoading, setUsers: field.onChange }}
-                />
-              </div>
-            </>
+            </div>
           )}
         />
       </fieldset>
