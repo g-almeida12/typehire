@@ -5,7 +5,8 @@ import { Dialog, DialogRef } from "../common/Dialog";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
 import { createApplicationAction } from "@/lib/modules/application";
-import { CheckIcon } from '@/components/icons';
+import { CheckIcon } from "@/components/icons";
+import { APP_URLS } from "@/utils/constants";
 
 export function ApplicationCreateWrapper({
   jobId,
@@ -42,17 +43,26 @@ export function ApplicationCreateWrapper({
 
   return (
     <>
-      <Button
-        text={
-          isUserCreator
-            ? "Ação bloqueada"
-            : userHasApplied
-              ? <>Candidatura enviada <CheckIcon /></>
-              : "Candidate-se agora"
-        }
-        disabled={isUserCreator || userHasApplied}
-        onClick={() => dialogRef.current?.openModal()}
-      />
+      {isUserCreator ? (
+        <Button
+          text="Ver candidaturas"
+          href={APP_URLS.jobApplications(jobId)}
+        />
+      ) : (
+        <Button
+          text={
+            userHasApplied ? (
+              <>
+                Candidatura enviada <CheckIcon />
+              </>
+            ) : (
+              "Candidate-se agora"
+            )
+          }
+          disabled={isUserCreator || userHasApplied}
+          onClick={() => dialogRef.current?.openModal()}
+        />
+      )}
 
       <Dialog
         title="Enviar candidatura?"
