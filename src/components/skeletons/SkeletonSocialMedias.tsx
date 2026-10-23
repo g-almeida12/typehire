@@ -1,13 +1,20 @@
 import { GitHubIcon, LinkedInIcon, GlobeIcon } from "@/components/icons";
 
-export function SkeletonSocialMedias() {
+export function SkeletonSocialMedias({
+  size = "default",
+}: {
+  size?: "default" | "small";
+}) {
   return (
-    <div className="flex flex-col gap-2">
+    <ul className={`flex flex-col ${size === "small" ? "gap-1" : "gap-2"}`}>
       {[GitHubIcon, LinkedInIcon, GlobeIcon].map((Icon) => (
-        <div className="flex items-center px-2 w-full h-8 rounded-md border border-background-600 bg-background-800 animate-pulse">
-          <Icon size={20} />
-        </div>
+        <li
+          className={`flex items-center w-full rounded-md border border-background-600 bg-background-800 animate-pulse ${size === "small" ? "h-7 px-1 py-0.5" : "h-8 px-2"}`}
+          key={`${Icon}`}
+        >
+          <Icon size={size === "small" ? 18 : 20} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
