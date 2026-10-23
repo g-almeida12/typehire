@@ -34,6 +34,9 @@ export const applicationWithDetailsInclude = {
       email: true,
       resumeUrl: true,
       skills: true,
+      githubUrl: true,
+      linkedinUrl: true,
+      portfolioUrl: true,
     },
   },
 } satisfies Prisma.ApplicationInclude;
@@ -59,6 +62,9 @@ export function mapApplicationEntity(
       email: application.candidate.email,
       skills: application.candidate.skills,
       resumeUrl: application.candidate.resumeUrl,
+      portfolioUrl: application.candidate.portfolioUrl,
+      githubUrl: application.candidate.githubUrl,
+      linkedinUrl: application.candidate.linkedinUrl,
     },
     job: {
       id: application.job.id,

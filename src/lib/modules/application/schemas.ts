@@ -68,8 +68,13 @@ export const ApplicationResponseSchema = ApplicationBaseSchema.extend({
     email: z.email(),
     resumeUrl: z.string().nullable(),
     skills: z.array(z.enum(Skill)),
+    githubUrl: z.string().nullable(),
+    linkedinUrl: z.string().nullable(),
+    portfolioUrl: z.string().nullable(),
   }),
 });
 export type ApplicationResponsePayload = z.infer<
   typeof ApplicationResponseSchema
 >;
+
+export type JobApplicationStatuses = Record<ApplicationStatus | "ALL", number>;

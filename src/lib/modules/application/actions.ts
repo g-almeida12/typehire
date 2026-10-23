@@ -6,6 +6,7 @@ import {
   ApplicationFormFilterOutputPayload,
   ApplicationResponsePayload,
   ApplicationUpdatePayload,
+  JobApplicationStatuses,
 } from "./schemas";
 import { getCurrentUserId } from "@/lib/data/user";
 import { AppError } from "@/utils/errors/app-error";
@@ -14,7 +15,7 @@ import {
   applicationWithDetailsInclude,
   mapApplicationEntity,
 } from "@/lib/data/application/entities";
-import { Prisma } from "@/database/generated/client";
+import { ApplicationStatus, Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 
 export async function createApplicationAction(
@@ -238,6 +239,71 @@ export async function getApplicationsAction(
       success: false,
       status: 500,
       message: "Não foi possível retornar as candidaturas.",
+    };
+  }
+}
+
+export async function getJobApplicationStatusesAction(
+  jobId: string,
+): ServerActionResponse<JobApplicationStatuses> {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      throw new AppError("Usuário não autenticado", 401);
+    }
+
+    const statusesCount = await prisma.$transaction(async (tx) => {
+      const jobData = await tx.job.findUnique({
+        where: { id: jobId },
+        select: {
+          createdBy: true,
+          company: { select: { createdBy: true } },
+        },
+      });
+      if (!jobData) {
+        throw new AppError("Vaga não encontrada.", 404);
+      }
+
+      if (
+        jobData.createdBy !== userId &&
+        jobData.company.createdBy !== userId
+      ) {
+        throw new AppError(
+          "Você não tem permissão para ver essa candidatura.",
+          403,
+        );
+      }
+
+      return tx.application.groupBy({
+        by: ["status"],
+        where: { jobId },
+        _count: true,
+      });
+    });
+
+    const applicationStatuses = Object.fromEntries(
+      [...Object.values(ApplicationStatus), "ALL"].map((s) => [s, 0]),
+    ) as JobApplicationStatuses;
+    for (const { status, _count } of statusesCount) {
+      applicationStatuses[status] = _count;
+      applicationStatuses.ALL += _count;
+    }
+
+    return { success: true, status: 200, data: applicationStatuses };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível retornar os estados das candidaturas da vaga.",
     };
   }
 }
