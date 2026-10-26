@@ -35,20 +35,19 @@ export function JobLevelDropdown<T extends ExtendedFieldValues>({
     <Dropdown
       label="Experiência necessária"
       Icon={AwardIcon}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      error={error}
+      disabled={isLoading}
       field={
         <DropdownButtonField
           selectedValue={jobLevelMapper[field.value ?? LEVELS[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
-          controls="level-dropdown"
           onToggle={() => setIsOpen((prev) => !prev)}
         />
       }
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      error={error}
-      disabled={isLoading}
     >
       {LEVELS.map((lv, idx) => (
         <DropdownOption

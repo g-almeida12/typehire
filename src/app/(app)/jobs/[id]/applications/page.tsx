@@ -83,13 +83,13 @@ export default async function JobApplicationsPage(
               {(() => {
                 switch (job.level) {
                   case "ESTAGIÁRIO":
-                    return <SproutIcon size={20} />;
+                    return <SproutIcon size={20} aria-hidden="true" />;
                   case "JÚNIOR":
-                    return <CircleFadingArrowUpIcon size={20} />;
+                    return <CircleFadingArrowUpIcon size={20} aria-hidden="true" />;
                   case "PLENO":
-                    return <BriefcaseIcon size={20} />;
+                    return <BriefcaseIcon size={20} aria-hidden="true" />;
                   case "SÊNIOR":
-                    return <AwardIcon size={20} />;
+                    return <AwardIcon size={20} aria-hidden="true" />;
                   default:
                     return null;
                 }
@@ -102,11 +102,11 @@ export default async function JobApplicationsPage(
               {(() => {
                 switch (job.modality) {
                   case "PRESENCIAL":
-                    return <BuildingIcon size={20} />;
+                    return <BuildingIcon size={20} aria-hidden="true" />;
                   case "HÍBRIDO":
-                    return <RefreshIcon size={20} />;
+                    return <RefreshIcon size={20} aria-hidden="true" />;
                   case "REMOTO":
-                    return <HouseIcon size={20} />;
+                    return <HouseIcon size={20} aria-hidden="true" />;
                   default:
                     return null;
                 }

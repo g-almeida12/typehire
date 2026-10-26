@@ -35,20 +35,19 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
     <Dropdown
       label="Período de duração do trabalho"
       Icon={ClockIcon}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      error={error}
+      disabled={isLoading}
       field={
         <DropdownButtonField
           selectedValue={jobModalityMapper[field.value ?? MODALITIES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
-          controls="modality-dropdown"
           onToggle={() => setIsOpen((prev) => !prev)}
         />
       }
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      error={error}
-      disabled={isLoading}
     >
       {MODALITIES.map((mod, idx) => (
         <DropdownOption

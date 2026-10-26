@@ -73,7 +73,6 @@ export function SkillsDropdown<T extends FieldValues & { skills?: Skill[] }>({
           isOpen={isOpen}
           disabled={isLoading}
           onOpen={() => setIsOpen(true)}
-          controls="skills"
           placeholder="Digite uma habilidade"
         />
       }

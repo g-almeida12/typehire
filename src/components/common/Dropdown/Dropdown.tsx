@@ -2,12 +2,28 @@
 
 import { IconKey } from "@/components/icons";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
-import { useRef } from "react";
+import { createContext, useContext, useId, useRef } from "react";
+
+const DropdownContext = createContext<{
+  labelId: string;
+  listboxId: string;
+} | null>(null);
+
+export function useDropdownContext() {
+  const ctx = useContext(DropdownContext);
+  if (!ctx) {
+    throw new Error(
+      "Hook 'useDropdownContext' must be used inside '<Dropdown>' component.",
+    );
+  }
+
+  return ctx;
+}
 
 interface DropdownProps {
   label: string;
   Icon?: IconKey;
-  field: React.ReactNode
+  field: React.ReactNode;
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
@@ -25,6 +41,8 @@ export function Dropdown({
   disabled,
   error,
 }: DropdownProps) {
+  const labelId = useId();
+  const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(containerRef, onClose);
@@ -37,34 +55,37 @@ export function Dropdown({
     : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`;
 
   return (
-    <div
-      className="relative group w-full flex flex-col items-start"
-      ref={containerRef}
-    >
-      <span className="w-full mb-1 text-left text-sm text-background-300">
-        {label}
-      </span>
-
+    <DropdownContext.Provider value={{ labelId, listboxId }}>
       <div
-        className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 transition-colors ${containerStyles}`}
+        className="relative group w-full flex flex-col items-start"
+        ref={containerRef}
       >
-        {Icon && <Icon size={24} className={`shrink-0 ${iconStyles}`} />}
-        {field}
-      </div>
+        <span className="w-full mb-1 text-left text-sm text-background-300" id={labelId}>
+          {label}
+        </span>
 
-      {/* Dropdown */}
-      {isOpen && !disabled && (
-        <ul
-          className={`absolute z-50 top-full w-full max-h-70 overflow-y-scroll rounded-b-md border-t border-background-700 bg-background-300 text-background-700 ${isOpen ? "shadow-lg" : ""}`}
-          id={label}
-          role="listbox"
+        <div
+          className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 transition-colors ${containerStyles}`}
         >
-          {children}
-        </ul>
-      )}
-      {error && (
-        <p className="text-left text-sm text-red-500 w-full">{error}</p>
-      )}
-    </div>
+          {Icon && <Icon size={24} className={`shrink-0 ${iconStyles}`} aria-hidden="true" />}
+          {field}
+        </div>
+
+        {/* Dropdown */}
+        {isOpen && !disabled && (
+          <ul
+            className={`absolute z-50 top-full w-full max-h-70 overflow-y-scroll rounded-b-md border-t border-background-700 bg-background-300 text-background-700 ${isOpen ? "shadow-lg" : ""}`}
+            id={listboxId}
+            role="listbox"
+            aria-labelledby={labelId}
+          >
+            {children}
+          </ul>
+        )}
+        {error && (
+          <p className="text-left text-sm text-red-500 w-full">{error}</p>
+        )}
+      </div>
+    </DropdownContext.Provider>
   );
 }

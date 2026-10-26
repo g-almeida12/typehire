@@ -1,6 +1,6 @@
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { ApplicationStatus } from "@/database/generated/enums";
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { CheckIcon, ChevronDownIcon } from "@/components/icons";
@@ -28,6 +28,7 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
 }: ApplicationStatusDropdownProps<T>) {
   const { field } = useController({ name: "status" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const { activeIndex, handleKeyDown, itemsRef } = useListNavigation(
     STATUSES.length,
@@ -67,12 +68,13 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-controls={"status-dropdown"}
+        aria-controls={dropdownId}
         type="button"
       >
         <ChevronDownIcon
           size={20}
           className={isOpen ? "rotate-180" : "rotate-0"}
+          aria-hidden="true"
         />
         <span className="text-sm font-medium">
           {applicationStatusMapper[selectedStatus]}
@@ -83,7 +85,7 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
         <ul
           className={`absolute z-50 top-full w-48 overflow-hidden rounded-b-md border-t bg-background-1000 ${isOpen ? "shadow-lg" : ""}`}
           role="listbox"
-          id="status-dropdown"
+          id={dropdownId}
         >
           {STATUSES.map((s, idx) => (
             <li
@@ -106,7 +108,7 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
                   color: tagColors[s].text,
                 }}
               >
-                {s === selectedStatus && <CheckIcon size={18} />}
+                {s === selectedStatus && <CheckIcon size={18} aria-hidden="true" />}
                 <span className="text-sm font-medium">
                   {applicationStatusMapper[s]}
                 </span>

@@ -17,7 +17,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
     {
       text: (
         <>
-          <EditIcon size={20} /> Atualizar vaga
+          <EditIcon size={20} aria-hidden="true" /> Atualizar vaga
         </>
       ),
       onClick: () => router.push(APP_URLS.jobUpdate(jobId)),
@@ -25,7 +25,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
     {
       text: (
         <>
-          <TrashIcon size={20} /> Deletar vaga
+          <TrashIcon size={20} aria-hidden="true" /> Deletar vaga
         </>
       ),
       onClick: () => dialogRef.current?.openModal(),

@@ -13,7 +13,7 @@ export default function JobLoading() {
       {/* Navbar */}
       <SkeletonNavbar />
       <main>
-        <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" />
+        <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" aria-hidden="true" />
 
         {/* Company profile */}
         <SkeletonCompanyProfile type="link" />

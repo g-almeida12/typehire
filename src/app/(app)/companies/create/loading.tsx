@@ -8,7 +8,7 @@ import {
 export default function CompanyCreateLoading() {
   return (
     <main className="pb-4" aria-busy="true">
-      <ArrowLeftIcon className="mt-4 animate-pulse" />
+      <ArrowLeftIcon className="mt-4 animate-pulse" aria-hidden="true" />
 
       {/* Title */}
       <SkeletonText customClassName="w-80 h-6 mt-8 rounded-md bg-background-200" />

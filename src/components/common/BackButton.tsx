@@ -12,7 +12,7 @@ export function BackButton() {
       aria-label="Voltar"
       className="size-6 cursor-pointer"
     >
-      <ArrowLeftIcon />
+      <ArrowLeftIcon size={24} aria-hidden="true" />
     </button>
   );
 }

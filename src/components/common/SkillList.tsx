@@ -29,7 +29,7 @@ export function SkillList({ skills, updateMode = undefined }: SkillListProps) {
               }}
               aria-label="Remover habilidade"
             >
-              <XIcon size={18} />
+              <XIcon size={18} aria-hidden="true" />
             </button>
           )}
         </li>

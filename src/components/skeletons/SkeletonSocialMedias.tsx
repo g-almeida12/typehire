@@ -12,7 +12,7 @@ export function SkeletonSocialMedias({
           className={`flex items-center w-full rounded-md border border-background-600 bg-background-800 animate-pulse ${size === "small" ? "h-7 px-1 py-0.5" : "h-8 px-2"}`}
           key={`${Icon}`}
         >
-          <Icon size={size === "small" ? 18 : 20} />
+          <Icon size={size === "small" ? 18 : 20} aria-hidden="true" />
         </li>
       ))}
     </ul>

@@ -1,9 +1,9 @@
 import { ChevronDownIcon } from "@/components/icons";
+import { useDropdownContext } from "./Dropdown";
 
 interface DropdownButtonFieldProps {
   selectedValue: string;
   isOpen: boolean;
-  controls: string;
   disabled: boolean;
   onToggle: () => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
@@ -12,11 +12,12 @@ interface DropdownButtonFieldProps {
 export function DropdownButtonField({
   selectedValue,
   isOpen,
-  controls,
   disabled,
   onToggle,
   handleKeyDown,
 }: DropdownButtonFieldProps) {
+  const { labelId, listboxId } = useDropdownContext();
+
   return (
     <button
       className="flex flex-row items-center justify-between w-full text-left cursor-pointer"
@@ -29,7 +30,8 @@ export function DropdownButtonField({
       onKeyDown={handleKeyDown}
       aria-expanded={isOpen}
       aria-haspopup="listbox"
-      aria-controls={controls}
+      aria-controls={listboxId}
+      aria-labelledby={labelId}
       type="button"
     >
       {selectedValue}

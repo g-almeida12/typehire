@@ -11,7 +11,7 @@ export default function ApplicationsLoading() {
     <div aria-busy="true">
       <SkeletonNavbar />
       <main>
-      <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" />
+      <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" aria-hidden="true" />
 
         <div className="flex flex-col gap-2 mt-10 mb-12">
           <SkeletonText height="6" width="[80%]" customClassName="mb-2" />

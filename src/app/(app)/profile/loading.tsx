@@ -11,7 +11,7 @@ import {
 export default function ProfileLoading() {
   return (
     <main className="pb-10" aria-busy="true">
-      <ArrowLeftIcon className="mt-4 mb-8 animate-pulse" />
+      <ArrowLeftIcon size={24} className="mt-4 mb-8 animate-pulse" aria-hidden="true" />
 
       <SkeletonUserProfile type="edit" />
       <div className="flex flex-row gap-4 mt-2">

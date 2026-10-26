@@ -26,6 +26,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             <MessageTextIcon
               size={24}
               className={`shrink-0 ${props.disabled ? "text-background-500" : "text-background-400 group-focus-within:text-background-800"}`}
+              aria-hidden="true"
             />
             <textarea
               className={`w-full min-h-30 max-h-70 resize-y focus:outline-none ${props.disabled ? "text-background-200" : ""}`}
@@ -38,6 +39,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               <QuestionMarkIcon
                 size={16}
                 className={`shrink-0 ${props.disabled ? "text-background-500" : "text-background-400 group-focus-within:text-background-800"}`}
+                aria-hidden="true"
               />
             </span>
           )}

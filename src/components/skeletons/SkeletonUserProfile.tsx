@@ -17,6 +17,7 @@ export function SkeletonUserProfile({ type }: { type?: "edit" | "link" | "list" 
           <ArrowUpRightIcon
             size={20}
             className="shrink-0 text-background-400 animate-pulse"
+            aria-hidden="true"
           />
         )}
 
@@ -24,6 +25,7 @@ export function SkeletonUserProfile({ type }: { type?: "edit" | "link" | "list" 
           <EditIcon
             size={20}
             className="shrink-0 text-background-400 animate-pulse"
+            aria-hidden="true"
           />
         )}
       </div>

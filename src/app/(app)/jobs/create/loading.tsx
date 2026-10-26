@@ -9,7 +9,7 @@ import {
 export default function JobCreateLoading() {
   return (
     <main className="pb-4">
-      <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" />
+      <ArrowLeftIcon size={24} className="mt-4 mb-6 animate-pulse" aria-hidden="true" />
 
       <SkeletonCompanyProfile />
 

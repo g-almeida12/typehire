@@ -17,7 +17,7 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
     {
       text: (
         <>
-          <EditIcon size={20} /> Atualizar empresa
+          <EditIcon size={20} aria-hidden="true" /> Atualizar empresa
         </>
       ),
       onClick: () => router.push(APP_URLS.companyUpdate(companyId)),
@@ -25,7 +25,7 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
     {
       text: (
         <>
-          <TrashIcon size={20} /> Deletar empresa
+          <TrashIcon size={20} aria-hidden="true" /> Deletar empresa
         </>
       ),
       onClick: () => dialogRef.current?.openModal(),

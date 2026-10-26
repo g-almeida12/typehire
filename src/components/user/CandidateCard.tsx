@@ -65,7 +65,7 @@ export function CandidateCard({
           style={{ pointerEvents: candidate.resumeUrl ? "auto" : "none" }}
         >
           <div className="flex flex-row items-center gap-2">
-            <FileIcon size={18} className="text-background-900" />
+            <FileIcon size={18} className="text-background-900" aria-hidden="true" />
             <span
               className={`text-sm font-medium text-background-900 ${candidate.resumeUrl ? "" : " italic"}`}
             >
@@ -75,7 +75,7 @@ export function CandidateCard({
             </span>
           </div>
           {candidate.resumeUrl && (
-            <ArrowUpRightIcon className="text-background-900" size={18} />
+            <ArrowUpRightIcon className="text-background-900" size={18} aria-hidden="true" />
           )}
         </a>
       </div>
@@ -94,12 +94,13 @@ export function CandidateCard({
                 target="_blank"
                 className="flex flex-row items-center justify-between w-full px-1 py-0.5 rounded-md border border-background-500 bg-background-800"
                 style={{ pointerEvents: url ? "auto" : "none" }}
+                aria-label={`Acessar ${name}`}
               >
                 <div className="flex flex-row items-center gap-2">
-                  <Icon size={18} />
+                  <Icon size={18} aria-hidden="true" />
                   <span className="text-background-100 text-sm">{name}</span>
                 </div>
-                {url && <ArrowUpRightIcon size={18} />}
+                {url && <ArrowUpRightIcon size={18} aria-hidden="true" />}
               </a>
             </li>
           );

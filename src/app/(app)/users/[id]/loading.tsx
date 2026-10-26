@@ -11,7 +11,7 @@ import {
 export default function ProfileLoading() {
   return (
     <main className="pb-10" aria-busy="true">
-      <ArrowLeftIcon className="mt-4 animate-pulse" />
+      <ArrowLeftIcon size={24} className="mt-4 animate-pulse" aria-hidden="true" />
 
       {/* Profile */}
       <div>

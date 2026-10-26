@@ -53,7 +53,7 @@ export function ApplicationCreateWrapper({
           text={
             userHasApplied ? (
               <>
-                Candidatura enviada <CheckIcon />
+                Candidatura enviada <CheckIcon size={24} aria-hidden="true" />
               </>
             ) : (
               "Candidate-se agora"

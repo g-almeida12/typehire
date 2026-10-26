@@ -97,7 +97,7 @@ export function ApplicationUpdateForm({
           <div className="fixed z-1000 left-1/2 top-1/2 -translate-1/2 w-[calc(100%-2rem)] p-2 rounded-md bg-background-800">
             <div className="flex flex-row items-center gap-2 mb-4">
               <ApplicationStatusTag status={initialStatus} />
-              <ArrowRightIcon size={20} />
+              <ArrowRightIcon size={20} aria-hidden="true" />
               <ApplicationStatusTag status={newStatus!} />
             </div>
 

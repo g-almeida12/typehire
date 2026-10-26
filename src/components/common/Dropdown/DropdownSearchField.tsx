@@ -1,10 +1,10 @@
 import { InputHTMLAttributes } from "react";
+import { useDropdownContext } from "./Dropdown";
 
 interface DropdownSearchFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   search: string;
   setSearch: (search: string) => void;
   isOpen: boolean;
-  controls: string;
   onOpen: () => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
@@ -13,11 +13,12 @@ export function DropdownSearchField({
   search,
   setSearch,
   isOpen,
-  controls,
   onOpen,
   handleKeyDown,
   ...props
 }: DropdownSearchFieldProps) {
+  const { labelId, listboxId } = useDropdownContext();
+
   return (
     <input
       {...props}
@@ -37,7 +38,8 @@ export function DropdownSearchField({
       role="combobox"
       aria-expanded={isOpen}
       aria-haspopup="listbox"
-      aria-controls={controls}
+      aria-controls={listboxId}
+      aria-labelledby={labelId}
     />
   );
 }

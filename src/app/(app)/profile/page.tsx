@@ -60,11 +60,11 @@ export default async function ProfilePage() {
         {/* Main user info */}
         <div className="w-full flex flex-row items-center gap-4 mt-2">
           <p className="flex flex-row gap-2 items-center text-sm text-background-300">
-            <PhoneIcon size={18} />
+            <PhoneIcon size={18} aria-hidden="true" />
             {user.phoneNumber ? user.phoneNumber : "Não informado"}
           </p>
           <p className="flex flex-row gap-2 items-center text-sm text-background-300">
-            <PinIcon size={18} />
+            <PinIcon size={18} aria-hidden="true" />
             {user.location ? user.location : "Não informado"}
           </p>
         </div>
@@ -79,7 +79,7 @@ export default async function ProfilePage() {
             style={{ pointerEvents: user.resumeUrl ? "auto" : "none" }}
           >
             <div className="flex flex-row items-center gap-2">
-              <FileIcon size={20} className="text-background-900" />
+              <FileIcon size={20} className="text-background-900" aria-hidden="true" />
               <span
                 className={`font-medium text-background-900 ${user.resumeUrl ? "" : " italic"}`}
               >
@@ -89,7 +89,7 @@ export default async function ProfilePage() {
               </span>
             </div>
             {user.resumeUrl && (
-              <ArrowUpRightIcon className="text-background-900" size={20} />
+              <ArrowUpRightIcon className="text-background-900" size={20} aria-hidden="true" />
             )}
           </a>
         </div>
@@ -113,16 +113,17 @@ export default async function ProfilePage() {
                 target="_blank"
                 className="flex flex-row items-center justify-between w-full px-2 py-1 rounded-md border border-background-500 bg-background-800"
                 style={{ pointerEvents: url ? "auto" : "none" }}
+                aria-label={url ? `Acessar ${name}` : undefined}
               >
                 <div className="flex flex-row items-center gap-2">
-                  <Icon size={20} />
+                  <Icon size={20} aria-hidden="true" />
                   <span
                     className={`${url ? "text-background-100" : "text-background-300 italic"}`}
                   >
                     {url ?? `${name} não informado`}
                   </span>
                 </div>
-                {url && <ArrowUpRightIcon size={20} />}
+                {url && <ArrowUpRightIcon size={20} aria-hidden="true" />}
               </a>
             </li>
           ))}

@@ -18,19 +18,19 @@ export function Navbar({ onlyBrand = false }: NavbarProps) {
       {!onlyBrand && (
         <div className="flex flex-row gap-6">
           <Link href={APP_URLS.home} aria-label="Ir para página inicial">
-            <SearchIcon aria-hidden={true} />
+            <SearchIcon size={24} aria-hidden={true} />
           </Link>
           <Link
             href={APP_URLS.applications}
             aria-label="Ir para página de aplicações"
           >
-            <LayersIcon aria-hidden={true} />
+            <LayersIcon size={24} aria-hidden={true} />
           </Link>
           <Link
             href={APP_URLS.profile}
             aria-label="Acessar informações do usuário"
           >
-            <UserCircleIcon aria-hidden={true} />
+            <UserCircleIcon size={24} aria-hidden={true} />
           </Link>
         </div>
       )}

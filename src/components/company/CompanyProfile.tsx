@@ -63,18 +63,21 @@ export function CompanyProfile({
             ) : visualOnlyWebsiteLink ? (
               <span>{company.website}</span>
             ) : (
-              <a
-                target="_blank"
-                href={
-                  company.website
-                    ? company.website.startsWith("http")
-                      ? company.website
-                      : `https://${company.website}`
-                    : ""
-                }
-              >
-                {company.website}
-              </a>
+              company.website && (
+                <a
+                  target="_blank"
+                  href={
+                    company.website
+                      ? company.website.startsWith("http")
+                        ? company.website
+                        : `https://${company.website}`
+                      : ""
+                  }
+                  aria-label="Acessar site da empresa"
+                >
+                  {company.website}
+                </a>
+              )
             )}
           </p>
         </div>
@@ -85,15 +88,25 @@ export function CompanyProfile({
         <Link
           href={APP_URLS.companyUpdate(company.id)}
           className="shrink-0 mt-1"
+          aria-label="Editar dados da empresa"
         >
-          <EditIcon size={20} className="shrink-0 text-background-300" />
+          <EditIcon
+            size={20}
+            className="shrink-0 text-background-300"
+            aria-hidden="true"
+          />
         </Link>
       ) : (
         type === "link" && (
-          <Link href={APP_URLS.company(company.id)} className="shrink-0 mt-1">
+          <Link
+            href={APP_URLS.company(company.id)}
+            className="shrink-0 mt-1"
+            aria-label="Ver dados da empresa"
+          >
             <ArrowUpRightIcon
               size={24}
               className="shrink-0 text-background-300"
+              aria-hidden="true"
             />
           </Link>
         )

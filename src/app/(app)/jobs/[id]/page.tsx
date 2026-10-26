@@ -80,13 +80,15 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
                 {(() => {
                   switch (job.level) {
                     case "ESTAGIÁRIO":
-                      return <SproutIcon size={20} />;
+                      return <SproutIcon size={20} aria-hidden="true" />;
                     case "JÚNIOR":
-                      return <CircleFadingArrowUpIcon size={20} />;
+                      return (
+                        <CircleFadingArrowUpIcon size={20} aria-hidden="true" />
+                      );
                     case "PLENO":
-                      return <BriefcaseIcon size={20} />;
+                      return <BriefcaseIcon size={20} aria-hidden="true" />;
                     case "SÊNIOR":
-                      return <AwardIcon size={20} />;
+                      return <AwardIcon size={20} aria-hidden="true" />;
                   }
                 })()}
                 <p className="font-semibold text-sm">
@@ -99,11 +101,11 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
                 {(() => {
                   switch (job.modality) {
                     case "PRESENCIAL":
-                      return <BuildingIcon size={20} />;
+                      return <BuildingIcon size={20} aria-hidden="true" />;
                     case "HÍBRIDO":
-                      return <RefreshIcon size={20} />;
+                      return <RefreshIcon size={20} aria-hidden="true" />;
                     case "REMOTO":
-                      return <HouseIcon size={20} />;
+                      return <HouseIcon size={20} aria-hidden="true" />;
                   }
                 })()}
                 <p className="font-semibold text-sm">
@@ -181,9 +183,17 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
                       className={`flex items-center justify-center size-5.5 rounded-full ${userHasSkill ? "bg-green-950" : "bg-red-800"}`}
                     >
                       {userHasSkill ? (
-                        <CheckIcon size={18} className="text-green-400" />
+                        <CheckIcon
+                          size={18}
+                          className="text-green-400"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <XIcon size={18} className="text-red-400" />
+                        <XIcon
+                          size={18}
+                          className="text-red-400"
+                          aria-hidden="true"
+                        />
                       )}
                     </span>
                   </li>

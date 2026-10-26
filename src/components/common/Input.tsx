@@ -69,6 +69,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               <QuestionMarkIcon
                 size={16}
                 className={`shrink-0 ${props.disabled ? "text-background-500" : "text-background-400 group-focus-within:text-background-800"}`}
+                aria-hidden="true"
               />
             </span>
           )}
@@ -79,7 +80,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               className="size-6 flex-1 cursor-pointer text-background-400 group-focus-within:text-background-700"
               tabIndex={-1}
             >
-              {isVisible ? <EyeIcon /> : <EyeOffIcon />}
+              {isVisible ? <EyeIcon size={24} aria-hidden="true" /> : <EyeOffIcon size={24} aria-hidden="true" />}
             </button>
           )}
         </div>

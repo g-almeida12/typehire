@@ -17,7 +17,6 @@ interface CompanySizeDropdownProps<T extends ExtendedFieldValues> {
   error: string | undefined;
 }
 
-
 export function CompanySizeDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
@@ -36,20 +35,19 @@ export function CompanySizeDropdown<T extends ExtendedFieldValues>({
     <Dropdown
       label="Período de duração do trabalho"
       Icon={ClockIcon}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      error={error}
+      disabled={isLoading}
       field={
         <DropdownButtonField
           selectedValue={companySizeMapper[field.value ?? SIZES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
-          controls="type-dropdown"
           onToggle={() => setIsOpen((prev) => !prev)}
         />
       }
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      error={error}
-      disabled={isLoading}
     >
       {SIZES.map((sz, idx) => (
         <DropdownOption

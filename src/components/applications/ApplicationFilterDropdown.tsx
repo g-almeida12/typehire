@@ -50,9 +50,9 @@ export function ApplicationFilterDropdown() {
   return (
     <Dropdown
       Icon={BookmarkIcon}
-      label={"Status das candidaturas"}
+      label="Status das candidaturas"
       disabled={isLoading}
-      error={""}
+      error=""
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       field={
@@ -62,7 +62,6 @@ export function ApplicationFilterDropdown() {
           onToggle={() => setIsOpen((prev) => !prev)}
           handleKeyDown={handleKeyDown}
           selectedValue={statusValue}
-          controls=""
         />
       }
     >

@@ -96,7 +96,6 @@ export function UsersDropdown<T extends FieldValues & { members?: User[] }>({
           isOpen={isOpen}
           disabled={isLoading}
           onOpen={() => setIsOpen(true)}
-          controls="members"
           placeholder="Digite o email do usuário"
         />
       }

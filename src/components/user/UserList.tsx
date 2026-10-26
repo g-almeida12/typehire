@@ -39,7 +39,7 @@ export function UserList({ users, updateMode = undefined }: UserListProps) {
                 }}
                 aria-label="Remover usuário da associação"
               >
-                <XIcon size={20} className="mt-1" />
+                <XIcon size={20} className="mt-1" aria-hidden="true" />
               </button>
             )}
           </div>

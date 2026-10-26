@@ -54,15 +54,28 @@ export function UserProfile({
 
       {/* Action buttons */}
       {type === "edit" ? (
-        <Link href={APP_URLS.profileUpdate} className="shrink-0 mt-1">
-          <EditIcon size={20} className="shrink-0 text-background-300" />
+        <Link
+          href={APP_URLS.profileUpdate}
+          className="shrink-0 mt-1"
+          aria-label="Editar informações do perfil"
+        >
+          <EditIcon
+            size={20}
+            className="shrink-0 text-background-300"
+            aria-hidden="true"
+          />
         </Link>
       ) : (
         type === "link" && (
-          <Link href={APP_URLS.user(user.id)} className="shrink-0 mt-1">
+          <Link
+            href={APP_URLS.user(user.id)}
+            className="shrink-0 mt-1"
+            aria-label="Ver informações do usuário"
+          >
             <ArrowUpRightIcon
               size={24}
               className="shrink-0 text-background-300"
+              aria-hidden="true"
             />
           </Link>
         )

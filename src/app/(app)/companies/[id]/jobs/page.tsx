@@ -70,7 +70,7 @@ export default async function CompanyJobsPage(
                 aria-label="Criar nova vaga"
                 title="Criar nova vaga"
               >
-                <CreateIcon />
+                <CreateIcon aria-hidden="true" />
               </Link>
             )}
           </div>

@@ -21,6 +21,7 @@ export function SkeletonCompanyProfile({
           <ArrowUpRightIcon
             size={20}
             className="shrink-0 text-background-400 animate-pulse"
+            aria-hidden="true"
           />
         )}
 
@@ -28,6 +29,7 @@ export function SkeletonCompanyProfile({
           <EditIcon
             size={20}
             className="shrink-0 text-background-400 animate-pulse"
+            aria-hidden="true"
           />
         )}
       </div>

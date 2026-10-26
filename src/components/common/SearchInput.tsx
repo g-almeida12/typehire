@@ -80,7 +80,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
               disabled={isRouterLoading}
               className="cursor-pointer"
             >
-              <SearchIcon size={24} />
+              <SearchIcon size={24} aria-hidden="true" />
             </button>
           </div>
           <input
@@ -106,7 +106,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
             aria-expanded={isFilterOpen}
             aria-label="Abrir filtro de pesquisa"
           >
-            <SlidersIcon size={24} />
+            <SlidersIcon size={24} aria-hidden="true" />
           </button>
         </div>
       </div>

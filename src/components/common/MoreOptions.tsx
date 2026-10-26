@@ -37,7 +37,7 @@ export function MoreOptions({ options }: MoreOptionsProps) {
         aria-controls={uniqueId}
         aria-label="Abrir menu de opções"
       >
-        <MoreOptionsIcon />
+        <MoreOptionsIcon size={24} aria-hidden="true" />
       </button>
 
       {isOpen && (

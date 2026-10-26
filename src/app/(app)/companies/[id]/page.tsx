@@ -110,8 +110,8 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               href={APP_URLS.companyJobs(company.id)}
               className="flex flex-row gap-2 items-center justify-center text-center text-accent-100 text-sm"
             >
-              Ver todas as vagas{" "}
-              <ArrowUpRightIcon size={20} className="text-accent-200" />
+              Ver todas as vagas
+              <ArrowUpRightIcon size={20} className="text-accent-200" aria-hidden="true" />
             </Link>
           </div>
         </section>

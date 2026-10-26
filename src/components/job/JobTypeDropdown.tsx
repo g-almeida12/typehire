@@ -35,20 +35,19 @@ export function JobTypeDropdown<T extends ExtendedFieldValues>({
     <Dropdown
       label="Período de duração do trabalho"
       Icon={ClockIcon}
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      error={error}
+      disabled={isLoading}
       field={
         <DropdownButtonField
           selectedValue={jobTypeMapper[field.value ?? TYPES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
-          controls="type-dropdown"
           onToggle={() => setIsOpen((prev) => !prev)}
         />
       }
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      error={error}
-      disabled={isLoading}
     >
       {TYPES.map((tp, idx) => (
         <DropdownOption

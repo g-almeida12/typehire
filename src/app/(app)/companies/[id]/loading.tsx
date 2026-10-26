@@ -15,7 +15,7 @@ export default function CompanyLoading() {
       {/* Navbar */}
       <SkeletonNavbar />
       <main className="pb-4">
-        <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" />
+        <ArrowLeftIcon className="mt-4 mb-6 animate-pulse" aria-hidden="true" />
 
         {/* Company info */}
         <div>

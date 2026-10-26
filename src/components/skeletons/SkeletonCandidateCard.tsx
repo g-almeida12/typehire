@@ -8,7 +8,7 @@ export function SkeletonCandidateCard() {
 
       {/* Resume */}
       <div className="flex items-center w-full h-6 mt-3 mb-5 px-1 rounded-md border border-background-500 bg-background-500 animate-pulse">
-        <FileIcon size={18} className="text-background-900" />
+        <FileIcon size={18} className="text-background-900" aria-hidden="true" />
       </div>
 
       {/* Social medias */}

@@ -9,7 +9,7 @@ import {
 export default function ProfileUpdateLoading() {
   return (
     <main className="pb-10" aria-busy="true">
-      <ArrowLeftIcon className="mt-4" />
+      <ArrowLeftIcon size={24} className="mt-4" aria-hidden="true" />
 
       <SkeletonText customClassName="w-80 h-5 mt-8 mb-6 rounded-md bg-background-200" />
 

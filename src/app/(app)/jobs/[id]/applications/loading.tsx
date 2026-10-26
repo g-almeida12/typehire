@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "@/components/icons";
 export default function JobApplicationsLoading() {
   return (
     <main aria-busy="true">
-      <ArrowLeftIcon className="mt-4 animate-pulse" />
+      <ArrowLeftIcon size={24} className="mt-4 animate-pulse" aria-hidden="true" />
       {/* Job info */}
       <div className="my-6">
         <SkeletonText height="7" width="[80%]" customClassName="mx-auto" />
