@@ -1,32 +1,45 @@
 "use client";
 
-import { InputHTMLAttributes, useState } from "react";
+import { useId, useState } from "react";
 import { Input } from "../common/Input";
 import { DollarIcon } from "../icons";
-import { Control, Controller, UseFormSetValue } from "react-hook-form";
-import { JobClientCreatePayload, JobUpdatePayload } from "@/lib/modules/job";
+import {
+  Control,
+  Controller,
+  FieldValues,
+  UseFormSetValue,
+} from "react-hook-form";
 
-interface JobSalaryInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  control: Control<JobClientCreatePayload | JobUpdatePayload>;
+type SalaryFields = {
+  fixedSalary?: number | null | undefined;
+  hourlySalary?: number | null | undefined;
+  intervalSalary?: [number, number] | null | undefined;
+};
+
+interface JobSalaryInputProps<T extends FieldValues & SalaryFields> {
+  control: Control<T>;
   label: string;
-  setValue: UseFormSetValue<JobClientCreatePayload | JobUpdatePayload>;
+  setValue: UseFormSetValue<T>;
   disabled?: boolean;
   error?: string;
   defaultSalaryType?: "fixed" | "hourly" | "interval";
 }
 
-export function JobSalaryInput({
-  control,
+export function JobSalaryInput<T extends FieldValues & SalaryFields>({
+  control: externalControl,
   label,
-  setValue,
+  setValue: externalSetValue,
   disabled = false,
   error,
   defaultSalaryType,
-  ...props
-}: JobSalaryInputProps) {
+}: JobSalaryInputProps<T>) {
+  const control = externalControl as unknown as Control<SalaryFields>;
+  const setValue = externalSetValue as unknown as UseFormSetValue<SalaryFields>;
+
   const [selectedSalaryType, setSelectedSalaryType] = useState<
     "fixed" | "hourly" | "interval"
-  >(defaultSalaryType ?? "fixed");
+    >(defaultSalaryType ?? "fixed");
+  const labelId = useId();
 
   const parseStrictNumber = (value: string) => {
     if (!value) return NaN;
@@ -35,13 +48,17 @@ export function JobSalaryInput({
   };
 
   return (
-    <div className="w-full flex flex-col items-start gap-1">
-      <label
-        htmlFor={props.id}
+    <div
+      className="w-full flex flex-col items-start gap-1"
+      role="group"
+      aria-labelledby={labelId}
+    >
+      <span
         className="w-full text-left text-sm text-background-300"
+        id={labelId}
       >
         {label}
-      </label>
+      </span>
 
       <div
         className={`w-full flex flex-col gap-2 px-2 py-1 mb-1 rounded-md ${disabled ? "border-background-900 bg-background-900" : "border-background-800 bg-background-800"}`}
@@ -71,7 +88,7 @@ export function JobSalaryInput({
 
       {selectedSalaryType === "fixed" && (
         <Controller
-          name="fixedSalary"
+          name={"fixedSalary"}
           control={control}
           render={({ field }) => (
             <Input
@@ -96,7 +113,7 @@ export function JobSalaryInput({
 
       {selectedSalaryType === "hourly" && (
         <Controller
-          name="hourlySalary"
+          name={"hourlySalary"}
           control={control}
           render={({ field }) => (
             <Input
@@ -121,9 +138,8 @@ export function JobSalaryInput({
 
       {selectedSalaryType === "interval" && (
         <Controller
-          name="intervalSalary"
+          name={"intervalSalary"}
           control={control}
-          defaultValue={["" as unknown as number, "" as unknown as number]}
           render={({ field }) => {
             const [minValue, maxValue] = Array.isArray(field.value)
               ? field.value

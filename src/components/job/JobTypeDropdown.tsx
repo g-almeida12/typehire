@@ -1,36 +1,35 @@
-import { Control, useController } from "react-hook-form";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
 import { jobTypeMapper } from "@/utils/mappers";
 import { ClockIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobType } from "@/database/generated/enums";
-import { JobClientCreatePayload, JobUpdatePayload } from "@/lib/modules/job";
 import { useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
 
-interface JobTypeDropdownProps {
-  control: Control<JobClientCreatePayload | JobUpdatePayload>;
+type ExtendedFieldValues = FieldValues & { type?: JobType | undefined };
+const TYPES = Object.values(JobType);
+
+interface JobTypeDropdownProps<T extends ExtendedFieldValues> {
+  control: Control<T>;
   isLoading: boolean;
   error: string | undefined;
 }
 
-const TYPES = Object.values(JobType);
-
-export function JobTypeDropdown({
+export function JobTypeDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
-}: JobTypeDropdownProps) {
-  const { field } = useController({ name: "type", control });
+}: JobTypeDropdownProps<T>) {
+  const { field } = useController({ name: "type" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { activeIndex, handleKeyDown, itemsRef } =
-    useListNavigation(
-      TYPES.length,
-      isOpen,
-      () => field.onChange(TYPES[activeIndex]),
-      () => setIsOpen(false),
-    );
+  const { activeIndex, handleKeyDown, itemsRef } = useListNavigation(
+    TYPES.length,
+    isOpen,
+    () => field.onChange(TYPES[activeIndex]),
+    () => setIsOpen(false),
+  );
 
   return (
     <Dropdown

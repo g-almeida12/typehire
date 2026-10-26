@@ -1,28 +1,28 @@
-import { Control, useController } from "react-hook-form";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
 import { jobLevelMapper } from "@/utils/mappers";
 import { AwardIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobLevel } from "@/database/generated/enums";
-import { JobClientCreatePayload, JobUpdatePayload } from "@/lib/modules/job";
 import { useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
 
-interface JobLevelDropdownProps {
-  control: Control<JobClientCreatePayload | JobUpdatePayload>;
+type ExtendedFieldValues = FieldValues & { level?: JobLevel | undefined };
+const LEVELS = Object.values(JobLevel);
+
+interface JobLevelDropdownProps<T extends ExtendedFieldValues> {
+  control: Control<T>;
   isLoading: boolean;
   error: string | undefined;
 }
 
-const LEVELS = Object.values(JobLevel);
-
-export function JobLevelDropdown({
+export function JobLevelDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
-}: JobLevelDropdownProps) {
-  const { field } = useController({ name: "level", control });
+}: JobLevelDropdownProps<T>) {
+  const { field } = useController({ name: "level" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { activeIndex, handleKeyDown, itemsRef } = useListNavigation(
     LEVELS.length,

@@ -1,4 +1,4 @@
-import { Control, useController } from "react-hook-form";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
 import { companySizeMapper } from "@/utils/mappers";
@@ -7,30 +7,30 @@ import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { CompanySize } from "@/database/generated/enums";
 import { useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
-import { CompanyCreatePayload, CompanyUpdatePayload } from "@/lib/modules/company";
 
-interface CompanySizeDropdownProps {
-  control: Control<CompanyCreatePayload | CompanyUpdatePayload>;
+type ExtendedFieldValues = FieldValues & { size?: CompanySize | undefined };
+const SIZES = Object.values(CompanySize);
+
+interface CompanySizeDropdownProps<T extends ExtendedFieldValues> {
+  control: Control<T>;
   isLoading: boolean;
   error: string | undefined;
 }
 
-const SIZES = Object.values(CompanySize);
 
-export function CompanySizeDropdown({
+export function CompanySizeDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
-}: CompanySizeDropdownProps) {
-  const { field } = useController({ name: "size", control });
+}: CompanySizeDropdownProps<T>) {
+  const { field } = useController({ name: "size" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { activeIndex, handleKeyDown, itemsRef } =
-    useListNavigation(
-      SIZES.length,
-      isOpen,
-      () => field.onChange(SIZES[activeIndex]),
-      () => setIsOpen(false),
-    );
+  const { activeIndex, handleKeyDown, itemsRef } = useListNavigation(
+    SIZES.length,
+    isOpen,
+    () => field.onChange(SIZES[activeIndex]),
+    () => setIsOpen(false),
+  );
 
   return (
     <Dropdown

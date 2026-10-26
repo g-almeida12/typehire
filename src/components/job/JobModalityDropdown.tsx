@@ -1,36 +1,35 @@
-import { Control, useController } from "react-hook-form";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
 import { jobModalityMapper } from "@/utils/mappers";
 import { ClockIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobModality } from "@/database/generated/enums";
-import { JobClientCreatePayload, JobUpdatePayload } from "@/lib/modules/job";
 import { useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
 
-interface JobModalityDropdownProps {
-  control: Control<JobClientCreatePayload | JobUpdatePayload>;
+type ExtendedFieldValues = FieldValues & { modality?: JobModality | undefined };
+const MODALITIES = Object.values(JobModality);
+
+interface JobModalityDropdownProps<T extends ExtendedFieldValues> {
+  control: Control<T>;
   isLoading: boolean;
   error: string | undefined;
 }
 
-const MODALITIES = Object.values(JobModality);
-
-export function JobModalityDropdown({
+export function JobModalityDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
-}: JobModalityDropdownProps) {
-  const { field } = useController({ name: "modality", control });
+}: JobModalityDropdownProps<T>) {
+  const { field } = useController({ name: "modality" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { activeIndex, handleKeyDown, itemsRef } =
-    useListNavigation(
-      MODALITIES.length,
-      isOpen,
-      () => field.onChange(MODALITIES[activeIndex]),
-      () => setIsOpen(false),
-    );
+  const { activeIndex, handleKeyDown, itemsRef } = useListNavigation(
+    MODALITIES.length,
+    isOpen,
+    () => field.onChange(MODALITIES[activeIndex]),
+    () => setIsOpen(false),
+  );
 
   return (
     <Dropdown
@@ -42,7 +41,7 @@ export function JobModalityDropdown({
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
-          controls="type-dropdown"
+          controls="modality-dropdown"
           onToggle={() => setIsOpen((prev) => !prev)}
         />
       }
