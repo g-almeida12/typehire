@@ -414,6 +414,145 @@ Procuramos um **QA Engineer Pleno** para atuar em meio período, estruturando pr
     ],
     skipDuplicates: true,
   });
+
+  await prisma.application.createMany({
+    data: [
+      // Candidaturas para a Vaga 1 (Desenvolvedor FullStack - Lucide Icons)
+      {
+        id: "app_v1_juliasilva",
+        jobId: "job1",
+        candidateId: "user124", // Julia Silva
+        status: "PENDING",
+        feedback: null,
+        feedbackAt: null,
+      },
+      {
+        id: "app_v1_julianacosta",
+        jobId: "job1",
+        candidateId: "user125", // Juliana Costa
+        status: "REVIEW",
+        feedback: "Analisando histórico acadêmico e projetos do GitHub.",
+        feedbackAt: new Date("2026-04-12T11:00:00Z"),
+      },
+      {
+        id: "app_v1_gabrielsouza",
+        jobId: "job1",
+        candidateId: "user126", // Gabriel Souza
+        status: "INTERVIEW",
+        feedback: "Excelente desenvoltura na primeira conversa com o RH.",
+        feedbackAt: new Date("2026-04-13T15:00:00Z"),
+      },
+
+      // Candidaturas para a Vaga 2 (Designer UI/UX - Lucide Icons)
+      {
+        id: "app_v2_gabrielasantos",
+        jobId: "job2",
+        candidateId: "user127", // Gabriela Santos
+        status: "HIRED",
+        feedback:
+          "Portfólio impecável e ótimo fit cultural com o time de design.",
+        feedbackAt: new Date("2026-04-10T18:00:00Z"),
+      },
+      {
+        id: "app_v2_carloseduardo",
+        jobId: "job2",
+        candidateId: "user128", // Carlos Eduardo
+        status: "REJECTED",
+        feedback:
+          "Faltou um pouco mais de experiência prática com fluxos mobile complexos.",
+        feedbackAt: new Date("2026-04-09T14:00:00Z"),
+      },
+
+      // Candidaturas para a Vaga 3 (Analista de dados - Lucide Icons)
+      {
+        id: "app_v3_camilarodrigues",
+        jobId: "job3",
+        candidateId: "user129", // Camila Rodrigues
+        status: "PENDING",
+        feedback: null,
+        feedbackAt: null,
+      },
+      {
+        id: "app_v3_lucasoliveira",
+        jobId: "job3",
+        candidateId: "user130", // Lucas Oliveira
+        status: "INTERVIEW",
+        feedback: "Teste técnico de SQL e Python avaliado com nota máxima.",
+        feedbackAt: new Date("2026-04-14T09:30:00Z"),
+      },
+
+      // Candidaturas para a Vaga 4 (Arquiteto de Software Cloud - CodeCraft)
+      {
+        id: "app_v4_joaocarlos",
+        jobId: "job4",
+        candidateId: "user123", // João Carlos
+        status: "REVIEW",
+        feedback:
+          "Validando certificações AWS e experiências anteriores em microsserviços.",
+        feedbackAt: new Date("2026-04-11T16:20:00Z"),
+      },
+      {
+        id: "app_v4_lucasoliveira",
+        jobId: "job4",
+        candidateId: "user130", // Lucas Oliveira
+        status: "REJECTED",
+        feedback:
+          "Ainda buscamos um nível de senioridade mais alinhado com a arquitetura multicloud.",
+        feedbackAt: new Date("2026-04-08T11:10:00Z"),
+      },
+
+      // Candidaturas para a Vaga 5 (Backend Node.js - CodeCraft)
+      {
+        id: "app_v5_juliasilva",
+        jobId: "job5",
+        candidateId: "user124", // Julia Silva
+        status: "INTERVIEW",
+        feedback:
+          "Entrevista técnica marcada com o time de engenharia backend.",
+        feedbackAt: new Date("2026-04-13T10:00:00Z"),
+      },
+
+      // Candidaturas para a Vaga 6 (Machine Learning - Nexus Tech)
+      {
+        id: "app_v6_carloseduardo",
+        jobId: "job6",
+        candidateId: "user128", // Carlos Eduardo
+        status: "PENDING",
+        feedback: null,
+        feedbackAt: null,
+      },
+
+      // Candidaturas para a Vaga 7 (Frontend React - Nexus Tech)
+      {
+        id: "app_v7_julianacosta",
+        jobId: "job7",
+        candidateId: "user125", // Juliana Costa
+        status: "HIRED",
+        feedback: "Domínio incrível de React e Next.js. Contratada!",
+        feedbackAt: new Date("2026-04-14T17:00:00Z"),
+      },
+      {
+        id: "app_v7_camilarodrigues",
+        jobId: "job7",
+        candidateId: "user129", // Camila Rodrigues
+        status: "REVIEW",
+        feedback: "Em análise pelo tech lead de frontend.",
+        feedbackAt: new Date("2026-04-12T13:40:00Z"),
+      },
+
+      // Candidaturas para a Vaga 8 (QA Engineer - Nexus Tech)
+      {
+        id: "app_v8_gabrielsouza",
+        jobId: "job8",
+        candidateId: "user126", // Gabriel Souza
+        status: "REJECTED",
+        feedback:
+          "Infelizmente optamos por um profissional com maior vivência em testes E2E com Cypress.",
+        feedbackAt: new Date("2026-04-07T15:00:00Z"),
+      },
+    ],
+    skipDuplicates: true,
+  });
 }
 
 main()

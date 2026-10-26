@@ -6,7 +6,7 @@ import { useRef } from "react";
 
 interface DropdownProps {
   label: string;
-  Icon: IconKey;
+  Icon?: IconKey;
   field: React.ReactNode
   children: React.ReactNode;
   isOpen: boolean;
@@ -48,7 +48,7 @@ export function Dropdown({
       <div
         className={`w-full flex flex-row gap-2 items-center justify-between border-2 px-2 py-1 transition-colors ${containerStyles}`}
       >
-        <Icon size={24} className={`shrink-0 ${iconStyles}`} />
+        {Icon && <Icon size={24} className={`shrink-0 ${iconStyles}`} />}
         {field}
       </div>
 

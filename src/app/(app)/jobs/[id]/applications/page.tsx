@@ -147,8 +147,19 @@ export default async function JobApplicationsPage(
   );
 }
 
-export const metadata: Metadata = {
-  title: "Suas aplicações | Typehire",
-  description:
-    "Visualize todas as suas candidaturas organizando por filtro para melhores resultados.",
-};
+export async function generateMetadata(
+  props: PageProps<"/jobs/[id]/applications">,
+): Promise<Metadata> {
+  const jobId = (await props.params).id;
+  const jobResponse = await getJobByIdAction(jobId);
+
+  if (!jobResponse.success) {
+    if (jobResponse.status === 404) notFound();
+    else throw Error();
+  }
+
+  return {
+    title: `Suas candidaturas da vaga para ${jobResponse.data.title} | TypeHire`,
+    description: `Veja todas as candidaturas para a sua vaga de ${jobResponse.data.title}, filtre os candidatos e escolha quem melhor se encaixar.`,
+  };
+}

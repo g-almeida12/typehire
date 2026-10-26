@@ -35,7 +35,7 @@ export function DropdownButtonField({
       {selectedValue}
       <ChevronDownIcon
         size={24}
-        className={`shrink-0 ${disabled ? "text-background-500" : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800" : "text-background-400"}`} `}
+        className={`shrink-0 ${disabled ? "text-background-500" : `text-background-400 group-focus-within:text-background-800 ${isOpen ? "text-background-800 rotate-180" : "text-background-400 rotate-0"}`} `}
       />
     </button>
   );

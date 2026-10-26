@@ -7,8 +7,8 @@ import {
 import { z } from "zod";
 
 const ApplicationBaseSchema = z.object({
-  feedback: z.string(),
-  feedbackAt: z.iso.datetime({ offset: true }).pipe(z.coerce.date()),
+  feedback: z.string().min(100, "Feedback muito curto para o usuário."),
+  feedbackAt: z.iso.datetime(),
   status: z.enum(ApplicationStatus),
 });
 
@@ -35,8 +35,10 @@ export const ApplicationCreateSchema = z.object({
 });
 export type ApplicationCreatePayload = z.infer<typeof ApplicationCreateSchema>;
 
-export const ApplicationUpdateSchema = ApplicationBaseSchema.partial();
-export type ApplicationUpdatePayload = z.infer<typeof ApplicationUpdateSchema>;
+export const ApplicationUpdateSchema = ApplicationBaseSchema.omit({
+  feedbackAt: true,
+});
+export type ApplicationUpdatePayload = z.input<typeof ApplicationUpdateSchema>;
 
 export const ApplicationResponseSchema = ApplicationBaseSchema.extend({
   id: z.string(),

@@ -12,7 +12,7 @@ import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { ApplicationResponsePayload } from "@/lib/modules/application";
 import { CompanyProfile } from "../company/CompanyProfile";
-import { ApplicationStatusTag } from "./ApplicationStatus";
+import { ApplicationStatusTag } from "./ApplicationStatusTag";
 
 export function ApplicationCard({
   application,

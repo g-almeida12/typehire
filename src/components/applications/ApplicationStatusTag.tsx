@@ -29,7 +29,7 @@ export function ApplicationStatusTag({ status }: ApplicationStatusTagProps) {
 
   return (
     <span
-      className="w-max flex flex-row items-center gap-2 px-2 py-1 mb-2 rounded-md"
+      className="flex flex-row items-center gap-2 px-2 py-1 rounded-md w-max"
       style={{ backgroundColor: tagColors.bg, color: tagColors.text }}
     >
       <span className="text-sm font-medium">

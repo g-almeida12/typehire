@@ -48,9 +48,9 @@ export function CandidateListView({
       renderItem={(application) => (
         <CandidateCard
           candidate={application.candidate}
+          applicationId={application.id}
           status={application.status}
           createdAt={application.createdAt}
-          jobId={application.jobId}
         />
       )}
       initialModules={initialApplications}
