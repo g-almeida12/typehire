@@ -42,10 +42,7 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
       </section>
 
       <section>
-        <JobForm
-          companyId={companyId}
-          key={companyId}
-        />
+        <JobForm companyId={companyId} key={companyId} />
       </section>
     </main>
   );
@@ -54,25 +51,16 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
 export async function generateMetadata(
   props: PageProps<"/jobs/create">,
 ): Promise<Metadata> {
-  try {
-    const companyId = (await props.searchParams).companyId as string;
-    const companyResponse = await getCompanyByIdAction(companyId);
+  const companyId = (await props.searchParams).companyId as string;
+  const companyResponse = await getCompanyByIdAction(companyId);
 
-    if (!companyResponse.success) {
-      return {
-        title: "Empresa não encontrada | TypeHire",
-        description:
-          "A empresa para criar a vaga pode ter sido desligada ou não existe.",
-      };
-    }
-
-    return {
-      title: `Criar vaga na empresa ${companyResponse.data.name} | TypeHire`,
-      description: "Crie uma nova vaga para sua empresa.",
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) notFound();
+    else throw Error();
   }
+
+  return {
+    title: `Criar vaga na empresa ${companyResponse.data.name} | TypeHire`,
+    description: "Crie uma nova vaga para sua empresa.",
+  };
 }

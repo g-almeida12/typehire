@@ -52,24 +52,16 @@ export default async function JobUpdatePage(
 export async function generateMetadata(
   props: PageProps<"/jobs/[id]/update">,
 ): Promise<Metadata> {
-  try {
-    const jobId = (await props.params).id;
-    const jobResponse = await getJobByIdAction(jobId);
-    if (!jobResponse.success) {
-      if (jobResponse.status === 404) {
-        notFound();
-      } else {
-        throw new Error();
-      }
-    }
-
-    return {
-      title: `Atualizar vaga da empresa ${jobResponse.data.company.name} | TypeHire`,
-      description: "Atualize os dados da vaga da empresa.",
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  const jobId = (await props.params).id;
+  const jobResponse = await getJobByIdAction(jobId);
+  
+  if (!jobResponse.success) {
+    if (jobResponse.status === 404) notFound();
+    else throw new Error();
   }
+
+  return {
+    title: `Atualizar vaga da empresa ${jobResponse.data.company.name} | TypeHire`,
+    description: "Atualize os dados da vaga da empresa.",
+  };
 }

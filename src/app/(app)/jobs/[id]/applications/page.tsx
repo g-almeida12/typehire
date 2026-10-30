@@ -39,11 +39,7 @@ export default async function JobApplicationsPage(
     }
   }
   if (!jobApplicationStatusesResponse.success) {
-    if (jobApplicationStatusesResponse.status === 404) {
-      notFound();
-    } else {
-      throw Error();
-    }
+    throw Error()
   }
 
   const filter = ApplicationURLFilterSchema.parse({

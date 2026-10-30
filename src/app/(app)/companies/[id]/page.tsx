@@ -111,7 +111,11 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               className="flex flex-row gap-2 items-center justify-center text-center text-accent-100 text-sm"
             >
               Ver todas as vagas
-              <ArrowUpRightIcon size={20} className="text-accent-200" aria-hidden="true" />
+              <ArrowUpRightIcon
+                size={20}
+                className="text-accent-200"
+                aria-hidden="true"
+              />
             </Link>
           </div>
         </section>
@@ -161,30 +165,21 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
 export async function generateMetadata(
   props: PageProps<"/companies/[id]">,
 ): Promise<Metadata> {
-  try {
-    const companyId = (await props.params).id;
-    const response = await getCompanyByIdAction(companyId);
+  const companyId = (await props.params).id;
+  const companyResponse = await getCompanyByIdAction(companyId);
 
-    if (!response.success) {
-      return {
-        title: "Empresa não encontrada | TypeHire",
-        description:
-          "A empresa que você está procurando pode ter sido desligada ou não existe.",
-      };
-    }
-
-    const description = response.data.bio
-      ? response.data.bio.slice(0, 150) +
-        (response.data.bio.length > 150 ? "..." : "")
-      : `Conheça a empresa ${response.data.name}, seus objetivos, suas vagas e seus colaboradores.`;
-
-    return {
-      title: `${response.data.name} | Vagas e Perfil no TypeHire`,
-      description,
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) notFound();
+    else throw Error();
   }
+
+  const company = companyResponse.data;
+  const description = company.bio
+    ? company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "")
+    : `Conheça a empresa ${company.name}, seus objetivos, suas vagas e seus colaboradores.`;
+
+  return {
+    title: `${company.name} | Vagas e Perfil no TypeHire`,
+    description,
+  };
 }

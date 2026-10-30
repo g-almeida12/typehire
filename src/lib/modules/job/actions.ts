@@ -17,49 +17,45 @@ import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { updateTag } from "next/cache";
 import { getCurrentUserId } from "@/lib/data/user/index";
+import { PrismaClientError } from "@/utils/errors/prisma-error";
+import { Prisma } from "@/database/generated/client";
 
 export async function createJobAction(
   jobData: JobServerCreatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const result = await prisma.$transaction(async (tx) => {
-      const isMember = await tx.companyMember.findFirst({
-        where: { userId, companyId: jobData.companyId },
-        select: { userId: true },
-      });
-
-      if (!isMember) {
-        throw new AppError(
-          "O usuário fornecido não faz parte da empresa e por isso não pode gerenciar vagas.",
-          403,
-          "companyId",
-        );
-      }
-
-      const { intervalSalary, ...leanNewData } = jobData;
-      const createdJob = await tx.job.create({
-        data: {
-          ...leanNewData,
-          minSalary: jobData.intervalSalary?.at(0) ?? null,
-          maxSalary: jobData.intervalSalary?.at(1) ?? null,
-          status: "ABERTA",
-          createdBy: userId,
-        },
-        include: jobWithDetailsInclude,
-      });
-
-      return createdJob;
+    const isMember = await prisma.companyMember.findFirst({
+      where: { userId: currentUserId, companyId: jobData.companyId },
+      select: { userId: true },
     });
+    if (!isMember) {
+      throw new AppError(
+        "O usuário fornecido não faz parte da empresa e por isso não pode gerenciar vagas.",
+        403,
+        "companyId",
+      );
+    }
 
+    const { intervalSalary, ...leanNewData } = jobData;
+    const createdJob = await prisma.job.create({
+      data: {
+        ...leanNewData,
+        minSalary: intervalSalary?.at(0) ?? null,
+        maxSalary: intervalSalary?.at(1) ?? null,
+        status: "ABERTA",
+        createdBy: currentUserId,
+      },
+      include: jobWithDetailsInclude,
+    });
     return {
       success: true,
       status: 201,
-      data: mapJobEntity({ ...result, userHasApplied: false }),
+      data: mapJobEntity({ ...createdJob, userHasApplied: false }),
     };
   } catch (err) {
     if (err instanceof AppError) {
@@ -88,8 +84,8 @@ export async function getJobsAction(
   pagination: PaginationResponsePayload;
 }> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
@@ -108,7 +104,7 @@ export async function getJobsAction(
       },
       include: {
         ...jobWithDetailsInclude,
-        applications: { where: { candidateId: userId }, select: { id: true } },
+        applications: { where: { candidateId: currentUserId }, select: { id: true } },
       },
     });
 
@@ -154,12 +150,12 @@ export async function getJobByIdAction(
   jobId: string,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const job = await getCachedJobById(jobId, userId);
+    const job = await getCachedJobById(jobId, currentUserId);
     if (!job) {
       throw new AppError("Vaga não encontrada.", 404);
     }
@@ -195,49 +191,29 @@ export async function updateJobByIdAction(
   newData: JobUpdatePayload,
 ): ServerActionResponse<JobResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const updatedJob = await prisma.$transaction(async (tx) => {
-      // Verify if the user has permission to update the job
-      const job = await tx.job.findUnique({
-        where: { id: jobId },
-        select: {
-          id: true,
-          createdBy: true,
-          company: { select: { createdBy: true } },
+    const { intervalSalary, ...leanNewData } = newData;
+    const updatedJob = await prisma.job.update({
+      where: {
+        id: jobId,
+        OR: [{ createdBy: currentUserId }, { company: { createdBy: currentUserId } }],
+      },
+      data: {
+        ...leanNewData,
+        minSalary: intervalSalary?.at(0) ?? null,
+        maxSalary: intervalSalary?.at(1) ?? null,
+      },
+      include: {
+        ...jobWithDetailsInclude,
+        applications: {
+          where: { candidateId: currentUserId },
+          select: { id: true },
         },
-      });
-      if (!job) {
-        throw new AppError("Vaga não encontrada.", 404);
-      }
-
-      if (userId !== job.createdBy && userId !== job.company.createdBy) {
-        throw new AppError(
-          "Usuário não tem permissão para atualizar a vaga.",
-          403,
-        );
-      }
-      
-      // Update the job
-      const { intervalSalary, ...leanNewData } = newData;
-      return await tx.job.update({
-        where: { id: jobId },
-        data: {
-          ...leanNewData,
-          minSalary: newData.intervalSalary?.at(0) ?? null,
-          maxSalary: newData.intervalSalary?.at(1) ?? null,
-        },
-        include: {
-          ...jobWithDetailsInclude,
-          applications: {
-            where: { candidateId: userId },
-            select: { id: true },
-          },
-        },
-      });
+      },
     });
 
     updateTag(`job-${jobId}`);
@@ -250,6 +226,17 @@ export async function updateJobByIdAction(
       }),
     };
   } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (leanErr.errType === "NOT_FOUND") {
+        return {
+          success: false,
+          status: 404,
+          message: "Vaga não encontrada.",
+        };
+      }
+    }
+
     if (err instanceof AppError) {
       return {
         success: false,
@@ -276,35 +263,18 @@ export async function deleteJobByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Verify if the user has permission to delete the job
-      const job = await tx.job.findUnique({
-        where: { id: jobId },
-        select: {
-          id: true,
-          createdBy: true,
-          company: { select: { createdBy: true } },
-        },
-      });
-      if (!job) {
-        throw new AppError("Vaga não encontrada.", 404);
-      }
-
-      if (
-        currentUserId !== job.createdBy &&
-        currentUserId !== job.company.createdBy
-      ) {
-        throw new AppError(
-          "Usuário não tem permissão para deletar a vaga.",
-          403,
-        );
-      }
-
-      // Delete the job
-      await tx.job.delete({
-        where: { id: jobId },
-      });
+    const { count } = await prisma.job.deleteMany({
+      where: {
+        id: jobId,
+        OR: [
+          { createdBy: currentUserId },
+          { company: { createdBy: currentUserId } },
+        ],
+      },
     });
+    if (count === 0) {
+      throw new AppError("Vaga não encontrada.", 404);
+    }
 
     updateTag(`job-${jobId}`);
     return { success: true, status: 200, data: null };

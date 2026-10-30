@@ -37,7 +37,7 @@ export function ApplicationFilterDropdown() {
     }
 
     setIsOpen(false);
-    startTransition(async () => router.push(`?${searchParams.toString()}`));
+    startTransition(() => router.replace(`?${searchParams.toString()}`));
   };
 
   const { activeIndex, itemsRef, handleKeyDown } = useListNavigation(

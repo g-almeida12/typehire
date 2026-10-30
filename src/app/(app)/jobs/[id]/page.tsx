@@ -215,27 +215,19 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 export async function generateMetadata(
   props: PageProps<"/jobs/[id]">,
 ): Promise<Metadata> {
-  try {
-    const jobId = (await props.params).id;
-    const response = await getJobByIdAction(jobId);
+  const jobId = (await props.params).id;
+  const jobResponse = await getJobByIdAction(jobId);
 
-    if (!response.success) {
-      return {
-        title: "Vaga não encontrada | TypeHire",
-        description:
-          "A vaga que você está procurando pode ter sido encerrada ou não existe.",
-      };
-    }
-
-    return {
-      title: `${response.data.title} na ${response.data.company.name} | TypeHire`,
-      description:
-        response.data.description.slice(0, 150) +
-        (response.data.description.length > 150 ? "..." : ""),
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  if (!jobResponse.success) {
+    if (jobResponse.status === 404) notFound();
+    else throw Error();
   }
+
+  const job = jobResponse.data;
+  return {
+    title: `${job.title} na ${job.company.name} | TypeHire`,
+    description:
+      job.description.slice(0, 150) +
+      (job.description.length > 150 ? "..." : ""),
+  };
 }

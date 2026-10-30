@@ -43,6 +43,7 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
         await deleteCompanyByIdAction(companyId);
         dialogRef.current?.closeModal();
 
+        dialogRef.current?.closeModal();
         router.replace("/");
       } catch (err) {
         //! Substituir por um toast

@@ -29,9 +29,10 @@ export function ApplicationCreateWrapper({
 
     startTransition(async () => {
       try {
-        await createApplicationAction({ jobId });
-        dialogRef.current?.closeModal();
+        const applicationResponse = await createApplicationAction({ jobId });
+        if (!applicationResponse.success) throw Error();
 
+        dialogRef.current?.closeModal();
         router.refresh();
       } catch (err) {
         //! Substituir por um toast

@@ -31,12 +31,13 @@ export function ApplicationUpdateForm({
     control,
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
   } = useForm<ApplicationUpdatePayload>({
     resolver: zodResolver(ApplicationUpdateSchema),
   });
   const { field: statusField } = useController({ control, name: "status" });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<ApplicationStatus | null>(null);
   const router = useRouter();
@@ -51,6 +52,8 @@ export function ApplicationUpdateForm({
 
   const handleApplicationUpdate = async (data: ApplicationUpdatePayload) => {
     try {
+      setIsLoading(true);
+
       const applicationResponse = await updateApplicationByIdAction(
         applicationId,
         data,
@@ -61,11 +64,12 @@ export function ApplicationUpdateForm({
 
       setIsFeedbackOpen(false);
       router.refresh();
-    } catch (err) {
+    } catch (_err) {
       setError("root", {
         message: "Não foi possível alterar o estado da candidatura.",
       });
       statusField.onChange(initialStatus);
+      setIsLoading(false);
     }
   };
 
@@ -89,7 +93,7 @@ export function ApplicationUpdateForm({
         initialStatus={initialStatus}
         onSelect={handleStatusSelect}
         error={errors.status?.message}
-        isLoading={isSubmitting}
+        isLoading={isLoading}
       />
 
       {isFeedbackOpen && (
@@ -112,7 +116,7 @@ export function ApplicationUpdateForm({
               label=""
               error={errors.feedback?.message}
               placeholder="Informe ao candidato sobre a mudança do estado da candidatura"
-              disabled={isSubmitting}
+              disabled={isLoading}
             />
 
             <hr className="my-6" />
@@ -125,13 +129,13 @@ export function ApplicationUpdateForm({
                   statusField.onChange(initialStatus);
                   setIsFeedbackOpen(false);
                 }}
-                disabled={isSubmitting}
+                disabled={isLoading}
               />
               <Button
                 text="Confirmar"
                 type="submit"
                 onClick={() => statusField.onChange(newStatus)}
-                disabled={isSubmitting}
+                disabled={isLoading}
               />
             </div>
           </div>

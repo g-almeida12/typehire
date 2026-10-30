@@ -10,7 +10,7 @@ import {
 import {
   companyWithDetailsInclude,
   mapCompanyEntity,
-  getCachedCompanyById
+  getCachedCompanyById,
 } from "@/lib/data/company/index";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
@@ -22,8 +22,8 @@ export async function createCompanyAction(
   companyData: CompanyCreatePayload,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
@@ -32,13 +32,13 @@ export async function createCompanyAction(
         ...companyData,
         members: {
           create: [
-            { userId },
+            { userId: currentUserId },
             ...companyData.members
-              .filter((u) => u.email !== userId)
+              .filter((u) => u.email !== currentUserId)
               .map((u) => ({ userId: u.id })),
           ],
         },
-        creator: { connect: { id: userId } },
+        creator: { connect: { id: currentUserId } },
       },
       include: companyWithDetailsInclude,
     });
@@ -112,74 +112,31 @@ export async function updateCompanyByIdAction(
   newData: CompanyUpdatePayload,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
     // Update the company data
     const { members, ...data } = newData;
-    const newMemberUserIds = (members ?? []).map((m) => m.id);
+    const newMemberIds = (members ?? []).map((m) => m.id);
 
     const updatedCompany = await prisma.$transaction(async (tx) => {
-      // Verify if the user has permission to update the company
-      const company = await tx.company.findUnique({
-        where: { id: companyId },
-        select: { createdBy: true },
-      });
-      if (!company) {
-        throw new AppError("Empresa não encontrada.", 404);
-      }
-      if (company.createdBy !== userId) {
-        throw new AppError(
-          "Usuário não tem permissão para atualizar a empresa.",
-          403,
-        );
-      }
-
-      await tx.company.update({
-        where: { id: companyId },
+      // Update the company if the user has permission to do it
+      const { count } = await tx.company.updateMany({
+        where: { id: companyId, createdBy: currentUserId },
         data,
       });
-
-      const memberIds = newData.members?.map((m) => m.id) ?? [];
-      if (memberIds.length > 0) {
-        const existingUserCount = await tx.user.count({
-          where: { id: { in: memberIds } },
-        });
-
-        if (existingUserCount !== memberIds.length) {
-          throw new AppError(
-            "Um ou mais usuário selecionados não existem.",
-            400,
-          );
-        }
+      if (count === 0) {
+        throw new AppError("Empresa não encontrada.", 404);
       }
 
-      // Delete the removed members
-      await tx.companyMember.deleteMany({
-        where: {
-          companyId,
-          userId: {
-            notIn: newMemberUserIds,
-          },
-        },
-      });
-
-      // Get the new members to be added
-      const existingMembers = await tx.companyMember.findMany({
-        where: { companyId },
-        select: { userId: true },
-      });
-      const existingUserIds = existingMembers.map((m) => m.userId);
-      const userIdsToAdd = newMemberUserIds.filter(
-        (id) => !existingUserIds.includes(id),
-      );
-
-      // Add the new members
-      if (userIdsToAdd.length > 0) {
+      if (members) {
+        await tx.companyMember.deleteMany({
+          where: { companyId, userId: { notIn: newMemberIds } },
+        });
         await tx.companyMember.createMany({
-          data: userIdsToAdd.map((id) => ({ companyId, userId: id })),
+          data: newMemberIds.map((id) => ({ companyId, userId: id })),
           skipDuplicates: true,
         });
       }
@@ -200,16 +157,25 @@ export async function updateCompanyByIdAction(
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       const leanError = PrismaClientError.getLeanError(err);
-      if (
-        leanError.errType === "UNIQUE_CONSTRAINT_ERROR" &&
-        leanError.field === "cnpj"
-      ) {
-        return {
-          success: false,
-          status: 409,
-          message: "CNPJ já cadastrado.",
-          field: "cnpj",
-        };
+      switch (leanError.errType) {
+        case "UNIQUE_CONSTRAINT_ERROR":
+          if (leanError.field === "cnpj") {
+            return {
+              success: false,
+              status: 409,
+              message: "CNPJ já cadastrado.",
+              field: "cnpj",
+            };
+          }
+          break;
+
+        case "FOREIGN_KEY_ERROR":
+          return {
+            success: false,
+            status: 400,
+            message: "Um ou mais usuários selecionados não existem.",
+            field: "members",
+          };
       }
     } else if (err instanceof AppError) {
       return {
@@ -232,30 +198,17 @@ export async function deleteCompanyByIdAction(
   companyId: string,
 ): ServerActionResponse<null> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    await prisma.$transaction(async (tx) => {
-      const company = await tx.company.findUnique({
-        where: { id: companyId },
-        select: { createdBy: true },
-      });
-      if (!company) {
-        throw new AppError("Empresa não encontrada.", 404);
-      }
-      if (company.createdBy !== userId) {
-        throw new AppError(
-          "Usuário não tem permissão para deletar a empresa.",
-          403,
-        );
-      }
-
-      await tx.company.delete({
-        where: { id: companyId },
-      });
+    const { count } = await prisma.company.deleteMany({
+      where: { id: companyId, createdBy: currentUserId },
     });
+    if (count === 0) {
+      throw new AppError("Empresa não encontrada.", 404);
+    }
 
     updateTag(`company-${companyId}`);
     return { success: true, status: 200, data: null };

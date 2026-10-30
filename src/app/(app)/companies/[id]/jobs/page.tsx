@@ -126,28 +126,19 @@ export default async function CompanyJobsPage(
 export async function generateMetadata(
   props: PageProps<"/companies/[id]/jobs">,
 ): Promise<Metadata> {
-  try {
-    const companyId = (await props.params).id;
-    const response = await getCompanyByIdAction(companyId);
+  const companyId = (await props.params).id;
+  const companyResponse = await getCompanyByIdAction(companyId);
 
-    if (!response.success) {
-      return {
-        title: "Empresa não encontrada | TypeHire",
-        description:
-          "A empresa que você está procurando pode ter sido desligada ou não existe.",
-      };
-    }
-
-    return {
-      title: `Vagas da ${response.data.name} | TypeHire`,
-      description: response.data.bio
-        ? response.data.bio.slice(0, 150) +
-          (response.data.bio.length > 150 ? "..." : "")
-        : `Veja todas as vagas da empresa ${response.data.name}.`,
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) notFound();
+    else throw Error();
   }
+
+  const company = companyResponse.data;
+  return {
+    title: `Vagas da ${company.name} | TypeHire`,
+    description: company.bio
+      ? company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "")
+      : `Veja todas as vagas da empresa ${company.name}.`,
+  };
 }

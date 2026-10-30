@@ -41,7 +41,7 @@ export default function CompleteProfilePage() {
       }
 
       router.replace(APP_URLS.home);
-    } catch (err: any) {
+    } catch (_err) {
       setError("root", {
         message:
           "Desculpe, mas não foi possível completar o registro da sua conta.",

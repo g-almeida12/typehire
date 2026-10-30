@@ -126,6 +126,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             placeholder="Digite o título da vaga"
             error={errors.title?.message}
             disabled={isLoading}
+            defaultValue={job?.title ?? ""}
           />
           <TextArea
             {...register("description")}
@@ -133,6 +134,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             placeholder="Descreva brevemente sua empresa e os requisitos da vaga em Markdown"
             error={errors.description?.message}
             disabled={isLoading}
+            defaultValue={job?.description ?? ""}
           />
           <JobSalaryInput
             label="Selecione o tipo de salário"

@@ -77,6 +77,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             placeholder="Seu nome completo"
             error={errors.name?.message}
             disabled={isLoading}
+            defaultValue={user.name}
           />
           <Input
             {...register("email")}
@@ -85,6 +86,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             placeholder="Ex.: exemplo@gmail.com"
             error={errors.email?.message}
             disabled={isLoading}
+            defaultValue={user.email}
           />
           <Input
             {...register("cpf")}
@@ -93,6 +95,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             placeholder="Ex.: 123.456.789-00"
             error={errors.cpf?.message}
             disabled={isLoading}
+            defaultValue={user.cpf}
           />
           <Input
             {...register("location")}
@@ -102,6 +105,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.location?.message}
             disabled={isLoading}
+            defaultValue={user.location ?? ""}
           />
           <Input
             {...register("phoneNumber")}
@@ -111,6 +115,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.phoneNumber?.message}
             disabled={isLoading}
+            defaultValue={user.phoneNumber ?? ""}
           />
           <TextArea
             {...register("bio")}
@@ -119,6 +124,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             error={errors.bio?.message}
             placeholder="Fale um pouco sobre você"
             disabled={isLoading}
+            defaultValue={user.bio ?? ""}
           />
         </div>
       </fieldset>
@@ -134,6 +140,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             error={errors.githubUrl?.message}
             placeholder="Ex.: www.github.com/user123"
             disabled={isLoading}
+            defaultValue={user.githubUrl ?? ""}
           />
           <Input
             {...register("linkedinUrl")}
@@ -143,6 +150,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             error={errors.linkedinUrl?.message}
             placeholder="Ex.: www.linkedin.com/in/user123"
             disabled={isLoading}
+            defaultValue={user.linkedinUrl ?? ""}
           />
           <Input
             {...register("portfolioUrl")}
@@ -152,6 +160,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             error={errors.portfolioUrl?.message}
             placeholder="Ex.: www.user123.dev"
             disabled={isLoading}
+            defaultValue={user.portfolioUrl ?? ""}
           />
         </div>
       </fieldset>

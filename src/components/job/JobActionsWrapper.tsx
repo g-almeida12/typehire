@@ -41,8 +41,8 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
     startTransition(async () => {
       try {
         await deleteJobByIdAction(jobId);
-        dialogRef.current?.closeModal();
 
+        dialogRef.current?.closeModal();
         router.replace("/");
       } catch (err) {
         //! Substituir por um toast

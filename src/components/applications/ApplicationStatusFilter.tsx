@@ -33,7 +33,7 @@ export function ApplicationStatusFilter({
       searchParams.set("status", status);
     }
 
-    startTransition(async () => router.push(`?${searchParams.toString()}`));
+    startTransition(() => router.replace(`?${searchParams.toString()}`));
   };
 
   return (

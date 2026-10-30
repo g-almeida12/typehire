@@ -127,6 +127,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             placeholder="Digite o nome da empresa"
             error={errors.name?.message}
             disabled={isLoading}
+            defaultValue={company?.name ?? ""}
           />
           {!company && (
             <Input
@@ -152,6 +153,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             helperText="Campo opcional"
             error={errors.website?.message}
             disabled={isLoading}
+            defaultValue={company?.website ?? ""}
           />
           <TextArea
             {...register("bio")}
@@ -160,6 +162,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             error={errors.bio?.message}
             placeholder="Descreva sua empresa"
             disabled={isLoading}
+            defaultValue={company?.bio ?? ""}
           />
         </div>
       </fieldset>

@@ -50,7 +50,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
     });
 
     setIsFilterOpen(false);
-    startRouterTransition(() => router.push(`?${params.toString()}`));
+    startRouterTransition(() => router.replace(`?${params.toString()}`));
   };
 
   const handleClearFilters = () => {

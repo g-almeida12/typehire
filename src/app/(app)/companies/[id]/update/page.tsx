@@ -28,7 +28,7 @@ export default async function CompanyUpdate(
         <div className="size-6 mt-4">
           <BackButton />
         </div>
-  
+
         <h1 className="mt-8 mb-6 text-2xl font-semibold">
           Atualize os dados da sua empresa
         </h1>
@@ -48,26 +48,17 @@ export default async function CompanyUpdate(
 export async function generateMetadata(
   props: PageProps<"/companies/[id]/update">,
 ): Promise<Metadata> {
-  try {
-    const companyId = (await props.params).id;
-    const companyResponse = await getCompanyByIdAction(companyId);
+  const companyId = (await props.params).id;
+  const companyResponse = await getCompanyByIdAction(companyId);
 
-    if (!companyResponse.success) {
-      return {
-        title: "Empresa não encontrada | TypeHire",
-        description:
-          "A empresa que você está procurando pode ter sido desligada ou não existe.",
-      };
-    }
-
-    return {
-      title: `Atualizar empresa ${companyResponse.data.name} | TypeHire`,
-      description:
-        "Atualize os dados da sua empresa para dar total transparência aos candidatos.",
-    };
-  } catch (_err) {
-    return {
-      title: "TypeHire - Portal de Vagas",
-    };
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) notFound();
+    else throw Error();
   }
+
+  return {
+    title: `Atualizar empresa ${companyResponse.data.name} | TypeHire`,
+    description:
+      "Atualize os dados da sua empresa para dar total transparência aos candidatos.",
+  };
 }
