@@ -52,6 +52,8 @@ export async function createJobAction(
       },
       include: jobWithDetailsInclude,
     });
+
+    updateTag(`company-${jobData.companyId}`);
     return {
       success: true,
       status: 201,
@@ -217,6 +219,7 @@ export async function updateJobByIdAction(
     });
 
     updateTag(`job-${jobId}`);
+    updateTag(`company-${updatedJob.companyId}`);
     return {
       success: true,
       status: 200,
@@ -263,7 +266,7 @@ export async function deleteJobByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const { count } = await prisma.job.deleteMany({
+    const deletedJob = await prisma.job.delete({
       where: {
         id: jobId,
         OR: [
@@ -271,14 +274,24 @@ export async function deleteJobByIdAction(
           { company: { createdBy: currentUserId } },
         ],
       },
+      select: {companyId: true}
     });
-    if (count === 0) {
-      throw new AppError("Vaga não encontrada.", 404);
-    }
 
     updateTag(`job-${jobId}`);
+    updateTag(`company-${deletedJob.companyId}`)
     return { success: true, status: 200, data: null };
   } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (leanErr.errType === "NOT_FOUND") {
+        return {
+          success: false,
+          status: 404,
+          message: "Vaga não encontrada."
+        }
+      }
+    }
+
     if (err instanceof AppError) {
       return {
         success: false,

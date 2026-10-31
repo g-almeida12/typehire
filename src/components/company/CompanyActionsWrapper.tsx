@@ -7,10 +7,12 @@ import { EditIcon, TrashIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 import { MoreOptions } from "../common/MoreOptions";
+import { useToast } from "@/contexts/ToastContext";
 
 export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
   const dialogRef = useRef<DialogRef>(null);
   const router = useRouter();
+  const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   const OPTIONS = [
@@ -40,14 +42,14 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
 
     startTransition(async () => {
       try {
-        await deleteCompanyByIdAction(companyId);
-        dialogRef.current?.closeModal();
+        const result = await deleteCompanyByIdAction(companyId);
+        if (!result.success) throw new Error();
 
         dialogRef.current?.closeModal();
+        showToast("success", "Empresa deletada com sucesso.");
         router.replace("/");
       } catch (err) {
-        //! Substituir por um toast
-        console.error("'deleteCompanyByIdAction' failed: ", err);
+        showToast("error", "Não foi possível deletar a empresa.");
         dialogRef.current?.closeModal();
       }
     });

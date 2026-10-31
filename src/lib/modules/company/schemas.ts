@@ -19,7 +19,7 @@ const CompanyBaseSchema = z.object({
   cnpj: z.string().min(14, "CNPJ inválido fornecido."),
   image: z.string().nullable(),
   website: z.string().nullable(),
-  bio: z.string().nullable(),
+  bio: z.string().min(50, "Descrição muito curta."),
   size: z.enum(CompanySize),
   members: z.array(
     UserPublicResponseSchema.pick({
@@ -33,7 +33,6 @@ const CompanyBaseSchema = z.object({
 export const CompanyCreateSchema = CompanyBaseSchema.extend({
   image: z.string().optional().nullable(),
   website: z.string().optional().nullable(),
-  bio: z.string().optional().nullable(),
 });
 export type CompanyCreatePayload = z.infer<typeof CompanyCreateSchema>;
 
@@ -46,7 +45,6 @@ export const CompanyResponseSchema = CompanyBaseSchema.extend({
   id: z.string(),
   jobs: z.array(JobSnippetSchema),
   website: z.string().nullable(),
-  bio: z.string().nullable(),
   createdBy: z.string(),
 });
 export type CompanyResponsePayload = z.infer<typeof CompanyResponseSchema>;

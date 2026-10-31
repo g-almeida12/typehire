@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { createApplicationAction } from "@/lib/modules/application";
 import { CheckIcon } from "@/components/icons";
 import { APP_URLS } from "@/utils/constants";
+import { useToast } from "@/contexts/ToastContext";
 
 export function ApplicationCreateWrapper({
   jobId,
@@ -16,7 +17,8 @@ export function ApplicationCreateWrapper({
   jobId: string;
   isUserCreator: boolean;
   userHasApplied: boolean;
-}) {
+  }) {
+  const { showToast } = useToast();
   const dialogRef = useRef<DialogRef>(null);
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -33,10 +35,10 @@ export function ApplicationCreateWrapper({
         if (!applicationResponse.success) throw Error();
 
         dialogRef.current?.closeModal();
+        showToast("success", "Candidatura enviada com sucesso.");
         router.refresh();
       } catch (err) {
-        //! Substituir por um toast
-        console.error("'createApplicationAction' failed: ", err);
+        showToast("error", "Não foi possível enviar sua candidatura.");
         dialogRef.current?.closeModal();
       }
     });

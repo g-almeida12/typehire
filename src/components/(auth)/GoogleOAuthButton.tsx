@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/contexts/ToastContext";
 import { authClient } from "@/lib/auth/auth-client";
 import Image from "next/image";
 import { ButtonHTMLAttributes } from "react";
@@ -12,15 +13,17 @@ export function GoogleOAuthButton({
   callbackURL,
   ...props
 }: GoogleOAuthButtonProps) {
+  const { showToast } = useToast();
+
   const handleGoogleSignup = async () => {
     try {
       const result = await authClient.signIn.social({
         provider: "google",
         callbackURL,
       });
+      if (!result.data) throw new Error();
     } catch (err) {
-      //! Substituir por um toast
-      console.log(err);
+      showToast("error", "Não foi possível acessar sua conta do Google.");
     }
   };
 

@@ -149,6 +149,10 @@ export async function updateCompanyByIdAction(
     });
 
     updateTag(`company-${companyId}`);
+    for (const m of members ?? []) {
+      updateTag(`user-${m.id}`);
+    }
+
     return {
       success: true,
       status: 200,
@@ -203,16 +207,29 @@ export async function deleteCompanyByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const { count } = await prisma.company.deleteMany({
+    const deletedCompany = await prisma.company.delete({
       where: { id: companyId, createdBy: currentUserId },
+      select: { members: true },
     });
-    if (count === 0) {
-      throw new AppError("Empresa não encontrada.", 404);
-    }
 
     updateTag(`company-${companyId}`);
+    for (const m of deletedCompany.members ?? []) {
+      updateTag(`user-${m.id}`);
+    }
+
     return { success: true, status: 200, data: null };
   } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (leanErr.errType === "NOT_FOUND") {
+        return {
+          success: false,
+          status: 404,
+          message: "Empresa não encontrada.",
+        };
+      }
+    }
+
     if (err instanceof AppError) {
       return {
         success: false,

@@ -92,7 +92,7 @@ model Company {
   cnpj       String       @unique
   image      String?
   website    String?
-  bio        String?
+  bio        String
   size       CompanySize
   members    CompanyMember[]
   jobs       Job[]

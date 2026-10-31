@@ -17,6 +17,7 @@ import {
 } from "@/lib/data/application/entities";
 import { ApplicationStatus, Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
+import { updateTag } from "next/cache";
 
 export async function createApplicationAction(
   applicationData: ApplicationCreatePayload,
@@ -62,6 +63,7 @@ export async function createApplicationAction(
       include: applicationWithDetailsInclude,
     });
 
+    updateTag(`job-${applicationData.jobId}`);
     return {
       success: true,
       status: 201,

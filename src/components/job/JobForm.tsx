@@ -66,7 +66,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
   ) => {
     try {
       setIsLoading(true);
-      
+
       // Update action
       if (job) {
         const updateResponse = await updateJobByIdAction(
@@ -96,7 +96,6 @@ export function JobForm({ job, companyId }: JobFormProps) {
       setError("root", {
         message: `Não foi possível ${job ? "atualizar" : "criar"} a vaga.`,
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -153,9 +152,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             error={errors.modality?.message}
             isLoading={isLoading}
           />
-          {(["PRESENCIAL", "HÍBRIDO"]).includes(
-            selectedModality || "",
-          ) && (
+          {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
             <Input
               {...register("location")}
               Icon={PinIcon}

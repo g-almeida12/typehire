@@ -97,7 +97,6 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
       setError("root", {
         message: `Não foi possível ${company ? "atualizar" : "criar"} a empresa.`,
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -158,7 +157,6 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           <TextArea
             {...register("bio")}
             label="Descrição da empresa"
-            helperText="Campo opcional"
             error={errors.bio?.message}
             placeholder="Descreva sua empresa"
             disabled={isLoading}

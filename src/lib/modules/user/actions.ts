@@ -90,7 +90,6 @@ export async function signInByEmailAction(
       data: mapPrivateUserEntity(loggedUser),
     };
   } catch (err: any) {
-    console.log(err);
     let response: { message: string; status: number } = {
       message: "",
       status: 0,

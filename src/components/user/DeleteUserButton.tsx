@@ -4,17 +4,20 @@ import { APP_URLS } from "@/utils/constants";
 import { deleteUserAction } from "@/lib/modules/user/index";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/contexts/ToastContext";
 
 export function DeleteUserButton() {
   const router = useRouter();
+  const { showToast } = useToast();
 
   const handleDeleteUser = async () => {
     try {
-      await deleteUserAction();
+      const result = await deleteUserAction();
+      if (!result.success) throw new Error();
 
       router.replace(APP_URLS.register);
     } catch (err) {
-      //! Substituir por um toast
+      showToast("error", "Não foi possível deletar sua conta.");
       console.error(err);
     }
   };

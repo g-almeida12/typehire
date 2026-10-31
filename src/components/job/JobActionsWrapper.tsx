@@ -7,10 +7,12 @@ import { deleteJobByIdAction } from "@/lib/modules/job";
 import { EditIcon, TrashIcon } from "@/components/icons";
 import { APP_URLS } from "@/utils/constants";
 import { MoreOptions } from "../common/MoreOptions";
+import { useToast } from "@/contexts/ToastContext";
 
 export function JobActionsWrapper({ jobId }: { jobId: string }) {
   const dialogRef = useRef<DialogRef>(null);
   const router = useRouter();
+  const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   const OPTIONS = [
@@ -40,13 +42,14 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
 
     startTransition(async () => {
       try {
-        await deleteJobByIdAction(jobId);
+        const result = await deleteJobByIdAction(jobId);
+        if (!result.success) throw new Error();
 
         dialogRef.current?.closeModal();
+        showToast("success", "Vaga deletada com sucesso.");
         router.replace("/");
       } catch (err) {
-        //! Substituir por um toast
-        console.error("'deleteJobByIdAction' failed: ", err);
+        showToast("error", "Não foi possível deletar a vaga.");
         dialogRef.current?.closeModal();
       }
     });

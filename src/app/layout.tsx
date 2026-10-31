@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -14,14 +15,18 @@ export const metadata: Metadata = {
     "Portal de empregos focado em TI com transparência salarial obrigatória e retorno garantido aos candidatos. Encontre vagas para Devs, Designers e Analistas.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="pt-br"
       className={`${poppins.variable} h-full antialiased bg-background-1000`}
     >
-      <body className="min-h-full flex flex-col" cz-shortcut-listen="true">
-        {children}
+      <body className="min-h-full flex flex-col">
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

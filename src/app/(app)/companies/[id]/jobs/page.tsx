@@ -137,8 +137,6 @@ export async function generateMetadata(
   const company = companyResponse.data;
   return {
     title: `Vagas da ${company.name} | TypeHire`,
-    description: company.bio
-      ? company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "")
-      : `Veja todas as vagas da empresa ${company.name}.`,
+    description: company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "")
   };
 }
