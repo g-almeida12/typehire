@@ -91,14 +91,16 @@ export async function getJobsAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
+    const whereCondition: Prisma.JobWhereInput = {
+      ...filter,
+      title: filter.title
+        ? { contains: filter.title, mode: "insensitive" }
+        : undefined,
+      skills: filter.skills ? { hasEvery: filter.skills } : undefined,
+    };
+
     const jobs = await prisma.job.findMany({
-      where: {
-        ...filter,
-        title: filter.title
-          ? { contains: filter.title, mode: "insensitive" }
-          : undefined,
-        skills: filter.skills ? { hasEvery: filter.skills } : undefined,
-      },
+      where: whereCondition,
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: {
@@ -106,11 +108,14 @@ export async function getJobsAction(
       },
       include: {
         ...jobWithDetailsInclude,
-        applications: { where: { candidateId: currentUserId }, select: { id: true } },
+        applications: {
+          where: { candidateId: currentUserId },
+          select: { id: true },
+        },
       },
     });
 
-    const total = await prisma.job.count();
+    const total = await prisma.job.count({ where: whereCondition });
     const totalPages = Math.ceil(total / pageSize);
 
     return {
@@ -202,7 +207,10 @@ export async function updateJobByIdAction(
     const updatedJob = await prisma.job.update({
       where: {
         id: jobId,
-        OR: [{ createdBy: currentUserId }, { company: { createdBy: currentUserId } }],
+        OR: [
+          { createdBy: currentUserId },
+          { company: { createdBy: currentUserId } },
+        ],
       },
       data: {
         ...leanNewData,
@@ -274,11 +282,11 @@ export async function deleteJobByIdAction(
           { company: { createdBy: currentUserId } },
         ],
       },
-      select: {companyId: true}
+      select: { companyId: true },
     });
 
     updateTag(`job-${jobId}`);
-    updateTag(`company-${deletedJob.companyId}`)
+    updateTag(`company-${deletedJob.companyId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -287,8 +295,8 @@ export async function deleteJobByIdAction(
         return {
           success: false,
           status: 404,
-          message: "Vaga não encontrada."
-        }
+          message: "Vaga não encontrada.",
+        };
       }
     }
 

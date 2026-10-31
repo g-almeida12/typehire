@@ -2,7 +2,6 @@
 
 import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
 import { CandidateCard } from "../user/CandidateCard";
-import { SkeletonJobCard } from "../skeletons";
 import {
   ApplicationFormFilterOutputPayload,
   ApplicationResponsePayload,
@@ -55,18 +54,7 @@ export function CandidateListView({
       )}
       initialModules={initialApplications}
       initialHasMore={initialHasMore}
-      SuspenseFallback={<CandidateListViewFallback />}
       key={JSON.stringify(filter)}
     />
-  );
-}
-
-function CandidateListViewFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonJobCard key={`job-${idx}`} />
-      ))}
-    </div>
   );
 }

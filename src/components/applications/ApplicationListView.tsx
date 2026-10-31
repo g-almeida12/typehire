@@ -7,7 +7,6 @@ import {
 } from "@/lib/modules/application";
 import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
 import { ApplicationCard } from "./ApplicationCard";
-import { SkeletonApplicationCard } from "../skeletons";
 
 interface ApplicationListViewProps {
   filter: ApplicationFormFilterOutputPayload;
@@ -50,17 +49,6 @@ export function ApplicationListView({
       )}
       initialModules={initialApplications}
       initialHasMore={initialHasMore}
-      SuspenseFallback={<ApplicationListViewFallback />}
     />
-  );
-}
-
-function ApplicationListViewFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonApplicationCard key={`application-${idx}`} />
-      ))}
-    </div>
   );
 }

@@ -7,7 +7,6 @@ import {
 } from "@/lib/modules/job";
 import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
 import { JobCard } from "./JobCard";
-import { SkeletonJobCard } from "../skeletons";
 
 interface JobListViewProps {
   filter: JobFormFilterOutputPayload;
@@ -48,18 +47,7 @@ export function JobListView({
       renderItem={(job) => <JobCard job={job} />}
       initialModules={initialJobs}
       initialHasMore={initialHasMore}
-      SuspenseFallback={<JobListViewFallback />}
       key={JSON.stringify(filter)}
     />
-  );
-}
-
-function JobListViewFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonJobCard key={`job-${idx}`} />
-      ))}
-    </div>
   );
 }

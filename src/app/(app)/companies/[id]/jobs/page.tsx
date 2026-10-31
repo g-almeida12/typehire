@@ -20,12 +20,12 @@ export default async function CompanyJobsPage(
     props.searchParams,
     props.params,
   ]);
-  const filter = JobURLFilterSchema.parse(searchParams);
   const companyId = params.id;
+  const filter = JobURLFilterSchema.parse({...searchParams, companyId});
 
   const [userId, jobsResponse, companyResponse] = await Promise.all([
     getCurrentUserId(),
-    getJobsAction({ ...filter, companyId }, 1, 10),
+    getJobsAction(filter, 1, 10),
     getCompanyByIdAction(companyId),
   ]);
 

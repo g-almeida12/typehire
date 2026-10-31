@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../common/Button";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { PaginationResponsePayload } from "@/utils/types";
@@ -27,7 +27,6 @@ interface ModuleListViewProps<TModule, TFilter> {
   modulesListEndMessage: string;
   initialModules?: TModule[];
   initialHasMore?: boolean;
-  SuspenseFallback: React.ReactNode;
 }
 
 export function ModuleListView<TModule, TFilter>({
@@ -38,85 +37,91 @@ export function ModuleListView<TModule, TFilter>({
   initialHasMore = true,
   errorMessage,
   modulesListEndMessage,
-  SuspenseFallback
 }: ModuleListViewProps<TModule, TFilter>) {
-  const [modules, setModules] =
-    useState<TModule[]>(initialModules);
+  const [modules, setModules] = useState<TModule[]>(initialModules);
   const [page, setPage] = useState<number>(2);
   const [hasMore, setHasMore] = useState<boolean>(initialHasMore);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const observerTarget = useRef<HTMLDivElement>(null);
+  const [sentinel, setSentinel] = useState<HTMLDivElement | null>(null);
 
   const loadMoreModules = async () => {
     if (isLoading || !hasMore) return;
 
-    setIsLoading(true);
-    const result = await getModulesAction(filter, page, 10);
+    try {
+      setIsLoading(true);
+      setError(null);
+      const result = await getModulesAction(filter, page, 10);
 
-    if (result.success) {
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
+
       setPage((prev) => prev + 1);
       setHasMore(result.data.pagination.hasNextPage);
       setModules((prev) => [...prev, ...result.data.modules]);
-    } else {
-      setError(result.message);
+    } catch (err) {
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
-    if (!observerTarget.current) return;
+    if (!sentinel) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !isLoading && !error) {
-        loadMoreModules();
-      }
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading && !error) {
+          loadMoreModules();
+        }
+      },
+      { rootMargin: "300px" },
+    );
 
-    observer.observe(observerTarget.current);
+    observer.observe(sentinel);
 
     return () => observer.disconnect();
-  }, [hasMore, isLoading]);
+  }, [hasMore, isLoading, sentinel, error]);
 
   return (
-    <Suspense fallback={SuspenseFallback}>
-      <div>
-        <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-          {modules.map((m, idx) => (
-            <li className="not-first:-mt-px" key={`module-view-${idx}`}>
-              {renderItem(m)}
-            </li>
-          ))}
-        </ul>
-  
-        <div className="mt-5">
-          {(() => {
-            if (error) {
-              return (
-                <div className="flex flex-col gap-2">
-                  <p className="text-center text-sm text-background-300">
-                    {errorMessage}
-                  </p>
-                  <Button text="Tentar novamente" onClick={loadMoreModules} />
-                </div>
-              );
-            }
-  
-            if (isLoading) {
-              return <LoadingSpinner />;
-            }
-  
-            if (!hasMore) {
-              return (
+    <div>
+      <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
+        {modules.map((m, idx) => (
+          <li className="not-first:-mt-px" key={`module-view-${idx}`}>
+            {renderItem(m)}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-5">
+        {(() => {
+          if (error) {
+            return (
+              <div className="flex flex-col gap-2">
                 <p className="text-center text-sm text-background-300">
-                  {modulesListEndMessage}
+                  {error}
                 </p>
-              );
-            }
-          })()}
-        </div>
-        <div ref={observerTarget}></div>
+                <Button text="Tentar novamente" onClick={loadMoreModules} />
+              </div>
+            );
+          }
+
+          if (isLoading) {
+            return <LoadingSpinner />;
+          }
+
+          if (!hasMore) {
+            return (
+              <p className="text-center text-sm text-background-300">
+                {modulesListEndMessage}
+              </p>
+            );
+          }
+        })()}
       </div>
-    </Suspense>
+      <div className="h-px" ref={setSentinel}></div>
+    </div>
   );
 }
