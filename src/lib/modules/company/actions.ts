@@ -133,8 +133,22 @@ export async function updateCompanyByIdAction(
 
       if (members) {
         await tx.companyMember.deleteMany({
-          where: { companyId, userId: { notIn: newMemberIds } },
+          where: {
+            companyId,
+            userId: { notIn: newMemberIds, cpf: { not: null } },
+          },
         });
+        const count = await tx.user.count({
+          where: { id: { in: newMemberIds }, cpf: { not: null } },
+        });
+        if (count !== newMemberIds.length) {
+          throw new AppError(
+            "Alguns dos usuários fornecidos não foram encontrados.",
+            400,
+            "members",
+          );
+        }
+
         await tx.companyMember.createMany({
           data: newMemberIds.map((id) => ({ companyId, userId: id })),
           skipDuplicates: true,

@@ -137,8 +137,17 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         title: "Desenvolvedor FullStack",
         type: "MEIO_PERÍODO",
         fixedSalary: 1800.5,
-        description: "Desenvolvimento fullstack com Python, FastAPI e PostgreSQL.",
-        skills: ["ANGULAR", "ARCHITECTURE", "POSTGRESQL", "PYTHON", "FASTAPI", "CSS", "HTML"],
+        description:
+          "Desenvolvimento fullstack com Python, FastAPI e PostgreSQL.",
+        skills: [
+          "ANGULAR",
+          "ARCHITECTURE",
+          "POSTGRESQL",
+          "PYTHON",
+          "FASTAPI",
+          "CSS",
+          "HTML",
+        ],
       },
       {
         id: "job2",
@@ -150,7 +159,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         location: "Recife, PE",
         type: "FREELANCER",
         hourlySalary: 100.0,
-        description: "Criação de wireframes e protótipos de alta fidelidade no Figma.",
+        description:
+          "Criação de wireframes e protótipos de alta fidelidade no Figma.",
         skills: ["FIGMA", "HTML", "CSS", "JIRA", "NETLIFY"],
       },
       {
@@ -217,7 +227,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 3000.0,
         maxSalary: 4500.0,
-        description: "Desenvolvimento de interfaces responsivas com React e Next.js.",
+        description:
+          "Desenvolvimento de interfaces responsivas com React e Next.js.",
         skills: ["REACT", "TYPESCRIPT", "TAILWINDCSS", "HTML", "CSS"],
       },
       {
@@ -229,7 +240,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         title: "QA Engineer (Quality Assurance)",
         type: "MEIO_PERÍODO",
         fixedSalary: 4000.0,
-        description: "Testes automatizados e garantia de qualidade de software.",
+        description:
+          "Testes automatizados e garantia de qualidade de software.",
         skills: ["CYPRESS", "JEST", "PYTHON", "GITHUB"],
       },
       // --- Novas Vagas para Testar Infinit Scroll ---
@@ -243,7 +255,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 11000.0,
         maxSalary: 15000.0,
-        description: "Liderança técnica do time de front-end, definindo padrões e arquitetura.",
+        description:
+          "Liderança técnica do time de front-end, definindo padrões e arquitetura.",
         skills: ["REACT", "TYPESCRIPT", "NEXTJS", "ARCHITECTURE"],
       },
       {
@@ -256,7 +269,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 6500.0,
         maxSalary: 9000.0,
-        description: "Desenvolvimento de aplicativos multiplataforma de alta performance.",
+        description:
+          "Desenvolvimento de aplicativos multiplataforma de alta performance.",
         skills: ["REACT", "TYPESCRIPT", "TAILWINDCSS"],
       },
       {
@@ -270,7 +284,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 3500.0,
         maxSalary: 5000.0,
-        description: "Criação de microsserviços corporativos utilizando C# e .NET Core.",
+        description:
+          "Criação de microsserviços corporativos utilizando C# e .NET Core.",
         skills: ["POSTGRESQL", "DOCKER"],
       },
       {
@@ -309,7 +324,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 7500.0,
         maxSalary: 10500.0,
-        description: "Gestão do ciclo de vida do produto e alinhamento com stakeholders.",
+        description:
+          "Gestão do ciclo de vida do produto e alinhamento com stakeholders.",
         skills: ["JIRA", "FIGMA"],
       },
       {
@@ -322,7 +338,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 2500.0,
         maxSalary: 3500.0,
-        description: "Atendimento a clientes e resolução de incidentes em sistemas web.",
+        description:
+          "Atendimento a clientes e resolução de incidentes em sistemas web.",
         skills: ["HTML", "CSS"],
       },
       {
@@ -335,7 +352,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 12500.0,
         maxSalary: 16500.0,
-        description: "Análise de vulnerabilidades, auditoria de código e segurança em nuvem.",
+        description:
+          "Análise de vulnerabilidades, auditoria de código e segurança em nuvem.",
         skills: ["AWS", "DOCKER", "KUBERNETES", "PYTHON"],
       },
       {
@@ -349,7 +367,8 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
         type: "INTEGRAL",
         minSalary: 7000.0,
         maxSalary: 9500.0,
-        description: "Construção de aplicações web modernas usando Golang e React.",
+        description:
+          "Construção de aplicações web modernas usando Golang e React.",
         skills: ["REACT", "TYPESCRIPT", "POSTGRESQL", "DOCKER"],
       },
     ],
@@ -358,6 +377,20 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
   console.log("Database seeded successfully with multiple jobs for testing!");
 }
 
+async function deleteAll() {
+  await prisma.user.deleteMany();
+}
+deleteAll()
+  .catch((err) => {
+    console.error("Error: ", err);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    process.exit(0);
+  });
+
+/*
 main()
   .catch((err) => {
     console.error("Error: ", err);
@@ -367,3 +400,4 @@ main()
     await prisma.$disconnect();
     process.exit(0);
   });
+*/

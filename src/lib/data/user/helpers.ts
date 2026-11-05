@@ -8,8 +8,7 @@ export async function getCurrentUserData(): Promise<UserPrivateResponsePayload |
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-
-  if (!session) return null;
+  if (!session?.user) return null;
 
   const user = await getCachedUser(session.user.id);
   if (!user) {
@@ -23,8 +22,7 @@ export async function getCurrentUserId(): Promise<string | null> {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-
-  if (!session) return null;
+  if (!session?.user) return null;
 
   const userId = await getCachedUserId(session.user.id);
   if (!userId) {

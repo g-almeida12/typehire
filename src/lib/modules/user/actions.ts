@@ -7,6 +7,7 @@ import {
   UserPrivateResponsePayload,
   UserUpdatePayload,
   UserPublicResponsePayload,
+  UserCompleteProfilePayload,
 } from "./schemas";
 import {
   mapPublicUserEntity,
@@ -14,7 +15,7 @@ import {
   userWithDetailsInclude,
   getCachedUser,
   getCurrentUserId,
-  mapPrivateUserEntity
+  mapPrivateUserEntity,
 } from "@/lib/data/user/index";
 import { ServerActionResponse } from "@/utils/types";
 import { authServer } from "@/lib/auth/auth-server";
@@ -168,6 +169,7 @@ export async function getUsersByEmailPrefixAction(
           startsWith: prefix,
           mode: "insensitive",
         },
+        cpf: { not: null },
       },
       take: 7,
       include: userWithDetailsInclude,
@@ -200,19 +202,19 @@ export async function updateUserAction(
   newUserData: UserUpdatePayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não encontrado.", 404);
     }
 
     const { companies, ...data } = newUserData;
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { id: currentUserId },
       data,
       include: userWithDetailsInclude,
     });
 
-    updateTag(`user-${userId}`);
+    updateTag(`user-${currentUserId}`);
     return {
       success: true,
       status: 200,
@@ -235,7 +237,7 @@ export async function updateUserAction(
           return {
             success: false,
             status: 409,
-            message: `${leanErr.field} passado já está registrado.`,
+            message: `${leanErr.field} fornecido(a) já está registrado.`,
             field: leanErr.field,
           };
       }
@@ -249,18 +251,70 @@ export async function updateUserAction(
   }
 }
 
+export async function finishUserRegisterAction(
+  completeData: UserCompleteProfilePayload,
+): ServerActionResponse<UserPrivateResponsePayload> {
+  try {
+    const session = await authServer.api.getSession({
+      headers: await headers(),
+    });
+    if (!session?.user) {
+      throw new AppError("Usuário não encontrado.", 404);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: session.user.id },
+      data: completeData,
+      include: userWithDetailsInclude,
+    });
+
+    return {
+      success: true,
+      status: 200,
+      data: mapPrivateUserEntity(updatedUser),
+    };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      switch (leanErr.errType) {
+        case "UNIQUE_CONSTRAINT_ERROR":
+          return {
+            success: false,
+            status: 409,
+            message: "CPF já cadastrado.",
+          };
+      }
+    }
+
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível terminar o registro do usuário.",
+    };
+  }
+}
+
 export async function deleteUserAction(): ServerActionResponse<null> {
   try {
-    const userId = await getCurrentUserId();
-    if (!userId) {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
       throw new AppError("Usuário não encontrado.", 404);
     }
 
     await prisma.user.delete({
-      where: { id: userId },
+      where: { id: currentUserId },
     });
 
-    updateTag(`user-${userId}`);
+    updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
     if (err instanceof AppError) {

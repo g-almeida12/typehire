@@ -17,7 +17,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
     headers: await headers(),
   });
 
-  if (!session) {
+  if (!session?.user) {
     redirect(APP_URLS.login);
   }
 

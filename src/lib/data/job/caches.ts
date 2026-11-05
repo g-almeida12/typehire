@@ -16,7 +16,10 @@ export const getCachedJobById = cache(
       where: { id: jobId },
       include: {
         ...jobWithDetailsInclude,
-        applications: { where: { candidateId: userId }, select: { id: true } },
+        applications: {
+          where: { candidateId: userId, cpf: { not: null } },
+          select: { id: true },
+        },
       },
     });
 

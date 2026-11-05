@@ -22,7 +22,7 @@ export function GoogleOAuthButton({
         callbackURL,
       });
       if (!result.data) throw new Error();
-    } catch (err) {
+    } catch (_err) {
       showToast("error", "Não foi possível acessar sua conta do Google.");
     }
   };
@@ -30,10 +30,16 @@ export function GoogleOAuthButton({
   return (
     <button
       onClick={handleGoogleSignup}
-      className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] ${props.disabled ? "cursor-none" : "cursor-pointer"}`}
+      className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] ${props.disabled ? "cursor-default" : "cursor-pointer"}`}
       {...props}
     >
-      <Image src="/google-icon.svg" alt="Google" width={24} height={24} />
+      <Image
+        src="/google-icon.svg"
+        alt="Google"
+        loading="eager"
+        width={24}
+        height={24}
+      />
       Continuar com o Google
     </button>
   );

@@ -52,13 +52,13 @@ export const UserRegisterSchema = UserPrivateResponseSchema.pick({
 });
 export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
 
-export const UserCompleteCPFSchema = z.object({
+export const UserCompleteProfileSchema = z.object({
   cpf: z
     .string()
     .transform((val) => val.replace(/\D+/g, ""))
     .refine((val) => val.length === 11, "CPF inválido."),
 });
-export type UserCompleteCPFPayload = z.infer<typeof UserCompleteCPFSchema>;
+export type UserCompleteProfilePayload = z.infer<typeof UserCompleteProfileSchema>;
 
 export const UserLoginSchema = z.object({
   email: z.email("Email inválido."),
