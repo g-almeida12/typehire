@@ -5,7 +5,7 @@ import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export default async function CompanyUpdate(
+export default async function CompanyUpdatePage(
   props: PageProps<"/companies/[id]/update">,
 ) {
   const companyId = (await props.params).id;

@@ -4,7 +4,6 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import { AtSignIcon, PinIcon } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
@@ -24,6 +23,7 @@ import { JobTypeDropdown } from "./JobTypeDropdown";
 import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
+import { useTransition } from "react";
 
 interface JobFormProps {
   companyId?: string;
@@ -32,7 +32,7 @@ interface JobFormProps {
 
 export function JobForm({ job, companyId }: JobFormProps) {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     setValue,
     handleSubmit,
@@ -47,8 +47,8 @@ export function JobForm({ job, companyId }: JobFormProps) {
     },
     resolver: zodResolver(job ? JobUpdateSchema : JobClientCreateSchema),
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [isRedirecting, startTransition] = useTransition();
   const selectedModality = useWatch({
     control,
     name: "modality",
@@ -60,13 +60,12 @@ export function JobForm({ job, companyId }: JobFormProps) {
         ? "interval"
         : "hourly"
     : undefined;
+  const isBusy = isSubmitting || isRedirecting;
 
   const handleButtonClick = async (
     data: JobClientCreatePayload | JobUpdatePayload,
   ) => {
     try {
-      setIsLoading(true);
-
       // Update action
       if (job) {
         const updateResponse = await updateJobByIdAction(
@@ -78,7 +77,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
           throw new Error();
         }
 
-        router.replace(APP_URLS.job(updateResponse.data.id));
+        startTransition(() =>
+          router.replace(APP_URLS.job(updateResponse.data.id)),
+        );
       }
       // Create action
       else {
@@ -90,13 +91,14 @@ export function JobForm({ job, companyId }: JobFormProps) {
           throw new Error();
         }
 
-        router.replace(APP_URLS.job(createResponse.data.id));
+        startTransition(() =>
+          router.replace(APP_URLS.job(createResponse.data.id)),
+        );
       }
     } catch (err) {
       setError("root", {
         message: `Não foi possível ${job ? "atualizar" : "criar"} a vaga.`,
       });
-      setIsLoading(false);
     }
   };
 
@@ -124,7 +126,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             label="Título da vaga"
             placeholder="Digite o título da vaga"
             error={errors.title?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={job?.title ?? ""}
           />
           <TextArea
@@ -132,7 +134,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             label="Descrição da vaga"
             placeholder="Descreva brevemente sua empresa e os requisitos da vaga em Markdown"
             error={errors.description?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={job?.description ?? ""}
           />
           <JobSalaryInput
@@ -140,17 +142,17 @@ export function JobForm({ job, companyId }: JobFormProps) {
             defaultSalaryType={salaryType}
             setValue={setValue}
             control={control}
+            disabled={isBusy}
             error={
               errors.fixedSalary?.message ||
               errors.hourlySalary?.message ||
               errors.intervalSalary?.message
             }
-            disabled={isLoading}
           />
           <JobModalityDropdown
             control={control}
             error={errors.modality?.message}
-            isLoading={isLoading}
+            isLoading={isBusy}
           />
           {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
             <Input
@@ -159,18 +161,18 @@ export function JobForm({ job, companyId }: JobFormProps) {
               label="Localização da vaga"
               placeholder="Ex.: Recife, PE"
               error={errors.location?.message}
-              disabled={isLoading}
+              disabled={isBusy}
             />
           )}
           <JobTypeDropdown
             control={control}
             error={errors.type?.message}
-            isLoading={isLoading}
+            isLoading={isBusy}
           />
           <JobLevelDropdown
             control={control}
             error={errors.level?.message}
-            isLoading={isLoading}
+            isLoading={isBusy}
           />
         </div>
       </fieldset>
@@ -182,7 +184,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
           label="Adicione uma nova habilidade"
           control={control}
           error={errors.skills?.message}
-          isLoading={isLoading}
+          isLoading={isBusy}
         />
         <Controller
           control={control}
@@ -192,7 +194,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
               <SkillList
                 skills={field.value ?? []}
                 updateMode={{
-                  isLoading,
+                  isLoading: isBusy,
                   setSkills: (skills) => field.onChange(skills),
                 }}
               />
@@ -204,7 +206,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
       <div className="mt-10">
         <Button
           text={
-            isLoading
+            isBusy
               ? job
                 ? "Atualizando dados da vaga..."
                 : "Criando nova vaga..."
@@ -213,7 +215,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
                 : "Criar nova vaga"
           }
           type="submit"
-          disabled={isLoading}
+          disabled={isBusy}
         />
       </div>
     </form>

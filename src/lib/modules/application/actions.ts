@@ -15,9 +15,13 @@ import {
   applicationWithDetailsInclude,
   mapApplicationEntity,
 } from "@/lib/data/application/entities";
-import { ApplicationStatus, Prisma } from "@/database/generated/client";
+import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
+import {
+  getCachedApplicationById,
+  getCachedJobApplicationStatuses,
+} from "@/lib/data/application/caches";
 
 export async function createApplicationAction(
   applicationData: ApplicationCreatePayload,
@@ -31,9 +35,8 @@ export async function createApplicationAction(
     const jobData = await prisma.job.findUnique({
       where: { id: applicationData.jobId },
       select: {
-        createdBy: true,
         company: {
-          select: { createdBy: true },
+          select: { members: true },
         },
       },
     });
@@ -41,16 +44,10 @@ export async function createApplicationAction(
       throw new AppError("Vaga não encontrada.", 404);
     }
 
-    if (jobData.createdBy === currentUserId) {
+    if (jobData.company.members.map((m) => m.userId).includes(currentUserId)) {
       throw new AppError(
-        "O criador da vaga não pode se candidatar na própria vaga.",
-        403,
-      );
-    }
-    if (jobData.company.createdBy === currentUserId) {
-      throw new AppError(
-        "O criador da empresa não pode se candidatar a nenhuma vaga da própria empresa.",
-        403,
+        "Uma candidatura não pode ser criada para vagas da empresa onde o usuário é membro.",
+        422,
       );
     }
 
@@ -108,17 +105,10 @@ export async function getApplicationByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const application = await prisma.application.findUnique({
-      where: {
-        id: applicationId,
-        OR: [
-          { candidateId: currentUserId },
-          { job: { createdBy: currentUserId } },
-          { job: { company: { createdBy: currentUserId } } },
-        ],
-      },
-      include: applicationWithDetailsInclude,
-    });
+    const application = await getCachedApplicationById(
+      applicationId,
+      currentUserId,
+    );
     if (!application) {
       throw new AppError("Candidatura não encontrada", 404);
     }
@@ -221,25 +211,10 @@ export async function getJobApplicationStatusesAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const statusesCount = await prisma.application.groupBy({
-      by: ["status"],
-      where: {
-        jobId,
-        OR: [
-          { job: { createdBy: currentUserId } },
-          { job: { company: { createdBy: currentUserId } } },
-        ],
-      },
-      _count: true,
-    });
-
-    const applicationStatuses = Object.fromEntries(
-      [...Object.values(ApplicationStatus), "ALL"].map((s) => [s, 0]),
-    ) as JobApplicationStatuses;
-    for (const { status, _count } of statusesCount) {
-      applicationStatuses[status] = _count;
-      applicationStatuses.ALL += _count;
-    }
+    const applicationStatuses = await getCachedJobApplicationStatuses(
+      jobId,
+      currentUserId,
+    );
 
     return { success: true, status: 200, data: applicationStatuses };
   } catch (err) {
@@ -282,6 +257,9 @@ export async function updateApplicationByIdAction(
       data: applicationData,
       include: applicationWithDetailsInclude,
     });
+
+    updateTag(`application-${applicationId}`);
+    updateTag(`job-application-statuses-${updatedApplication.jobId}`);
 
     return {
       success: true,

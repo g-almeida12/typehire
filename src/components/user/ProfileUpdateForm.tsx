@@ -17,7 +17,7 @@ import {
   PhoneIcon,
   GlobeIcon,
 } from "@/components/icons";
-import { useState } from "react";
+import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ interface ProfileUpdateFormProps {
 
 export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     handleSubmit,
     register,
@@ -40,19 +40,17 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
     resolver: zodResolver(UserUpdateSchema),
     defaultValues: user,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [isRedirecting, startTransition] = useTransition();
+  const isBusy = isRedirecting || isSubmitting;
 
   const handleUserUpdate = async (data: UserUpdatePayload) => {
     try {
-      setIsLoading(true);
       await updateUserAction(data);
 
-      router.replace(APP_URLS.profile);
+      startTransition(() => router.replace(APP_URLS.profile));
     } catch (err) {
       setError("root", { message: "Não foi possível atualizar seus dados." });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -76,7 +74,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             label="Nome completo"
             placeholder="Seu nome completo"
             error={errors.name?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.name}
           />
           <Input
@@ -85,7 +83,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             label="email"
             placeholder="Ex.: exemplo@gmail.com"
             error={errors.email?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.email}
           />
           <Input
@@ -94,7 +92,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             label="CPF"
             placeholder="Ex.: 123.456.789-00"
             error={errors.cpf?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.cpf}
           />
           <Input
@@ -104,7 +102,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             placeholder="Ex.: Recife, PE"
             helperText="Campo opcional"
             error={errors.location?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.location ?? ""}
           />
           <Input
@@ -114,7 +112,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             placeholder="Ex.: (99) 91234-5678"
             helperText="Campo opcional"
             error={errors.phoneNumber?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.phoneNumber ?? ""}
           />
           <TextArea
@@ -123,7 +121,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.bio?.message}
             placeholder="Fale um pouco sobre você"
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.bio ?? ""}
           />
         </div>
@@ -139,7 +137,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.githubUrl?.message}
             placeholder="Ex.: www.github.com/user123"
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.githubUrl ?? ""}
           />
           <Input
@@ -149,7 +147,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.linkedinUrl?.message}
             placeholder="Ex.: www.linkedin.com/in/user123"
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.linkedinUrl ?? ""}
           />
           <Input
@@ -159,7 +157,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             helperText="Campo opcional"
             error={errors.portfolioUrl?.message}
             placeholder="Ex.: www.user123.dev"
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={user.portfolioUrl ?? ""}
           />
         </div>
@@ -173,7 +171,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
           label="Adicione uma nova habilidade"
           control={control}
           error={errors.skills?.message}
-          isLoading={isLoading}
+          isLoading={isBusy}
         />
         <Controller
           control={control}
@@ -183,7 +181,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
               <SkillList
                 skills={field.value ?? []}
                 updateMode={{
-                  isLoading,
+                  isLoading: isBusy,
                   setSkills: (skills) => field.onChange(skills),
                 }}
               />
@@ -194,9 +192,9 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
 
       <div className="mt-10">
         <Button
-          text={isLoading ? "Atualizando dados..." : "Atualizar meus dados"}
+          text={isBusy ? "Atualizando dados..." : "Atualizar meus dados"}
           type="submit"
-          disabled={isLoading}
+          disabled={isBusy}
         />
       </div>
     </form>

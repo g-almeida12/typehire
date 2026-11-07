@@ -4,7 +4,7 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import { BuildingIcon, AtSignIcon, GlobeIcon } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ interface CompanyFormProps {
 
 export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
     handleSubmit,
     register,
@@ -45,14 +45,14 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
     },
     resolver: zodResolver(company ? CompanyUpdateSchema : CompanyCreateSchema),
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
+  const isBusy = isSubmitting || isRedirecting;
 
   const handleButtonClick = async (
     data: CompanyCreatePayload | CompanyUpdatePayload,
   ) => {
     try {
-      setIsLoading(true);
       // Update action
       if (company) {
         const updateResponse = await updateCompanyByIdAction(
@@ -72,7 +72,9 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           throw new Error();
         }
 
-        router.replace(APP_URLS.company(updateResponse.data.id));
+        startTransition(() =>
+          router.replace(APP_URLS.company(updateResponse.data.id)),
+        );
       }
       // Create action
       else {
@@ -91,13 +93,14 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           throw new Error();
         }
 
-        router.replace(APP_URLS.company(createResponse.data.id));
+        startTransition(() =>
+          router.replace(APP_URLS.company(createResponse.data.id)),
+        );
       }
     } catch (err) {
       setError("root", {
         message: `Não foi possível ${company ? "atualizar" : "criar"} a empresa.`,
       });
-      setIsLoading(false);
     }
   };
 
@@ -125,7 +128,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             label="Nome da empresa"
             placeholder="Digite o nome da empresa"
             error={errors.name?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={company?.name ?? ""}
           />
           {!company && (
@@ -135,14 +138,14 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
               label="CNPJ"
               placeholder="Ex.: 12.345.678/0001-99"
               error={"cnpj" in errors ? errors.cnpj?.message : undefined}
-              disabled={isLoading}
+              disabled={isBusy}
             />
           )}
 
           <CompanySizeDropdown
             control={control}
             error={errors.size?.message}
-            isLoading={isLoading}
+            isLoading={isBusy}
           />
           <Input
             {...register("website")}
@@ -151,7 +154,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             placeholder="Ex.: sua-empresa.com.br"
             helperText="Campo opcional"
             error={errors.website?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={company?.website ?? ""}
           />
           <TextArea
@@ -159,7 +162,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
             label="Descrição da empresa"
             error={errors.bio?.message}
             placeholder="Descreva sua empresa"
-            disabled={isLoading}
+            disabled={isBusy}
             defaultValue={company?.bio ?? ""}
           />
         </div>
@@ -176,7 +179,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           label="Adicione uma nova habilidade"
           control={control}
           error={errors.members?.message}
-          isLoading={isLoading}
+          isLoading={isBusy}
         />
         <Controller
           control={control}
@@ -184,9 +187,11 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           render={({ field }) => (
             <div className="mt-4">
               <UserList
-                users={field.value ?? []}
+                users={
+                  field.value?.filter((u) => u.email !== currentUserEmail) ?? []
+                }
                 updateMode={{
-                  isLoading,
+                  isLoading: isBusy,
                   setUsers: (users) => field.onChange(users),
                 }}
               />
@@ -198,7 +203,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
       <div className="mt-10">
         <Button
           text={
-            isLoading
+            isBusy
               ? company
                 ? "Atualizando dados da empresa..."
                 : "Criando nova empresa..."
@@ -207,7 +212,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
                 : "Criar nova empresa"
           }
           type="submit"
-          disabled={isLoading}
+          disabled={isBusy}
         />
       </div>
     </form>

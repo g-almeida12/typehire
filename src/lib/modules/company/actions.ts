@@ -132,12 +132,15 @@ export async function updateCompanyByIdAction(
       }
 
       if (members) {
-        await tx.companyMember.deleteMany({
-          where: {
-            companyId,
-            userId: { notIn: newMemberIds, cpf: { not: null } },
-          },
-        });
+          await tx.companyMember.deleteMany({
+            where: {
+              companyId,
+              user: {
+                cpf: { not: null },
+                id: { notIn: newMemberIds, not: currentUserId },
+              },
+            },
+          });
         const count = await tx.user.count({
           where: { id: { in: newMemberIds }, cpf: { not: null } },
         });

@@ -65,7 +65,11 @@ export function CandidateCard({
           style={{ pointerEvents: candidate.resumeUrl ? "auto" : "none" }}
         >
           <div className="flex flex-row items-center gap-2">
-            <FileIcon size={18} className="text-background-900" aria-hidden="true" />
+            <FileIcon
+              size={18}
+              className="text-background-900"
+              aria-hidden="true"
+            />
             <span
               className={`text-sm font-medium text-background-900 ${candidate.resumeUrl ? "" : " italic"}`}
             >
@@ -75,7 +79,11 @@ export function CandidateCard({
             </span>
           </div>
           {candidate.resumeUrl && (
-            <ArrowUpRightIcon className="text-background-900" size={18} aria-hidden="true" />
+            <ArrowUpRightIcon
+              className="text-background-900"
+              size={18}
+              aria-hidden="true"
+            />
           )}
         </a>
       </div>
@@ -113,6 +121,7 @@ export function CandidateCard({
           initialStatus={status}
           candidateName={candidate.name}
           applicationId={applicationId}
+          key={status}
         />
         <span className="text-sm text-background-300">
           {formatRelativeTime(createdAt)}

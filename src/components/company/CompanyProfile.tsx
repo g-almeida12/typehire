@@ -17,7 +17,7 @@ interface CompanyProfileProps {
 
 const USER_MEMBERSHIP_MAP = {
   CREATOR: "Criador",
-  MEMBER: "Associado",
+  MEMBER: "Membro",
 };
 
 export function CompanyProfile({
@@ -53,11 +53,11 @@ export function CompanyProfile({
         {/* Company name and website */}
         <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0">
           <p className="font-medium truncate">
-            {company.name}
+            {company.name}{" "}
             {showCompanySize && `(${companySizeMapper[company.size!]})`}
           </p>
 
-          <p className="-mt-px text-sm text-background-300 italic truncate">
+          <p className="-mt-0.5 text-sm text-background-300 italic truncate">
             {showUserMembership ? (
               USER_MEMBERSHIP_MAP[showUserMembership]
             ) : visualOnlyWebsiteLink ? (

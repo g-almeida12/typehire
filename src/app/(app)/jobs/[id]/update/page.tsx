@@ -54,7 +54,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const jobId = (await props.params).id;
   const jobResponse = await getJobByIdAction(jobId);
-  
+
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
     else throw new Error();

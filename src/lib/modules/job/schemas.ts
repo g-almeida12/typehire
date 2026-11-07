@@ -161,6 +161,8 @@ export const JobResponseSchema = JobBaseSchema.extend({
     image: z.string().optional().nullable().default(null),
     website: z.string().optional().nullable().default(null),
     size: z.enum(CompanySize),
+    memberIds: z.array(z.string()),
+    createdBy: z.string(),
   }),
   creator: z.object({
     id: z.string(),

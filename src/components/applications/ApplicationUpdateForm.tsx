@@ -8,7 +8,7 @@ import {
   updateApplicationByIdAction,
 } from "@/lib/modules/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { ApplicationStatus } from "@/database/generated/enums";
 import { ApplicationStatusTag } from "./ApplicationStatusTag";
 import { ArrowRightIcon } from "@/components/icons";
@@ -31,16 +31,21 @@ export function ApplicationUpdateForm({
     control,
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<ApplicationUpdatePayload>({
     resolver: zodResolver(ApplicationUpdateSchema),
+    defaultValues: {
+      status: initialStatus,
+      feedback: "",
+    },
   });
   const { field: statusField } = useController({ control, name: "status" });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRefreshing, startTransition] = useTransition();
   const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<ApplicationStatus | null>(null);
   const router = useRouter();
+  const isBusy = isSubmitting || isRefreshing;
 
   useEffect(() => {
     if (isFeedbackOpen) {
@@ -49,51 +54,41 @@ export function ApplicationUpdateForm({
       document.body.style.overflow = "auto";
     }
   }, [isFeedbackOpen]);
+  const error =
+    errors.status?.message || errors.feedback?.message || errors.root?.message;
 
   const handleApplicationUpdate = async (data: ApplicationUpdatePayload) => {
     try {
-      setIsLoading(true);
-
       const applicationResponse = await updateApplicationByIdAction(
         applicationId,
-        data,
+        { ...data, status: newStatus! },
       );
       if (!applicationResponse.success) {
         throw new Error();
       }
 
       setIsFeedbackOpen(false);
-      router.refresh();
+      startTransition(() => router.refresh());
     } catch (_err) {
+      statusField.onChange(initialStatus);
       setError("root", {
         message: "Não foi possível alterar o estado da candidatura.",
       });
-      statusField.onChange(initialStatus);
-      setIsLoading(false);
     }
   };
 
   const handleStatusSelect = (status: ApplicationStatus) => {
-    if (status !== "REVIEW") {
-      setIsFeedbackOpen(true);
-      setNewStatus(status);
-    }
+    setIsFeedbackOpen(true);
+    setNewStatus(status);
   };
 
   return (
     <form onSubmit={handleSubmit(handleApplicationUpdate)} className="w-max">
-      {errors.root?.message && (
-        <p className="text-left text-sm text-red-500 w-full">
-          {errors.root?.message}
-        </p>
-      )}
-
       <ApplicationStatusDropdown
         control={control}
         initialStatus={initialStatus}
         onSelect={handleStatusSelect}
-        error={errors.status?.message}
-        isLoading={isLoading}
+        isLoading={isBusy}
       />
 
       {isFeedbackOpen && (
@@ -105,19 +100,38 @@ export function ApplicationUpdateForm({
               <ApplicationStatusTag status={newStatus!} />
             </div>
 
-            <h2 className="mb-1 text-2xl font-medium">Adicione um feedback</h2>
-            <p className="mb-4 text-sm text-background-300">
-              Escreva um feedback para o candidato{" "}
-              <span className="font-semibold">{candidateName}</span>.
-            </p>
+            {newStatus === "REVIEW" ? (
+              <>
+                <h2 className="mb-1 text-2xl font-medium">
+                  Confirme a nova etapa
+                </h2>
+                <p className="mb-4 text-sm text-background-300">
+                  Feedback não é necessário para a etapa "Em análise".
+                </p>
+              </>
+            ) : (
+              <>
+                <h2 className="mb-1 text-2xl font-medium">
+                  Adicione um feedback
+                </h2>
+                <p className="mb-4 text-sm text-background-300">
+                  Escreva um feedback para o candidato{" "}
+                  <span className="font-semibold">{candidateName}</span>.
+                </p>
 
-            <TextArea
-              {...register("feedback")}
-              label=""
-              error={errors.feedback?.message}
-              placeholder="Informe ao candidato sobre a mudança do estado da candidatura"
-              disabled={isLoading}
-            />
+                <TextArea
+                  {...register("feedback")}
+                  label=""
+                  error=""
+                  placeholder="Informe ao candidato sobre a mudança do estado da candidatura"
+                  disabled={isBusy}
+                />
+              </>
+            )}
+
+            {error && (
+              <p className="text-left text-sm text-red-500 w-full">{error}</p>
+            )}
 
             <hr className="my-6" />
 
@@ -129,13 +143,12 @@ export function ApplicationUpdateForm({
                   statusField.onChange(initialStatus);
                   setIsFeedbackOpen(false);
                 }}
-                disabled={isLoading}
+                disabled={isBusy}
               />
               <Button
-                text="Confirmar"
+                text={isBusy ? "Atualizando..." : "Atualizar"}
                 type="submit"
-                onClick={() => statusField.onChange(newStatus)}
-                disabled={isLoading}
+                disabled={isBusy}
               />
             </div>
           </div>

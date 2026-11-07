@@ -378,7 +378,7 @@ A Nexus Tech Innovations é uma startup de tecnologia focada em inteligência ar
 }
 
 async function deleteAll() {
-  await prisma.user.deleteMany();
+  await prisma.application.deleteMany();
 }
 deleteAll()
   .catch((err) => {

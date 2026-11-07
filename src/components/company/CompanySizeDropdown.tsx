@@ -61,6 +61,7 @@ export function CompanySizeDropdown<T extends ExtendedFieldValues>({
           ref={(el) => {
             itemsRef.current[idx] = el;
           }}
+          key={sz}
         >
           {companySizeMapper[sz as CompanySize]}
         </DropdownOption>

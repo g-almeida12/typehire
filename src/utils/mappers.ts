@@ -9,16 +9,16 @@ import {
 } from "@/database/generated/enums";
 
 export const skillMapper: Record<Skill, string> = {
+  // --- Frontend & Web ---
   JAVASCRIPT: "JavaScript",
   TYPESCRIPT: "TypeScript",
   REACT: "React",
-  VUE: "Vue.js",
+  VUE: "Vue",
   ANGULAR: "Angular",
   SVELTE: "Svelte",
-  NEXTJS: "Next.js",
-  NUXT: "Nuxt.js",
-  NEXT: "Next",
-  NEST: "NestJS",
+  NUXTJS: "NuxtJS",
+  NEXTJS: "NextJS",
+  NESTJS: "NestJS",
   REMIX: "Remix",
   ASTRO: "Astro",
   HTML: "HTML5",
@@ -32,7 +32,8 @@ export const skillMapper: Record<Skill, string> = {
   VITE: "Vite",
   BUN: "Bun",
 
-  NODEJS: "Node.js",
+  // --- Backend & Languages ---
+  NODEJS: "NodeJS",
   PYTHON: "Python",
   JAVA: "Java",
   CSHARP: "C#",
@@ -50,6 +51,7 @@ export const skillMapper: Record<Skill, string> = {
   C: "C",
   R: "R",
 
+  // --- Databases ---
   POSTGRESQL: "PostgreSQL",
   MYSQL: "MySQL",
   MONGODB: "MongoDB",
@@ -61,6 +63,7 @@ export const skillMapper: Record<Skill, string> = {
   CASSANDRA: "Cassandra",
   MARIADB: "MariaDB",
 
+  // --- Mobile ---
   REACT_NATIVE: "React Native",
   FLUTTER: "Flutter",
   SWIFT: "Swift",
@@ -68,6 +71,7 @@ export const skillMapper: Record<Skill, string> = {
   XAMARIN: "Xamarin",
   IONIC: "Ionic",
 
+  // --- DevOps & Cloud ---
   DOCKER: "Docker",
   KUBERNETES: "Kubernetes",
   AWS: "AWS",
@@ -81,6 +85,7 @@ export const skillMapper: Record<Skill, string> = {
   JENKINS: "Jenkins",
   TERRAFORM: "Terraform",
 
+  // --- Tools & OS ---
   GIT: "Git",
   GITHUB: "GitHub",
   GITLAB: "GitLab",
@@ -91,6 +96,7 @@ export const skillMapper: Record<Skill, string> = {
   WINDOWS: "Windows",
   MACOS: "macOS",
 
+  // --- Testing ---
   JEST: "Jest",
   VITEST: "Vitest",
   CYPRESS: "Cypress",
@@ -100,6 +106,7 @@ export const skillMapper: Record<Skill, string> = {
   PYTEST: "PyTest",
   UNITTEST: "UnitTest",
 
+  // --- Concepts & Architecture ---
   REST_API: "REST API",
   GRAPHQL: "GraphQL",
   GRPC: "gRPC",

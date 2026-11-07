@@ -7,17 +7,9 @@ import {
 import { Metadata } from "next";
 import { getJobByIdAction } from "@/lib/modules/job";
 import { notFound } from "next/navigation";
-import {
-  SproutIcon,
-  CircleFadingArrowUpIcon,
-  BriefcaseIcon,
-  AwardIcon,
-  BuildingIcon,
-  RefreshIcon,
-  HouseIcon,
-} from "@/components/icons";
 import { ApplicationStatusFilter } from "@/components/applications/ApplicationStatusFilter";
 import { CandidateListView } from "@/components/user/CandidateListView";
+import { JobInfoTags } from "@/components/job/JobInfoTags";
 
 export default async function JobApplicationsPage(
   props: PageProps<"/jobs/[id]/applications">,
@@ -52,12 +44,7 @@ export default async function JobApplicationsPage(
   const hasMoreApplications = !isError
     ? applicationsResponse.data.pagination.hasNextPage
     : false;
-
   const job = jobResponse.data;
-  const capitalizedLevel =
-    job.level[0].toUpperCase() + job.level.slice(1).toLowerCase();
-  const capitalizedModality =
-    job.modality[0].toUpperCase() + job.modality.slice(1).toLowerCase();
 
   return (
     <>
@@ -73,43 +60,7 @@ export default async function JobApplicationsPage(
           <p className="text-2xl font-medium">{job.title}</p>
 
           {/* Job level and modality tags */}
-          <div className="flex flex-row gap-2 mt-2">
-            {/* Level */}
-            <div className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-              {(() => {
-                switch (job.level) {
-                  case "ESTAGIÁRIO":
-                    return <SproutIcon size={20} aria-hidden="true" />;
-                  case "JÚNIOR":
-                    return <CircleFadingArrowUpIcon size={20} aria-hidden="true" />;
-                  case "PLENO":
-                    return <BriefcaseIcon size={20} aria-hidden="true" />;
-                  case "SÊNIOR":
-                    return <AwardIcon size={20} aria-hidden="true" />;
-                  default:
-                    return null;
-                }
-              })()}
-              <p className="font-semibold text-sm">{capitalizedLevel}</p>
-            </div>
-
-            {/* Modality */}
-            <div className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-              {(() => {
-                switch (job.modality) {
-                  case "PRESENCIAL":
-                    return <BuildingIcon size={20} aria-hidden="true" />;
-                  case "HÍBRIDO":
-                    return <RefreshIcon size={20} aria-hidden="true" />;
-                  case "REMOTO":
-                    return <HouseIcon size={20} aria-hidden="true" />;
-                  default:
-                    return null;
-                }
-              })()}
-              <p className="font-semibold text-sm">{capitalizedModality}</p>
-            </div>
-          </div>
+          <JobInfoTags level={job.level} modality={job.modality} />
         </section>
 
         <section>

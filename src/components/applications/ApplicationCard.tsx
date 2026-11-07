@@ -1,31 +1,16 @@
-import {
-  SproutIcon,
-  CircleFadingArrowUpIcon,
-  AwardIcon,
-  BriefcaseIcon,
-  HouseIcon,
-  BuildingIcon,
-  RefreshIcon,
-} from "@/components/icons";
 import { formatRelativeTime } from "@/utils/date";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { ApplicationResponsePayload } from "@/lib/modules/application";
 import { CompanyProfile } from "../company/CompanyProfile";
 import { ApplicationStatusTag } from "./ApplicationStatusTag";
+import { JobInfoTags } from "../job/JobInfoTags";
 
 export function ApplicationCard({
   application,
 }: {
   application: ApplicationResponsePayload;
 }) {
-  const capitalizedLevel =
-    application.job.level[0].toUpperCase() +
-    application.job.level.slice(1).toLowerCase();
-  const capitalizedModality =
-    application.job.modality[0].toUpperCase() +
-    application.job.modality.slice(1).toLowerCase();
-
   return (
     <Link href={APP_URLS.job(application.jobId)} prefetch={false}>
       <div className="px-4 py-4 border-y border-y-background-700">
@@ -50,43 +35,7 @@ export function ApplicationCard({
         </div>
 
         {/* Job level and modality tags */}
-        <div className="flex flex-row gap-2 mt-3">
-          {/* Level */}
-          <div className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-            {(() => {
-              switch (application.job.level) {
-                case "ESTAGIÁRIO":
-                  return <SproutIcon size={20} aria-hidden="true" />;
-                case "JÚNIOR":
-                  return <CircleFadingArrowUpIcon size={20} aria-hidden="true" />;
-                case "PLENO":
-                  return <BriefcaseIcon size={20} aria-hidden="true" />;
-                case "SÊNIOR":
-                  return <AwardIcon size={20} aria-hidden="true" />;
-                default:
-                  return null;
-              }
-            })()}
-            <p className="font-semibold text-sm">{capitalizedLevel}</p>
-          </div>
-
-          {/* Modality */}
-          <div className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-            {(() => {
-              switch (application.job.modality) {
-                case "PRESENCIAL":
-                  return <BuildingIcon size={20} aria-hidden="true" />;
-                case "HÍBRIDO":
-                  return <RefreshIcon size={20} aria-hidden="true" />;
-                case "REMOTO":
-                  return <HouseIcon size={20} aria-hidden="true" />;
-                default:
-                  return null;
-              }
-            })()}
-            <p className="font-semibold text-sm">{capitalizedModality}</p>
-          </div>
-        </div>
+        <JobInfoTags level={application.job.level} modality={application.job.modality} />
 
         {/* Job salary and creation date */}
         <div className="flex flex-row justify-between items-baseline mt-6">

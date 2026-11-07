@@ -63,7 +63,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
               label={
                 USER_ROLE === "CREATOR"
                   ? "Sua empresa"
-                  : "Associado nessa empresa"
+                  : "Você é membro"
               }
             />
           )}
@@ -135,12 +135,12 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
           />
 
           <h3 className="mb-2 mt-4 font-medium text-background-300">
-            Associados
+            Membros
           </h3>
           <ul className="flex flex-col gap-4">
             {company.members.length === 1 ? (
               <p className="text-center text-sm text-background-300">
-                Não há nenhum associado nessa empresa.
+                Não há nenhum membro nessa empresa.
               </p>
             ) : (
               company.members

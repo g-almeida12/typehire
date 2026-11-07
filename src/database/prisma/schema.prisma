@@ -54,7 +54,6 @@ model Session {
 
 model Account {
   id                    String    @id
-  issuer                String
   accountId             String
   providerId            String
   userId                String
@@ -69,7 +68,6 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
   @@index([userId])
   @@map("account")
 }
@@ -205,6 +203,7 @@ enum JobStatus {
 }
 
 enum Skill {
+  // --- Frontend & Web ---
   JAVASCRIPT
   TYPESCRIPT
   REACT
@@ -212,9 +211,8 @@ enum Skill {
   ANGULAR
   SVELTE
   NEXTJS
-  NUXT
-  NEXT
-  NEST
+  NUXTJS
+  NESTJS
   REMIX
   ASTRO
   HTML
@@ -228,6 +226,7 @@ enum Skill {
   VITE
   BUN
   
+  // --- Backend & Languages ---
   NODEJS
   PYTHON
   JAVA
@@ -245,8 +244,8 @@ enum Skill {
   CPP
   C
   R
-
   
+  // --- Databases ---
   POSTGRESQL
   MYSQL
   MONGODB
@@ -258,6 +257,7 @@ enum Skill {
   CASSANDRA
   MARIADB
   
+  // --- Mobile ---
   REACT_NATIVE
   FLUTTER
   SWIFT
@@ -265,6 +265,7 @@ enum Skill {
   XAMARIN
   IONIC
   
+  // --- DevOps & Cloud ---
   DOCKER
   KUBERNETES
   AWS
@@ -278,6 +279,7 @@ enum Skill {
   JENKINS
   TERRAFORM
   
+  // --- Tools & OS ---
   GIT
   GITHUB
   GITLAB
@@ -288,6 +290,7 @@ enum Skill {
   WINDOWS
   MACOS
   
+  // --- Testing ---
   JEST
   VITEST
   CYPRESS
@@ -297,6 +300,7 @@ enum Skill {
   PYTEST
   UNITTEST
   
+  // --- Concepts & Architecture ---
   REST_API
   GRAPHQL
   GRPC

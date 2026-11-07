@@ -81,7 +81,7 @@ export default async function CompanyJobsPage(
                 label={
                   USER_ROLE === "CREATOR"
                     ? "Sua empresa"
-                    : "Associado nessa empresa"
+                    : "Você é membro"
                 }
               />
             )}

@@ -19,18 +19,16 @@ export function UserList({ users, updateMode = undefined }: UserListProps) {
   return users.length > 0 ? (
     <ul className="flex flex-row flex-wrap gap-0 rounded-md bg-background-700">
       {users.map((user, idx) => (
-        <li className="w-full" key={`user-${user.id}`}>
+        <li className="w-full max-w-full" key={`user-${user.id}`}>
           {idx >= 1 && <hr className="my-1 mx-2 text-background-500" />}
 
           <div
-            className={`flex flex-row w-full items-start gap-2 px-2 py-1 rounded-sm  text-sm font-semibold ${updateMode?.isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
+            className={`relative flex flex-row w-full items-start gap-2 px-2 py-1 rounded-sm  text-sm font-semibold ${updateMode?.isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
           >
             <UserProfile user={user} type="list" />
             {updateMode && (
               <button
-                className={
-                  updateMode.isLoading ? "cursor-default" : "cursor-pointer"
-                }
+                className={`absolute z-2 top-0 right-1 ${updateMode.isLoading ? "cursor-default" : "cursor-pointer"}`}
                 type="button"
                 onClick={() => {
                   if (updateMode.isLoading) return;

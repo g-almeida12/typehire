@@ -9,6 +9,8 @@ export const jobWithDetailsInclude = {
       image: true,
       website: true,
       size: true,
+      members: true,
+      createdBy: true
     },
   },
   creator: {
@@ -44,6 +46,9 @@ export function mapJobEntity(
     intervalSalary:
       job.minSalary && job.maxSalary ? [job.minSalary, job.maxSalary] : null,
     location: job.location,
-    company: job.company,
+    company: {
+      ...job.company,
+      memberIds: job.company.members.map((m) => m.userId),
+    },
   };
 }

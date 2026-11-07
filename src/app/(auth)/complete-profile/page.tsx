@@ -1,8 +1,17 @@
 import { CompleteProfileForm } from "@/components/(auth)/CompleteProfileForm";
 import { Navbar } from "@/components/ui/Navbar";
+import { authServer } from "@/lib/auth/auth-server";
+import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function CompleteProfilePage() {
+export default async function CompleteProfilePage() {
+  const session = await authServer.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.user) redirect(APP_URLS.register);
+
   return (
     <>
       <Navbar onlyBrand />

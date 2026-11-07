@@ -38,7 +38,7 @@ export function JobSalaryInput<T extends FieldValues & SalaryFields>({
 
   const [selectedSalaryType, setSelectedSalaryType] = useState<
     "fixed" | "hourly" | "interval"
-    >(defaultSalaryType ?? "fixed");
+  >(defaultSalaryType ?? "fixed");
   const labelId = useId();
 
   const parseStrictNumber = (value: string) => {
@@ -172,7 +172,7 @@ export function JobSalaryInput<T extends FieldValues & SalaryFields>({
 
                     field.onChange([minValue, parsedValue]);
                   }}
-                  error={error}
+                  error=""
                   inputMode="decimal"
                   type="number"
                   disabled={disabled}

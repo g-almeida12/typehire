@@ -7,10 +7,33 @@ import {
 import { z } from "zod";
 
 const ApplicationBaseSchema = z.object({
-  feedback: z.string().min(100, "Feedback muito curto para o usuário."),
+  feedback: z
+    .string()
+    .trim()
+    .nullable()
+    .transform((v) => (v === "" ? null : v)),
   feedbackAt: z.iso.datetime(),
   status: z.enum(ApplicationStatus),
 });
+
+function validateApplicationSchema(
+  data: Partial<z.infer<typeof ApplicationBaseSchema>>,
+  ctx: z.RefinementCtx,
+) {
+  if (!data) return;
+
+  if (
+    data.status &&
+    ["PENDING", "INTERVIEW", "REJECTED", "HIRED"].includes(data.status) &&
+    (!data.feedback || data.feedback.length < 100)
+  ) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["feedback"],
+      message: "Feedback muito curto para o usuário.",
+    });
+  }
+}
 
 export const ApplicationFormFilterSchema = z
   .object({
@@ -37,7 +60,7 @@ export type ApplicationCreatePayload = z.infer<typeof ApplicationCreateSchema>;
 
 export const ApplicationUpdateSchema = ApplicationBaseSchema.omit({
   feedbackAt: true,
-});
+}).superRefine(validateApplicationSchema);
 export type ApplicationUpdatePayload = z.input<typeof ApplicationUpdateSchema>;
 
 export const ApplicationResponseSchema = ApplicationBaseSchema.extend({

@@ -1,31 +1,17 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
-import {
-  AwardIcon,
-  BriefcaseIcon,
-  BuildingIcon,
-  CircleFadingArrowUpIcon,
-  SproutIcon,
-  RefreshIcon,
-  HouseIcon,
-  CheckIcon,
-  XIcon,
-} from "@/components/icons";
+import { CheckIcon, XIcon } from "@/components/icons";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobByIdAction } from "@/lib/modules/job/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
-import {
-  jobLevelMapper,
-  jobModalityMapper,
-  jobTypeMapper,
-  skillMapper,
-} from "@/utils/mappers";
+import { jobTypeMapper, skillMapper } from "@/utils/mappers";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { InfoTag } from "@/components/common/InfoTag";
 import { JobActionsWrapper } from "@/components/job/JobActionsWrapper";
 import { ApplicationCreateWrapper } from "@/components/applications/ApplicationCreateWrapper";
+import { JobInfoTags } from "@/components/job/JobInfoTags";
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   const jobId = (await props.params).id;
@@ -36,15 +22,17 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 
   // Handle get job request exceptions
   if (!jobResponse.success) {
-    if (jobResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error("Não foi possível carregar os dados da vaga.");
-    }
+    if (jobResponse.status === 404) notFound();
+    else throw new Error();
   }
 
   const job = jobResponse.data;
-  const isUserCreator = job.creator.id === user?.id;
+  const userRole =
+    job.creator.id === user!.id || job.company.createdBy === user!.id
+      ? "CREATOR"
+      : job.company.memberIds.includes(user!.id)
+        ? "MEMBER"
+        : "USER";
 
   return (
     <>
@@ -54,7 +42,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           <div className="size-6">
             <BackButton />
           </div>
-          {isUserCreator && (
+          {userRole === "CREATOR" && (
             <div className="size-6">
               <JobActionsWrapper jobId={jobId} />
             </div>
@@ -63,6 +51,8 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 
         {/* Job and company main info */}
         <section className="mt-6">
+          {userRole === "CREATOR" && <InfoTag label="Sua empresa" />}
+          {userRole === "MEMBER" && <InfoTag label="Você é membro" />}
           <CompanyProfile
             company={job.company}
             type="link"
@@ -70,49 +60,11 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           />
 
           <div className="mt-10">
-            {isUserCreator && <InfoTag label="Criada por você" />}
+            {job.creator.id === user!.id && <InfoTag label="Sua vaga" />}
             <h1 className="text-2xl font-semibold">{job.title}</h1>
 
             {/* Job level and modality tags */}
-            <ul className="flex flex-row flex-wrap gap-2 mt-1">
-              {/* Level */}
-              <li className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-                {(() => {
-                  switch (job.level) {
-                    case "ESTAGIÁRIO":
-                      return <SproutIcon size={20} aria-hidden="true" />;
-                    case "JÚNIOR":
-                      return (
-                        <CircleFadingArrowUpIcon size={20} aria-hidden="true" />
-                      );
-                    case "PLENO":
-                      return <BriefcaseIcon size={20} aria-hidden="true" />;
-                    case "SÊNIOR":
-                      return <AwardIcon size={20} aria-hidden="true" />;
-                  }
-                })()}
-                <p className="font-semibold text-sm">
-                  {jobLevelMapper[job.level]}
-                </p>
-              </li>
-
-              {/* Modality */}
-              <li className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
-                {(() => {
-                  switch (job.modality) {
-                    case "PRESENCIAL":
-                      return <BuildingIcon size={20} aria-hidden="true" />;
-                    case "HÍBRIDO":
-                      return <RefreshIcon size={20} aria-hidden="true" />;
-                    case "REMOTO":
-                      return <HouseIcon size={20} aria-hidden="true" />;
-                  }
-                })()}
-                <p className="font-semibold text-sm">
-                  {jobModalityMapper[job.modality]}
-                </p>
-              </li>
-            </ul>
+            <JobInfoTags level={job.level} modality={job.modality} />
 
             {/* Job salary and type */}
             <div className="flex flex-col gap-0 mt-4 ">
@@ -147,7 +99,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           <div className="mt-6">
             <ApplicationCreateWrapper
               jobId={jobId}
-              isUserCreator={isUserCreator}
+              userRole={userRole}
               userHasApplied={job.userHasApplied}
             />
           </div>
@@ -203,7 +155,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
 
           {/* Job description */}
           <h2 className="mb-4 mt-8 text-xl font-medium">Descrição da vaga</h2>
-          <div className="w-[calc(100%+2rem)] prose prose-invert p-4 -ml-4 bg-background-800">
+          <div className="w-[calc(100%+2rem)] prose prose-invert p-4 -ml-4 -mb-4 bg-background-800 overflow-x-hidden">
             <ReactMarkdown>{job.description}</ReactMarkdown>
           </div>
         </section>

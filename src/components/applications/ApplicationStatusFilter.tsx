@@ -6,6 +6,8 @@ import { applicationStatusMapper } from "@/utils/mappers";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+const STATUSES = Object.values(ApplicationStatus);
+
 export function ApplicationStatusFilter({
   jobApplicationStatuses,
 }: {
@@ -64,15 +66,7 @@ export function ApplicationStatusFilter({
             {jobApplicationStatuses.ALL} No total
           </button>
         </li>
-        {(
-          [
-            "PENDING",
-            "INTERVIEW",
-            "REVIEW",
-            "HIRED",
-            "REJECTED",
-          ] as ApplicationStatus[]
-        ).map((status) => (
+        {STATUSES.map((status) => (
           <li
             className="flex flex-row shrink-0 w-fit items-center justify-center px-2 py-1 rounded-md text-sm font-medium"
             style={{

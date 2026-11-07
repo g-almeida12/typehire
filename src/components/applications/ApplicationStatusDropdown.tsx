@@ -7,16 +7,13 @@ import { CheckIcon, ChevronDownIcon } from "@/components/icons";
 import { applicationStatusMapper } from "@/utils/mappers";
 
 type ExtendedFieldValues = FieldValues & { status: ApplicationStatus };
-const STATUSES = Object.values(ApplicationStatus).filter(
-  (s) => s !== "PENDING",
-);
+const STATUSES = Object.values(ApplicationStatus);
 
 interface ApplicationStatusDropdownProps<T extends ExtendedFieldValues> {
   control: Control<T>;
   initialStatus: ApplicationStatus;
   onSelect: (status: ApplicationStatus) => void;
   isLoading: boolean;
-  error: string | undefined;
 }
 
 export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
@@ -24,7 +21,6 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
   initialStatus,
   onSelect,
   isLoading,
-  error,
 }: ApplicationStatusDropdownProps<T>) {
   const { field } = useController({ name: "status" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -116,9 +112,6 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
             </li>
           ))}
         </ul>
-      )}
-      {error && (
-        <p className="text-left text-sm text-red-500 w-full">{error}</p>
       )}
     </div>
   );

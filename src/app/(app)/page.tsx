@@ -23,7 +23,7 @@ export default async function HomePage(props: PageProps<"/">) {
       <main className="pb-4">
         <section className="flex flex-col gap-2 mt-10 mb-12">
           <p className="text-xl font-medium text-center">
-            {user?.name ? `Olá, ${user.name}.` : "Olá"}
+            {user?.name ? `Olá, ${user.name.split(" ")[0]}.` : "Olá"}
           </p>
           <SearchInput placeholder="Encontre sua próxima vaga" />
         </section>
@@ -32,7 +32,7 @@ export default async function HomePage(props: PageProps<"/">) {
           {isError ? (
             <div className="flex flex-col items-center justify-center px-4 text-center">
               <p className="text-background-300 text-lg/[22px]">
-                Não foi possível carregar as vagas no momento.
+                Não foi possível carregar mais vagas.
               </p>
               <p className="text-sm text-background-400 mt-2">
                 Tente recarregar a página mais tarde.
