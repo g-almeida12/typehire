@@ -1,6 +1,6 @@
 import { Skill } from "@/database/generated/enums";
 import { XIcon } from "@/components/icons";
-import { skillMapper } from "@/utils/mappers";
+import { SKILL_LABELS } from "@/utils/mappers";
 
 interface SkillListProps {
   skills: Skill[];
@@ -15,7 +15,7 @@ export function SkillList({ skills, updateMode = undefined }: SkillListProps) {
           className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm  text-sm  font-semibold ${updateMode?.isLoading ? "bg-background-800 text-background-400" : "bg-background-700 text-background-300"}`}
           key={s}
         >
-          <span>{skillMapper[s]}</span>
+          <span>{SKILL_LABELS[s]}</span>
           {updateMode && (
             <button
               className={

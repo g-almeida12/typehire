@@ -4,7 +4,7 @@ import { CheckIcon, XIcon } from "@/components/icons";
 import { Navbar } from "@/components/ui/Navbar";
 import { getJobByIdAction } from "@/lib/modules/job/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
-import { jobTypeMapper, skillMapper } from "@/utils/mappers";
+import { JOB_TYPE_LABELS, SKILL_LABELS } from "@/utils/mappers";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -96,7 +96,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
               </p>
 
               <p className="text-sm text-background-300 italic">
-                {jobTypeMapper[job.type]}
+                {JOB_TYPE_LABELS[job.type]}
               </p>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
                     className={`flex flex-row items-center gap-2 px-2 py-1 rounded-sm text-sm font-semibold ${tagStyles}`}
                     key={s}
                   >
-                    <span>{skillMapper[s]}</span>
+                    <span>{SKILL_LABELS[s]}</span>
                     <span
                       className={`flex items-center justify-center size-5.5 rounded-full ${userHasSkill ? "bg-green-950" : "bg-red-800"}`}
                     >

@@ -1,7 +1,7 @@
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
-import { jobLevelMapper } from "@/utils/mappers";
+import { JOB_LEVEL_LABELS } from "@/utils/mappers";
 import { AwardIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobLevel } from "@/database/generated/enums";
@@ -41,7 +41,7 @@ export function JobLevelDropdown<T extends ExtendedFieldValues>({
       disabled={isLoading}
       field={
         <DropdownButtonField
-          selectedValue={jobLevelMapper[field.value ?? LEVELS[0]]}
+          selectedValue={JOB_LEVEL_LABELS[field.value ?? LEVELS[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
@@ -63,7 +63,7 @@ export function JobLevelDropdown<T extends ExtendedFieldValues>({
           }}
           key={lv}
         >
-          {jobLevelMapper[lv as JobLevel]}
+          {JOB_LEVEL_LABELS[lv as JobLevel]}
         </DropdownOption>
       ))}
     </Dropdown>

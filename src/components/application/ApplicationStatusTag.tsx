@@ -1,5 +1,5 @@
 import { ApplicationStatus } from "@/database/generated/enums";
-import { applicationStatusMapper } from "@/utils/mappers";
+import { APPLICATION_STATUS_LABELS } from "@/utils/mappers";
 
 interface ApplicationStatusTagProps {
   status: ApplicationStatus;
@@ -33,7 +33,7 @@ export function ApplicationStatusTag({ status }: ApplicationStatusTagProps) {
       style={{ backgroundColor: tagColors.bg, color: tagColors.text }}
     >
       <span className="text-sm font-medium">
-        {applicationStatusMapper[status]}
+        {APPLICATION_STATUS_LABELS[status]}
       </span>
     </span>
   );

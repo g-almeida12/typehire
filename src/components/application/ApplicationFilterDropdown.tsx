@@ -4,7 +4,7 @@ import { BookmarkIcon } from "@/components/icons";
 import { ApplicationStatus } from "@/database/generated/enums";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { useRouter, useSearchParams } from "next/navigation";
-import { applicationStatusMapper } from "@/utils/mappers";
+import { APPLICATION_STATUS_LABELS } from "@/utils/mappers";
 import { useState, useTransition } from "react";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
@@ -13,7 +13,7 @@ import { DropdownOption } from "../common/Dropdown/DropdownOption";
 const STATUS = [
   "Em qualquer etapa",
   ...Object.keys(ApplicationStatus).map(
-    (s) => applicationStatusMapper[s as ApplicationStatus],
+    (s) => APPLICATION_STATUS_LABELS[s as ApplicationStatus],
   ),
 ];
 
@@ -23,12 +23,12 @@ export function ApplicationFilterDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, startTransition] = useTransition();
   const statusValue = searchParams.get("status")
-    ? applicationStatusMapper[searchParams.get("status") as ApplicationStatus]
+    ? APPLICATION_STATUS_LABELS[searchParams.get("status") as ApplicationStatus]
     : STATUS[0];
 
   const handleStatusClick = (status: string) => {
-    const selectedStatus = Object.keys(applicationStatusMapper).find(
-      (key) => applicationStatusMapper[key as ApplicationStatus] === status,
+    const selectedStatus = Object.keys(APPLICATION_STATUS_LABELS).find(
+      (key) => APPLICATION_STATUS_LABELS[key as ApplicationStatus] === status,
     ) as ApplicationStatus | undefined;
 
     const searchParams = new URLSearchParams();

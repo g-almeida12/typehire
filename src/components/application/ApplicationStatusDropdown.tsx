@@ -4,7 +4,7 @@ import { useId, useRef, useState } from "react";
 import { useListNavigation } from "@/lib/hooks/useListNavigation";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { CheckIcon, ChevronDownIcon } from "@/components/icons";
-import { applicationStatusMapper } from "@/utils/mappers";
+import { APPLICATION_STATUS_LABELS } from "@/utils/mappers";
 
 type ExtendedFieldValues = FieldValues & { status: ApplicationStatus };
 const STATUSES = Object.values(ApplicationStatus);
@@ -73,7 +73,7 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
           aria-hidden="true"
         />
         <span className="text-sm font-medium">
-          {applicationStatusMapper[selectedStatus]}
+          {APPLICATION_STATUS_LABELS[selectedStatus]}
         </span>
       </button>
 
@@ -87,7 +87,7 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
             <li
               onClick={() => {
                 if (initialStatus === s) return;
-                
+
                 field.onChange(s);
                 setIsOpen(false);
                 onSelect(s);
@@ -106,9 +106,11 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
                   color: tagColors[s].text,
                 }}
               >
-                {s === selectedStatus && <CheckIcon size={18} aria-hidden="true" />}
+                {s === selectedStatus && (
+                  <CheckIcon size={18} aria-hidden="true" />
+                )}
                 <span className="text-sm font-medium">
-                  {applicationStatusMapper[s]}
+                  {APPLICATION_STATUS_LABELS[s]}
                 </span>
               </span>
             </li>

@@ -9,7 +9,7 @@ import {
   FileIcon,
 } from "@/components/icons";
 import { UserProfile } from "@/components/user/UserProfile";
-import { skillMapper } from "@/utils/mappers";
+import { SKILL_LABELS } from "@/utils/mappers";
 import { Metadata } from "next";
 import { getUserByIdAction } from "@/lib/modules/user/index";
 import { notFound } from "next/navigation";
@@ -154,7 +154,7 @@ export default async function ProfilePage(props: PageProps<"/users/[id]">) {
                 className="block px-2 py-1 rounded-sm bg-background-700 text-sm text-background-300 font-semibold"
                 key={s}
               >
-                <span>{skillMapper[s]}</span>
+                <span>{SKILL_LABELS[s]}</span>
               </li>
             ))}
           </ul>

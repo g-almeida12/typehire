@@ -117,7 +117,7 @@ model Job {
   modality       JobModality
   location       String?
   skills         Skill[]
-  status         JobStatus   @default(ABERTA)
+  status         JobStatus   @default(OPEN)
   companyId      String
   createdBy      String
 
@@ -171,35 +171,35 @@ enum ApplicationStatus {
 
 enum CompanySize {
   STARTUP
-  PEQUENA
-  MÉDIA
-  GRANDE
-  MULTINACIONAL
+  SMALL
+  MEDIUM
+  LARGE
+  MULTINATIONAL
 }
 
 enum JobType {
-  INTEGRAL
-  MEIO_PERÍODO
-  FREELANCER
+  FULL_TIME
+  PART_TIME
+  FREELANCE
 }
 
 enum JobLevel {
-  ESTAGIÁRIO
-  JÚNIOR
-  PLENO
-  SÊNIOR
+  INTERN
+  JUNIOR
+  MID
+  SENIOR
 }
 
 enum JobModality {
-  REMOTO
-  HÍBRIDO
-  PRESENCIAL
+  REMOTE
+  HYBRID
+  ON_SITE
 }
 
 enum JobStatus {
-  ABERTA
-  FECHADA
-  PAUSADA
+  OPEN
+  CLOSED
+  PAUSED
 }
 
 enum Skill {
@@ -312,7 +312,6 @@ enum Skill {
   MQ
   RABBITMQ
   KAFKA
-  REDIS_CACHE
   DESIGN_PATTERNS
   AGILE
   SCRUM

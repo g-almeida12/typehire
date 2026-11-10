@@ -8,7 +8,7 @@ import {
   ApplicationStatus,
 } from "@/database/generated/enums";
 
-export const skillMapper: Record<Skill, string> = {
+export const SKILL_LABELS: Record<Skill, string> = {
   // --- Frontend & Web ---
   JAVASCRIPT: "JavaScript",
   TYPESCRIPT: "TypeScript",
@@ -118,49 +118,48 @@ export const skillMapper: Record<Skill, string> = {
   MQ: "Message Queue",
   RABBITMQ: "RabbitMQ",
   KAFKA: "Apache Kafka",
-  REDIS_CACHE: "Redis Cache",
   DESIGN_PATTERNS: "Design Patterns",
-  AGILE: "Ágil",
+  AGILE: "Métodologia Ágil",
   SCRUM: "Scrum",
   MICROSERVICES: "Microsserviços",
   MONOLITH: "Monólito",
   ARCHITECTURE: "Arquitetura de Software",
 };
 
-export const jobLevelMapper: Record<JobLevel, string> = {
-  ESTAGIÁRIO: "Estagiário",
-  JÚNIOR: "Júnior",
-  PLENO: "Pleno",
-  SÊNIOR: "Sênior",
+export const JOB_LEVEL_LABELS: Record<JobLevel, string> = {
+  INTERN: "Estagiário",
+  JUNIOR: "Júnior",
+  MID: "Pleno",
+  SENIOR: "Sênior",
 };
 
-export const jobModalityMapper: Record<JobModality, string> = {
-  REMOTO: "Remoto",
-  HÍBRIDO: "Híbrido",
-  PRESENCIAL: "Presencial",
+export const JOB_MODALITY_LABELS: Record<JobModality, string> = {
+  REMOTE: "Remoto",
+  HYBRID: "Híbrido",
+  ON_SITE: "Presencial",
 };
 
-export const jobTypeMapper: Record<JobType, string> = {
-  INTEGRAL: "Tempo Integral",
-  MEIO_PERÍODO: "Meio Período",
-  FREELANCER: "Freelancer",
+export const JOB_TYPE_LABELS: Record<JobType, string> = {
+  FULL_TIME: "Tempo Integral",
+  PART_TIME: "Meio Período",
+  FREELANCE: "Freelancer",
 };
 
-export const jobStatusMapper: Record<JobStatus, string> = {
-  ABERTA: "Aberta",
-  FECHADA: "Fechada",
-  PAUSADA: "Pausada",
+export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
+  OPEN: "Aberta",
+  CLOSED: "Fechada",
+  PAUSED: "Pausada",
 };
 
-export const companySizeMapper: Record<CompanySize, string> = {
+export const COMPANY_SIZE_LABELS: Record<CompanySize, string> = {
   STARTUP: "Startup",
-  PEQUENA: "Pequena empresa",
-  MÉDIA: "Média empresa",
-  GRANDE: "Grande empresa",
-  MULTINACIONAL: "Multinacional",
+  SMALL: "Pequena empresa",
+  MEDIUM: "Média empresa",
+  LARGE: "Grande empresa",
+  MULTINATIONAL: "Multinacional",
 };
 
-export const applicationStatusMapper: Record<ApplicationStatus, string> = {
+export const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
   PENDING: "Pendente",
   REVIEW: "Em análise",
   INTERVIEW: "Em entrevista",

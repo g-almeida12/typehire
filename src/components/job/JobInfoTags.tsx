@@ -1,5 +1,5 @@
 import { JobResponsePayload } from "@/lib/modules/job";
-import { jobLevelMapper, jobModalityMapper } from "@/utils/mappers";
+import { JOB_LEVEL_LABELS, JOB_MODALITY_LABELS } from "@/utils/mappers";
 import {
   AwardIcon,
   BriefcaseIcon,
@@ -20,32 +20,32 @@ export function JobInfoTags({
       <li className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
         {(() => {
           switch (level) {
-            case "ESTAGIÁRIO":
+            case "INTERN":
               return <SproutIcon size={20} aria-hidden="true" />;
-            case "JÚNIOR":
+            case "JUNIOR":
               return <CircleFadingArrowUpIcon size={20} aria-hidden="true" />;
-            case "PLENO":
+            case "MID":
               return <BriefcaseIcon size={20} aria-hidden="true" />;
-            case "SÊNIOR":
+            case "SENIOR":
               return <AwardIcon size={20} aria-hidden="true" />;
           }
         })()}
-        <p className="font-semibold text-sm">{jobLevelMapper[level]}</p>
+        <p className="font-semibold text-sm">{JOB_LEVEL_LABELS[level]}</p>
       </li>
 
       {/* Modality */}
       <li className="flex flex-row gap-1 items-center px-2 py-1 rounded-md bg-background-700 text-background-300">
         {(() => {
           switch (modality) {
-            case "PRESENCIAL":
+            case "ON_SITE":
               return <BuildingIcon size={20} aria-hidden="true" />;
-            case "HÍBRIDO":
+            case "HYBRID":
               return <RefreshIcon size={20} aria-hidden="true" />;
-            case "REMOTO":
+            case "REMOTE":
               return <HouseIcon size={20} aria-hidden="true" />;
           }
         })()}
-        <p className="font-semibold text-sm">{jobModalityMapper[modality]}</p>
+        <p className="font-semibold text-sm">{JOB_MODALITY_LABELS[modality]}</p>
       </li>
     </ul>
   );

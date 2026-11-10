@@ -36,8 +36,8 @@ function validateJobSchema(
 
   // Ensure that when salary is provided, if isn't a freelancer or internship job
   if (
-    data.type !== "FREELANCER" &&
-    data.level !== "ESTAGIÁRIO" &&
+    data.type !== "FREELANCE" &&
+    data.level !== "INTERN" &&
     !(data.fixedSalary || data.intervalSalary || data.hourlySalary)
   ) {
     ctx.addIssue({
@@ -85,7 +85,7 @@ function validateJobSchema(
   }
 
   // Ensure that a remote job does not has a location
-  if (data.modality === "REMOTO" && data.location) {
+  if (data.modality === "REMOTE" && data.location) {
     ctx.addIssue({
       code: "custom",
       path: ["location"],
@@ -94,7 +94,7 @@ function validateJobSchema(
   }
 
   // Ensure that a in-person job has a location
-  if (data.modality !== "REMOTO" && !data.location) {
+  if (data.modality !== "REMOTE" && !data.location) {
     ctx.addIssue({
       code: "custom",
       path: ["location"],
@@ -106,18 +106,9 @@ function validateJobSchema(
 export const JobFormFilterSchema = z
   .object({
     title: z.string(),
-    type: z
-      .enum(JobType)
-      .transform((val) => val ?? undefined)
-      .nullish(),
-    level: z
-      .enum(JobLevel)
-      .transform((val) => val ?? undefined)
-      .nullish(),
-    modality: z
-      .enum(JobModality)
-      .transform((val) => val ?? undefined)
-      .nullish(),
+    type: z.enum(JobType).transform((val) => val ?? undefined),
+    level: z.enum(JobLevel).transform((val) => val ?? undefined),
+    modality: z.enum(JobModality).transform((val) => val ?? undefined),
     skills: z.array(z.enum(Skill)).transform((arr) => [...new Set(arr)]),
     companyId: z.string(),
   })

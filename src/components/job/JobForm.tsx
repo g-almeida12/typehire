@@ -43,9 +43,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
     defaultValues: job ?? {
       title: "",
       description: "",
-      modality: "REMOTO",
-      type: "INTEGRAL",
-      level: "ESTAGIÁRIO",
+      modality: "REMOTE",
+      type: "FULL_TIME",
+      level: "INTERN",
       skills: [],
     },
     resolver: zodResolver(job ? JobUpdateSchema : JobClientCreateSchema),
@@ -71,9 +71,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
       reset({
         title: "",
         description: "",
-        modality: "REMOTO",
-        type: "INTEGRAL",
-        level: "ESTAGIÁRIO",
+        modality: "REMOTE",
+        type: "FULL_TIME",
+        level: "INTERN",
         skills: [],
       });
   }, []);
@@ -170,7 +170,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
             error={errors.modality?.message}
             isLoading={isBusy}
             onSelect={(mod) => {
-              if (mod === "REMOTO") setValue("location", null);
+              if (mod === "REMOTE") setValue("location", null);
             }}
           />
           {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (

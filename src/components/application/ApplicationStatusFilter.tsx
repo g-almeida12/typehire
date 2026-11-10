@@ -2,7 +2,7 @@
 
 import { ApplicationStatus } from "@/database/generated/enums";
 import { JobApplicationStatuses } from "@/lib/modules/application";
-import { applicationStatusMapper } from "@/utils/mappers";
+import { APPLICATION_STATUS_LABELS } from "@/utils/mappers";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -104,7 +104,7 @@ export function ApplicationStatusFilter({
 }
 
 function mapApplicationStatusCount(count: number, status: ApplicationStatus) {
-  const mappedStatus = applicationStatusMapper[status];
+  const mappedStatus = APPLICATION_STATUS_LABELS[status];
 
   switch (status) {
     case "PENDING":

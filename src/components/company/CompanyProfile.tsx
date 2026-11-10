@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRightIcon, EditIcon } from "../icons";
 import { APP_URLS } from "@/utils/constants";
 import { CompanyResponsePayload } from "@/lib/modules/company/index";
-import { companySizeMapper } from "@/utils/mappers";
+import { COMPANY_SIZE_LABELS } from "@/utils/mappers";
 
 interface CompanyProfileProps {
   company: Pick<CompanyResponsePayload, "image" | "name" | "id"> & {
@@ -54,7 +54,7 @@ export function CompanyProfile({
         <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0">
           <p className="font-medium truncate">
             {company.name}{" "}
-            {showCompanySize && `(${companySizeMapper[company.size!]})`}
+            {showCompanySize && `(${COMPANY_SIZE_LABELS[company.size!]})`}
           </p>
 
           <p className="-mt-0.5 text-sm text-background-300 italic truncate">

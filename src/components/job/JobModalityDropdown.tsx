@@ -1,7 +1,7 @@
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
-import { jobModalityMapper } from "@/utils/mappers";
+import { JOB_MODALITY_LABELS } from "@/utils/mappers";
 import { ClockIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobModality } from "@/database/generated/enums";
@@ -22,7 +22,7 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
-  onSelect
+  onSelect,
 }: JobModalityDropdownProps<T>) {
   const { field } = useController({ name: "modality" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
       disabled={isLoading}
       field={
         <DropdownButtonField
-          selectedValue={jobModalityMapper[field.value ?? MODALITIES[0]]}
+          selectedValue={JOB_MODALITY_LABELS[field.value ?? MODALITIES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
@@ -66,7 +66,7 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
           }}
           key={mod}
         >
-          {jobModalityMapper[mod as JobModality]}
+          {JOB_MODALITY_LABELS[mod as JobModality]}
         </DropdownOption>
       ))}
     </Dropdown>

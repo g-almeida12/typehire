@@ -8,9 +8,9 @@ import {
   JobFormFilterSchema,
 } from "@/lib/modules/job";
 import {
-  jobLevelMapper,
-  jobModalityMapper,
-  jobTypeMapper,
+  JOB_LEVEL_LABELS,
+  JOB_MODALITY_LABELS,
+  JOB_TYPE_LABELS,
 } from "@/utils/mappers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -129,7 +129,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
                   key={`radio-${mod}`}
                 >
                   <input type="radio" value={mod} {...register("modality")} />
-                  {jobModalityMapper[mod as JobModality]}
+                  {JOB_MODALITY_LABELS[mod as JobModality]}
                 </label>
               ))}
             </div>
@@ -147,7 +147,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
                   key={`radio-${lv}`}
                 >
                   <input type="radio" value={lv} {...register("level")} />
-                  {jobLevelMapper[lv as JobLevel]}
+                  {JOB_LEVEL_LABELS[lv as JobLevel]}
                 </label>
               ))}
             </div>
@@ -163,7 +163,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
                   key={`radio-${tp}`}
                 >
                   <input type="radio" value={tp} {...register("type")} />
-                  {jobTypeMapper[tp as JobType]}
+                  {JOB_TYPE_LABELS[tp as JobType]}
                 </label>
               ))}
             </div>

@@ -47,7 +47,7 @@ export async function createJobAction(
         ...leanNewData,
         minSalary: intervalSalary?.at(0) ?? null,
         maxSalary: intervalSalary?.at(1) ?? null,
-        status: "ABERTA",
+        status: "OPEN",
         createdBy: currentUserId,
       },
       include: jobWithDetailsInclude,

@@ -7,13 +7,8 @@ import { Skill } from "@/database/generated/enums";
 import { DropdownOption } from "./Dropdown/DropdownOption";
 import { DropdownSearchField } from "./Dropdown/DropdownSearchField";
 import { BookmarkIcon } from "@/components/icons";
-import {
-  Control,
-  FieldValues,
-  Path,
-  useController,
-} from "react-hook-form";
-import { skillMapper } from "@/utils/mappers";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
+import { SKILL_LABELS } from "@/utils/mappers";
 
 const SKILLS = Object.values(Skill);
 
@@ -36,7 +31,7 @@ export function SkillsDropdown<T extends FieldValues & { skills?: Skill[] }>({
 
   const selectedSkills: Skill[] = field.value ?? [];
   const filteredSkills = SKILLS.filter((skill) =>
-    skillMapper[skill].toLowerCase().startsWith(search.toLowerCase()),
+    SKILL_LABELS[skill].toLowerCase().startsWith(search.toLowerCase()),
   );
 
   const addSkill = (skill: Skill) => {
@@ -45,7 +40,7 @@ export function SkillsDropdown<T extends FieldValues & { skills?: Skill[] }>({
     field.onChange([...selectedSkills, skill]);
     setActiveIndex(0);
     setSearch("");
-  }
+  };
   const { activeIndex, setActiveIndex, itemsRef, handleKeyDown } =
     useListNavigation(
       filteredSkills.length,
@@ -95,7 +90,7 @@ export function SkillsDropdown<T extends FieldValues & { skills?: Skill[] }>({
           }}
           key={skill}
         >
-          {skillMapper[skill]}
+          {SKILL_LABELS[skill]}
         </DropdownOption>
       ))}
     </Dropdown>

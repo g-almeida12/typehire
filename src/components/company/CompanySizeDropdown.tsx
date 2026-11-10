@@ -1,7 +1,7 @@
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
-import { companySizeMapper } from "@/utils/mappers";
+import { COMPANY_SIZE_LABELS } from "@/utils/mappers";
 import { ClockIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { CompanySize } from "@/database/generated/enums";
@@ -41,7 +41,7 @@ export function CompanySizeDropdown<T extends ExtendedFieldValues>({
       disabled={isLoading}
       field={
         <DropdownButtonField
-          selectedValue={companySizeMapper[field.value ?? SIZES[0]]}
+          selectedValue={COMPANY_SIZE_LABELS[field.value ?? SIZES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
@@ -63,7 +63,7 @@ export function CompanySizeDropdown<T extends ExtendedFieldValues>({
           }}
           key={sz}
         >
-          {companySizeMapper[sz as CompanySize]}
+          {COMPANY_SIZE_LABELS[sz as CompanySize]}
         </DropdownOption>
       ))}
     </Dropdown>

@@ -1,7 +1,7 @@
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 import { Dropdown } from "../common/Dropdown/Dropdown";
 import { DropdownButtonField } from "../common/Dropdown/DropdownButtonField";
-import { jobTypeMapper } from "@/utils/mappers";
+import { JOB_TYPE_LABELS } from "@/utils/mappers";
 import { ClockIcon } from "@/components/icons";
 import { DropdownOption } from "../common/Dropdown/DropdownOption";
 import { JobType } from "@/database/generated/enums";
@@ -41,7 +41,7 @@ export function JobTypeDropdown<T extends ExtendedFieldValues>({
       disabled={isLoading}
       field={
         <DropdownButtonField
-          selectedValue={jobTypeMapper[field.value ?? TYPES[0]]}
+          selectedValue={JOB_TYPE_LABELS[field.value ?? TYPES[0]]}
           disabled={isLoading}
           handleKeyDown={handleKeyDown}
           isOpen={isOpen}
@@ -63,7 +63,7 @@ export function JobTypeDropdown<T extends ExtendedFieldValues>({
           }}
           key={tp}
         >
-          {jobTypeMapper[tp as JobType]}
+          {JOB_TYPE_LABELS[tp as JobType]}
         </DropdownOption>
       ))}
     </Dropdown>
