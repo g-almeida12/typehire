@@ -10,8 +10,8 @@ const ApplicationBaseSchema = z.object({
   feedback: z
     .string()
     .trim()
-    .nullable()
-    .transform((v) => (v === "" ? null : v)),
+    .transform((v) => (v === "" ? null : v))
+    .nullable(),
   feedbackAt: z.iso.datetime(),
   status: z.enum(ApplicationStatus),
 });
@@ -83,8 +83,8 @@ export const ApplicationResponseSchema = ApplicationBaseSchema.extend({
     company: z.object({
       id: z.string(),
       name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
-      image: z.string().optional().nullable().default(null),
-      website: z.string().optional().nullable().default(null),
+      image: z.string().nullable(),
+      website: z.string().nullable()
     }),
   }),
   candidate: z.object({

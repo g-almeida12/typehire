@@ -4,7 +4,7 @@ import { JobLevel, JobModality, CompanySize } from "@/database/generated/enums";
 
 const JobSnippetSchema = z.object({
   id: z.string(),
-  title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
+  title: z.string().trim().min(5, "Título deve ter no mínimo 5 caracteres."),
   fixedSalary: z.number().nullable(),
   intervalSalary: z.tuple([z.number(), z.number()]).nullable(),
   hourlySalary: z.number().nullable(),
@@ -15,11 +15,15 @@ const JobSnippetSchema = z.object({
 });
 
 const CompanyBaseSchema = z.object({
-  name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
-  cnpj: z.string().min(14, "CNPJ inválido fornecido."),
+  name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
+  cnpj: z.string().trim().min(14, "CNPJ inválido fornecido."),
   image: z.string().nullable(),
-  website: z.string().nullable(),
-  bio: z.string().min(50, "Descrição muito curta."),
+  website: z
+    .string()
+    .trim()
+    .transform((v) => (v === "" ? null : v))
+    .nullable(),
+  bio: z.string().trim().min(50, "Descrição muito curta."),
   size: z.enum(CompanySize),
   members: z.array(
     UserPublicResponseSchema.pick({
@@ -31,8 +35,12 @@ const CompanyBaseSchema = z.object({
 });
 
 export const CompanyCreateSchema = CompanyBaseSchema.extend({
-  image: z.string().optional().nullable(),
-  website: z.string().optional().nullable(),
+  image: z.string().trim().nullish(),
+  website: z
+    .string()
+    .trim()
+    .transform((v) => (v === "" ? null : v))
+    .nullish(),
 });
 export type CompanyCreatePayload = z.infer<typeof CompanyCreateSchema>;
 

@@ -11,18 +11,20 @@ import {
 const JobBaseSchema = z.object({
   title: z.string().min(5, "Título deve ter no mínimo 5 caracteres."),
   description: z.string().min(100, "Descrição não pode ser curta demais."),
-  fixedSalary: z.number().optional().nullable(),
-  intervalSalary: z.tuple([z.number(), z.number()]).optional().nullable(),
-  hourlySalary: z.number().optional().nullable(),
+  fixedSalary: z.number().nullish(),
+  intervalSalary: z.tuple([z.number(), z.number()]).nullish(),
+  hourlySalary: z.number().nullish(),
   status: z.enum(JobStatus),
   type: z.enum(JobType),
   level: z.enum(JobLevel),
   modality: z.enum(JobModality),
   location: z
-    .string()
-    .min(5, "Insira a localização no formato 'cidade, UF'")
-    .optional()
-    .nullable(),
+    .union([
+      z.literal(""),
+      z.string().trim().min(5, "Insira a localização no formato 'Cidade, UF'"),
+    ])
+    .transform((v) => (v === "" ? null : v))
+    .nullish(),
   skills: z.array(z.enum(Skill)).transform((arr) => [...new Set(arr)]),
 });
 
@@ -86,8 +88,17 @@ function validateJobSchema(
   if (data.modality === "REMOTO" && data.location) {
     ctx.addIssue({
       code: "custom",
-      path: ["root"],
+      path: ["location"],
       message: "Trabalhos remotos não podem ter uma localização definida.",
+    });
+  }
+
+  // Ensure that a in-person job has a location
+  if (data.modality !== "REMOTO" && !data.location) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["location"],
+      message: "Trabalhos presenciais precisam ter a localização definida.",
     });
   }
 }
@@ -97,16 +108,16 @@ export const JobFormFilterSchema = z
     title: z.string(),
     type: z
       .enum(JobType)
-      .nullish()
-      .transform((val) => val ?? undefined),
+      .transform((val) => val ?? undefined)
+      .nullish(),
     level: z
       .enum(JobLevel)
-      .nullish()
-      .transform((val) => val ?? undefined),
+      .transform((val) => val ?? undefined)
+      .nullish(),
     modality: z
       .enum(JobModality)
-      .nullish()
-      .transform((val) => val ?? undefined),
+      .transform((val) => val ?? undefined)
+      .nullish(),
     skills: z.array(z.enum(Skill)).transform((arr) => [...new Set(arr)]),
     companyId: z.string(),
   })
@@ -158,8 +169,8 @@ export const JobResponseSchema = JobBaseSchema.extend({
   company: z.object({
     id: z.string(),
     name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
-    image: z.string().optional().nullable().default(null),
-    website: z.string().optional().nullable().default(null),
+    image: z.string().nullable(),
+    website: z.string().nullable(),
     size: z.enum(CompanySize),
     memberIds: z.array(z.string()),
     createdBy: z.string(),

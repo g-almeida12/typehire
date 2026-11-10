@@ -1,16 +1,82 @@
 import { z } from "zod";
 import { Skill } from "@/database/generated/enums";
 
+const OptionalTextSchema = z
+  .string()
+  .trim()
+  .transform((v) => (v === "" ? null : v))
+  .nullable();
+
+const CpfSchema = z
+  .string()
+  .trim()
+  .transform((val) => val.replace(/\D+/g, ""))
+  .refine((val) => val.length === 11, "CPF inválido digitado.");
+
 const CompanySnippetSchema = z.object({
   id: z.string(),
   image: z.string().nullable(),
-  name: z.string(),
+  name: z.string().trim(),
   createdBy: z.string(),
 });
 
+export const UserRegisterSchema = z.object({
+  name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
+  email: z.email("Email inválido."),
+  cpf: CpfSchema,
+  agreeToTerms: z
+    .boolean()
+    .refine(
+      (val) => val === true,
+      "Você deve concordar com os termos e condições.",
+    ),
+  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
+  image: z.string().optional().nullable(),
+});
+export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
+
+export const UserCompleteProfileSchema = z.object({
+  cpf: CpfSchema,
+});
+export type UserCompleteProfilePayload = z.infer<
+  typeof UserCompleteProfileSchema
+>;
+
+export const UserLoginSchema = z.object({
+  email: z.email("Email inválido."),
+  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
+});
+export type UserLoginPayload = z.infer<typeof UserLoginSchema>;
+
+export const UserUpdateSchema = z
+  .object({
+    name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
+    email: z.email("Email inválido."),
+    cpf: CpfSchema,
+    location: z
+      .union([
+        z.literal(""),
+        z
+          .string()
+          .trim()
+          .min(5, "Insira a localização no formato 'Cidade, UF'"),
+      ])
+      .transform((v) => (v === "" ? null : v))
+      .nullish(),
+    phoneNumber: OptionalTextSchema,
+    bio: OptionalTextSchema,
+    githubUrl: OptionalTextSchema,
+    linkedinUrl: OptionalTextSchema,
+    portfolioUrl: OptionalTextSchema,
+    resumeUrl: OptionalTextSchema,
+    skills: z.array(z.enum(Skill)).transform((v) => [...new Set(v)]),
+  })
+  .partial();
+export type UserUpdatePayload = z.infer<typeof UserUpdateSchema>;
+
 export const UserPublicResponseSchema = z.object({
   id: z.string(),
-  name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
+  name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
   email: z.email("Email inválido."),
   location: z.string().nullable(),
   phoneNumber: z.string().nullable(),
@@ -27,46 +93,8 @@ export type UserPublicResponsePayload = z.infer<
 >;
 
 export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
-  cpf: z
-    .string()
-    .transform((val) => val.replace(/\D+/g, ""))
-    .refine((val) => val.length === 11, "CPF inválido digitado."),
+  cpf: CpfSchema,
 });
 export type UserPrivateResponsePayload = z.infer<
   typeof UserPrivateResponseSchema
 >;
-
-export const UserRegisterSchema = UserPrivateResponseSchema.pick({
-  name: true,
-  email: true,
-  cpf: true,
-}).extend({
-  agreeToTerms: z
-    .boolean()
-    .refine(
-      (val) => val === true,
-      "Você deve concordar com os termos e condições.",
-    ),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
-  image: z.string().optional().nullable(),
-});
-export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
-
-export const UserCompleteProfileSchema = z.object({
-  cpf: z
-    .string()
-    .transform((val) => val.replace(/\D+/g, ""))
-    .refine((val) => val.length === 11, "CPF inválido."),
-});
-export type UserCompleteProfilePayload = z.infer<typeof UserCompleteProfileSchema>;
-
-export const UserLoginSchema = z.object({
-  email: z.email("Email inválido."),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
-});
-export type UserLoginPayload = z.infer<typeof UserLoginSchema>;
-
-export const UserUpdateSchema = UserPrivateResponseSchema.omit({
-  id: true,
-}).partial();
-export type UserUpdatePayload = z.infer<typeof UserUpdateSchema>;
