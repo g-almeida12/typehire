@@ -60,6 +60,11 @@ export function ModuleListView<TModule, TFilter>({
 
   const cachedKey = JSON.stringify({ ...filter, pathname });
 
+  // Refresh 'modules' on 'initialModules' changes
+  useEffect(() => {
+    setModules(initialModules);
+   }, [initialModules]);
+
   // Get the cached list to show
   useLayoutEffect(() => {
     const cached = listCache.get(cachedKey);

@@ -1,6 +1,6 @@
 "use client";
 
-import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
+import { ModuleListView, type ModuleResponse } from "../ui/ModuleListView";
 import { CandidateCard } from "../user/CandidateCard";
 import {
   ApplicationFormFilterOutputPayload,

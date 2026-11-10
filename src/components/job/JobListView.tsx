@@ -5,7 +5,7 @@ import {
   JobResponsePayload,
   getJobsAction,
 } from "@/lib/modules/job";
-import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
+import { ModuleListView, type ModuleResponse } from "../ui/ModuleListView";
 import { JobCard } from "./JobCard";
 
 interface JobListViewProps {
