@@ -7,8 +7,8 @@ import {
 } from "@/lib/modules/user";
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../common/Input";
 import { KeyRoundIcon, MailIcon } from "@/components/icons";
@@ -18,7 +18,7 @@ import Link from "next/link";
 
 export function LoginForm() {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     setError,
     register,
@@ -30,38 +30,37 @@ export function LoginForm() {
     },
     resolver: zodResolver(UserLoginSchema),
   });
-  const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
+  const isBusy = isSubmitting || isRedirecting;
 
+  // Cleanup on dismount
   useEffect(() => {
-    reset({
-      email: "",
-      password: "",
-    });
-  }, [pathname, reset]);
+    return () =>
+      reset({
+        email: "",
+        password: "",
+      });
+  }, []);
 
   const handleSignInByEmail = async (data: UserLoginPayload) => {
     try {
-      setIsLoading(true);
       const response = await signInByEmailAction(data);
 
       if (!response.success) {
         if (response.status === 401) {
           setError("root", { message: response.message });
-          setIsLoading(false);
           return;
         }
 
         throw new Error();
       }
 
-      router.replace(APP_URLS.home);
+      startTransition(() => router.replace(APP_URLS.home));
     } catch (_err) {
       setError("root", {
         message: "Desculpe, mas não foi possível conectar na sua conta.",
       });
-      setIsLoading(false);
     }
   };
 
@@ -86,7 +85,7 @@ export function LoginForm() {
             Icon={MailIcon}
             placeholder="exemplo@gmail.com"
             error={errors.email?.message}
-            disabled={isLoading}
+            disabled={isBusy}
           />
           <Input
             {...register("password")}
@@ -94,15 +93,15 @@ export function LoginForm() {
             Icon={KeyRoundIcon}
             placeholder="Sua senha pessoal"
             error={errors.password?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             showVisibilityToggle
           />
         </div>
 
         <Button
-          text={isLoading ? "Conectando-se..." : "Conecte-se"}
+          text={isBusy ? "Conectando-se..." : "Conecte-se"}
           variant="primary"
-          disabled={isLoading}
+          disabled={isBusy}
         />
       </form>
 
@@ -114,7 +113,10 @@ export function LoginForm() {
       </div>
 
       <div className="mt-12">
-        <GoogleOAuthButton callbackURL={APP_URLS.authCallback} disabled={isLoading} />
+        <GoogleOAuthButton
+          callbackURL={APP_URLS.authCallback}
+          disabled={isBusy}
+        />
       </div>
 
       <p className="mt-17 text-sm text-background-300 text-center">

@@ -7,8 +7,8 @@ import {
 } from "@/lib/modules/user";
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import Link from "next/link";
@@ -23,7 +23,7 @@ import {
 
 export function RegisterForm() {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     setError,
     register,
@@ -39,41 +39,39 @@ export function RegisterForm() {
     },
     resolver: zodResolver(UserRegisterSchema),
   });
-  const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
+  const isBusy = isSubmitting || isRedirecting;
 
   useEffect(() => {
-    reset({
-      email: "",
-      name: "",
-      cpf: "",
-      agreeToTerms: false,
-      image: null,
-      password: "",
-    });
-  }, [pathname, reset]);
+    return () =>
+      reset({
+        email: "",
+        name: "",
+        cpf: "",
+        agreeToTerms: false,
+        image: null,
+        password: "",
+      });
+  }, []);
 
   const handleSignUpByEmail = async (data: UserRegisterPayload) => {
     try {
-      setIsLoading(true);
       const response = await signUpByEmailAction(data);
       if (!response.success) {
         if (response.status === 409) {
           setError("root", { message: response.message });
-          setIsLoading(false);
           return;
         }
 
         throw new Error();
       }
 
-      router.replace(APP_URLS.home);
+      startTransition(() => router.replace(APP_URLS.home));
     } catch (err: any) {
       setError("root", {
         message: "Desculpe, mas não foi possível registrar sua conta.",
       });
-      setIsLoading(false);
     }
   };
 
@@ -96,7 +94,7 @@ export function RegisterForm() {
             Icon={UserCircleIcon}
             placeholder="Seu nome completo"
             error={errors.name?.message}
-            disabled={isLoading}
+            disabled={isBusy}
           />
           <Input
             {...register("email")}
@@ -104,7 +102,7 @@ export function RegisterForm() {
             Icon={MailIcon}
             placeholder="exemplo@gmail.com"
             error={errors.email?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             type="email"
             inputMode="email"
           />
@@ -114,7 +112,7 @@ export function RegisterForm() {
             Icon={IdCardIcon}
             placeholder="123.456.789-00"
             error={errors.cpf?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             inputMode="numeric"
           />
           <Input
@@ -123,7 +121,7 @@ export function RegisterForm() {
             Icon={KeyRoundIcon}
             placeholder="Sua senha pessoal"
             error={errors.password?.message}
-            disabled={isLoading}
+            disabled={isBusy}
             showVisibilityToggle
           />
         </div>
@@ -136,7 +134,7 @@ export function RegisterForm() {
                 type="checkbox"
                 className="relative top-1 h-3.5 w-3.5"
                 id="agree-to-terms"
-                disabled={isLoading}
+                disabled={isBusy}
               />
               <label
                 htmlFor="agree-to-terms"
@@ -166,9 +164,9 @@ export function RegisterForm() {
             )}
           </div>
           <Button
-            text={isLoading ? "Cadastrando usuário..." : "Cadastrar usuário"}
+            text={isBusy ? "Cadastrando usuário..." : "Cadastrar usuário"}
             variant="primary"
-            disabled={isLoading}
+            disabled={isBusy}
             type="submit"
           />
         </div>
@@ -184,7 +182,7 @@ export function RegisterForm() {
       <div className="mt-12">
         <GoogleOAuthButton
           callbackURL={APP_URLS.authCallback}
-          disabled={isLoading}
+          disabled={isBusy}
         />
       </div>
 
