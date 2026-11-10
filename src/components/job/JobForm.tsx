@@ -23,7 +23,7 @@ import { JobTypeDropdown } from "./JobTypeDropdown";
 import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 
 interface JobFormProps {
   companyId?: string;
@@ -37,9 +37,12 @@ export function JobForm({ job, companyId }: JobFormProps) {
     setValue,
     handleSubmit,
     register,
+    reset,
     control,
   } = useForm<JobClientCreatePayload | JobUpdatePayload>({
     defaultValues: job ?? {
+      title: "",
+      description: "",
       modality: "REMOTO",
       type: "INTEGRAL",
       level: "ESTAGIÁRIO",
@@ -61,6 +64,19 @@ export function JobForm({ job, companyId }: JobFormProps) {
         : "hourly"
     : undefined;
   const isBusy = isSubmitting || isRedirecting;
+
+  // Cleanup on dismount
+  useEffect(() => {
+    return () =>
+      reset({
+        title: "",
+        description: "",
+        modality: "REMOTO",
+        type: "INTEGRAL",
+        level: "ESTAGIÁRIO",
+        skills: [],
+      });
+  }, []);
 
   const handleButtonClick = async (
     data: JobClientCreatePayload | JobUpdatePayload,
@@ -153,6 +169,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
             control={control}
             error={errors.modality?.message}
             isLoading={isBusy}
+            onSelect={(mod) => {
+              if (mod === "REMOTO") setValue("location", null);
+            }}
           />
           {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
             <Input

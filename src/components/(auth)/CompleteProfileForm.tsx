@@ -8,7 +8,7 @@ import {
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../common/Input";
 import { IdCardIcon } from "@/components/icons";
@@ -22,10 +22,19 @@ export function CompleteProfileForm() {
     handleSubmit,
     setError,
     register,
+    reset,
   } = useForm<UserCompleteProfilePayload>({
     defaultValues: { cpf: "" },
     resolver: zodResolver(UserCompleteProfileSchema),
   });
+
+  // Cleanup on dismount
+  useEffect(() => {
+    return () =>
+      reset({
+        cpf: "",
+      });
+  }, []);
 
   const handleUpdateProfile = async (data: UserCompleteProfilePayload) => {
     try {

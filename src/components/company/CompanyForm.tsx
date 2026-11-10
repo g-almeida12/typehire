@@ -4,7 +4,7 @@ import { Input } from "@/components/common/Input";
 import { TextArea } from "@/components/common/TextArea";
 import { BuildingIcon, AtSignIcon, GlobeIcon } from "@/components/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
@@ -34,6 +34,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
     handleSubmit,
     register,
     control,
+    reset,
   } = useForm<CompanyCreatePayload | CompanyUpdatePayload>({
     defaultValues: company ?? {
       name: "",
@@ -48,6 +49,18 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
+
+  useEffect(() => {
+    return () =>
+      reset({
+        name: "",
+        bio: "",
+        cnpj: "",
+        size: "STARTUP",
+        website: "",
+        members: [],
+      });
+  }, []);
 
   const handleButtonClick = async (
     data: CompanyCreatePayload | CompanyUpdatePayload,
