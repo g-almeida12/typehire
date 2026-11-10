@@ -7,7 +7,7 @@ import {
 import { Metadata } from "next";
 import { getJobByIdAction } from "@/lib/modules/job";
 import { notFound } from "next/navigation";
-import { ApplicationStatusFilter } from "@/components/applications/ApplicationStatusFilter";
+import { ApplicationStatusFilter } from "@/components/application/ApplicationStatusFilter";
 import { CandidateListView } from "@/components/user/CandidateListView";
 import { JobInfoTags } from "@/components/job/JobInfoTags";
 
@@ -31,7 +31,7 @@ export default async function JobApplicationsPage(
     }
   }
   if (!jobApplicationStatusesResponse.success) {
-    throw Error()
+    throw Error();
   }
 
   const filter = ApplicationURLFilterSchema.parse({

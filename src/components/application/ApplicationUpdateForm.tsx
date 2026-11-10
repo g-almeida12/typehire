@@ -33,6 +33,8 @@ export function ApplicationUpdateForm({
     register,
     formState: { errors, isSubmitting },
     setError,
+    clearErrors,
+    setValue,
   } = useForm<ApplicationUpdatePayload>({
     resolver: zodResolver(ApplicationUpdateSchema),
     defaultValues: {
@@ -46,28 +48,41 @@ export function ApplicationUpdateForm({
   const [newStatus, setNewStatus] = useState<ApplicationStatus | null>(null);
   const router = useRouter();
   const isBusy = isSubmitting || isRefreshing;
+  const error =
+    errors.status?.message || errors.feedback?.message || errors.root?.message;
 
   useEffect(() => {
     if (isFeedbackOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isFeedbackOpen]);
-  const error =
-    errors.status?.message || errors.feedback?.message || errors.root?.message;
 
   const handleApplicationUpdate = async (data: ApplicationUpdatePayload) => {
     try {
-      const applicationResponse = await updateApplicationByIdAction(
-        applicationId,
-        { ...data, status: newStatus! },
-      );
-      if (!applicationResponse.success) {
+      const updateResponse = await updateApplicationByIdAction(applicationId, {
+        ...data,
+        status: newStatus!,
+      });
+      if (!updateResponse.success) {
+        if (updateResponse.status === 422) {
+          setError(updateResponse.field as keyof ApplicationUpdatePayload, {
+            message: updateResponse.message,
+          });
+          statusField.onChange(initialStatus);
+          return;
+        }
+
         throw new Error();
       }
 
       setIsFeedbackOpen(false);
+      setValue("feedback", "");
       startTransition(() => router.refresh());
     } catch (_err) {
       statusField.onChange(initialStatus);
@@ -100,13 +115,13 @@ export function ApplicationUpdateForm({
               <ApplicationStatusTag status={newStatus!} />
             </div>
 
-            {newStatus === "REVIEW" ? (
+            {newStatus === "REVIEW" && initialStatus === "PENDING" ? (
               <>
                 <h2 className="mb-1 text-2xl font-medium">
                   Confirme a nova etapa
                 </h2>
                 <p className="mb-4 text-sm text-background-300">
-                  Feedback não é necessário para a etapa "Em análise".
+                  Feedback não é necessário para marcar como "Em análise".
                 </p>
               </>
             ) : (
@@ -141,6 +156,7 @@ export function ApplicationUpdateForm({
                 variant="ghost"
                 onClick={() => {
                   statusField.onChange(initialStatus);
+                  clearErrors();
                   setIsFeedbackOpen(false);
                 }}
                 disabled={isBusy}

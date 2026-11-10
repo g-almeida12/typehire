@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useRef, useTransition } from "react";
 import { Dialog, DialogRef } from "../common/Dialog";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
@@ -21,9 +21,7 @@ export function ApplicationCreateWrapper({
   const { showToast } = useToast();
   const dialogRef = useRef<DialogRef>(null);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isRedirecting, startTransition] = useTransition();
-  const isBusy = isLoading || isRedirecting;
+  const [isPending, startTransition] = useTransition();
 
   const handleOptionClick = async (confirm: boolean) => {
     if (!confirm) {
@@ -31,20 +29,18 @@ export function ApplicationCreateWrapper({
       return;
     }
 
-    try {
-      setIsLoading(true);
-      const applicationResponse = await createApplicationAction({ jobId });
-      if (!applicationResponse.success) throw Error();
+    startTransition(async () => {
+      try {
+        const applicationResponse = await createApplicationAction({ jobId });
+        if (!applicationResponse.success) throw Error();
 
-      dialogRef.current?.closeModal();
-      showToast("success", "Candidatura enviada com sucesso.");
-      startTransition(() => router.refresh());
-    } catch (err) {
-      showToast("error", "Não foi possível enviar sua candidatura.");
-      dialogRef.current?.closeModal();
-    } finally {
-      setIsLoading(false);
-    }
+        showToast("success", "Candidatura enviada com sucesso.");
+        startTransition(() => router.refresh());
+      } catch (err) {
+        showToast("error", "Não foi possível enviar sua candidatura.");
+        dialogRef.current?.closeModal();
+      }
+    });
   };
 
   return (
@@ -78,7 +74,7 @@ export function ApplicationCreateWrapper({
         confirmText="Enviar"
         onOptionClick={handleOptionClick}
         ref={dialogRef}
-        isPending={isBusy}
+        isPending={isPending}
       />
     </>
   );

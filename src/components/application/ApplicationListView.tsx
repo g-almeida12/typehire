@@ -5,7 +5,7 @@ import {
   ApplicationResponsePayload,
   getApplicationsAction,
 } from "@/lib/modules/application";
-import { ModuleListView, type ModuleResponse } from "../ui/ModulesListView";
+import { ModuleListView, type ModuleResponse } from "../ui/ModuleListView";
 import { ApplicationCard } from "./ApplicationCard";
 
 interface ApplicationListViewProps {

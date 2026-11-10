@@ -86,6 +86,8 @@ export function ApplicationStatusDropdown<T extends ExtendedFieldValues>({
           {STATUSES.map((s, idx) => (
             <li
               onClick={() => {
+                if (initialStatus === s) return;
+                
                 field.onChange(s);
                 setIsOpen(false);
                 onSelect(s);

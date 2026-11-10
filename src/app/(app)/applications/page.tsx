@@ -4,8 +4,8 @@ import {
   ApplicationURLFilterSchema,
   getApplicationsAction,
 } from "@/lib/modules/application";
-import { ApplicationListView } from "@/components/applications/ApplicationListView";
-import { ApplicationFilterDropdown } from "@/components/applications/ApplicationFilterDropdown";
+import { ApplicationListView } from "@/components/application/ApplicationListView";
+import { ApplicationFilterDropdown } from "@/components/application/ApplicationFilterDropdown";
 import { Metadata } from "next";
 
 export default async function ApplicationsPage(

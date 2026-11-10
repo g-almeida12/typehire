@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { InfoTag } from "@/components/common/InfoTag";
 import { JobActionsWrapper } from "@/components/job/JobActionsWrapper";
-import { ApplicationCreateWrapper } from "@/components/applications/ApplicationCreateWrapper";
+import { ApplicationCreateWrapper } from "@/components/application/ApplicationCreateWrapper";
 import { JobInfoTags } from "@/components/job/JobInfoTags";
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
@@ -62,6 +62,11 @@ export default async function JobPage(props: PageProps<"/jobs/[id]">) {
           <div className="mt-10">
             {job.creator.id === user!.id && <InfoTag label="Sua vaga" />}
             <h1 className="text-2xl font-semibold">{job.title}</h1>
+            {job.location && (
+              <p className="mb-3 text-background-300 text-sm/[14px] truncate italic">
+                {job.location}
+              </p>
+            )}
 
             {/* Job level and modality tags */}
             <JobInfoTags level={job.level} modality={job.modality} />

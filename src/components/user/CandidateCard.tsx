@@ -9,7 +9,7 @@ import {
 } from "../icons";
 import { ApplicationStatus } from "@/database/generated/enums";
 import { formatRelativeTime } from "@/utils/date";
-import { ApplicationUpdateForm } from "../applications/ApplicationUpdateForm";
+import { ApplicationUpdateForm } from "../application/ApplicationUpdateForm";
 
 interface CandidateCardProps {
   candidate: Pick<
@@ -121,7 +121,6 @@ export function CandidateCard({
           initialStatus={status}
           candidateName={candidate.name}
           applicationId={applicationId}
-          key={status}
         />
         <span className="text-sm text-background-300">
           {formatRelativeTime(createdAt)}
