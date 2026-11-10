@@ -61,6 +61,7 @@ export function JobLevelDropdown<T extends ExtendedFieldValues>({
           ref={(el) => {
             itemsRef.current[idx] = el;
           }}
+          key={lv}
         >
           {jobLevelMapper[lv as JobLevel]}
         </DropdownOption>

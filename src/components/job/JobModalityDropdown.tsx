@@ -15,12 +15,14 @@ interface JobModalityDropdownProps<T extends ExtendedFieldValues> {
   control: Control<T>;
   isLoading: boolean;
   error: string | undefined;
+  onSelect?: (modality: JobModality) => void;
 }
 
 export function JobModalityDropdown<T extends ExtendedFieldValues>({
   control,
   isLoading,
   error,
+  onSelect
 }: JobModalityDropdownProps<T>) {
   const { field } = useController({ name: "modality" as Path<T>, control });
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -33,7 +35,7 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
 
   return (
     <Dropdown
-      label="Período de duração do trabalho"
+      label="Modalidade do trabalho"
       Icon={ClockIcon}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
@@ -57,10 +59,12 @@ export function JobModalityDropdown<T extends ExtendedFieldValues>({
           onOptionClick={() => {
             field.onChange(mod);
             setIsOpen(false);
+            onSelect?.(mod);
           }}
           ref={(el) => {
             itemsRef.current[idx] = el;
           }}
+          key={mod}
         >
           {jobModalityMapper[mod as JobModality]}
         </DropdownOption>
