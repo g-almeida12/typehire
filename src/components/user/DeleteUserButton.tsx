@@ -18,7 +18,6 @@ export function DeleteUserButton() {
       router.replace(APP_URLS.register);
     } catch (err) {
       showToast("error", "Não foi possível deletar sua conta.");
-      console.error(err);
     }
   };
 

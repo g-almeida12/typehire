@@ -35,17 +35,16 @@ export function JobCard({
           <CompanyProfile company={job.company} type="readonly" />
           <div className="flex flex-col gap-0">
             <p className="text-lg font-medium">{job.title}</p>
-            <p className="text-background-300 text-sm/[14px] truncate italic">
-              {job.location ?? "Remoto"}
-            </p>
+            {job.location && (
+              <p className="mb-3 text-background-300 text-sm/[14px] truncate italic">
+                {job.location}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Job level and modality tags */}
-        <JobInfoTags
-          level={job.level}
-          modality={job.modality}
-        />
+        <JobInfoTags level={job.level} modality={job.modality} />
 
         {/* Job salary and creation date */}
         <div className="flex flex-row justify-between items-baseline mt-6">
