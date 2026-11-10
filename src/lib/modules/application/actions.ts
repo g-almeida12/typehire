@@ -15,13 +15,15 @@ import {
   applicationWithDetailsInclude,
   mapApplicationEntity,
 } from "@/lib/data/application/entities";
-import { Prisma } from "@/database/generated/client";
+import { ApplicationStatus, Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
 import {
   getCachedApplicationById,
   getCachedJobApplicationStatuses,
 } from "@/lib/data/application/caches";
+
+const STATUSES = Object.values(ApplicationStatus);
 
 export async function createApplicationAction(
   applicationData: ApplicationCreatePayload,
@@ -243,6 +245,41 @@ export async function updateApplicationByIdAction(
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
+    }
+
+    if (applicationData.status) {
+      const application = await prisma.application.findUnique({
+        where: {
+          id: applicationId,
+          OR: [
+            { candidateId: currentUserId },
+            { job: { createdBy: currentUserId } },
+            { job: { company: { createdBy: currentUserId } } },
+          ],
+        },
+        select: { status: true },
+      });
+      if (!application) {
+        throw new AppError("Candidatura não encontrada.", 404);
+      }
+
+      if (application.status === applicationData.status) {
+        throw new AppError(
+          "A candidatura já está nessa etapa.",
+          422,
+          "status",
+        );
+      }
+
+      const oldStatusIdx = STATUSES.indexOf(application.status);
+      const newStatusIdx = STATUSES.indexOf(applicationData.status);
+      if (oldStatusIdx > newStatusIdx && !applicationData.feedback) {
+        throw new AppError(
+          "Informe um feedback para mover a candidatura para uma etapa anterior.",
+          422,
+          "feedback",
+        );
+      }
     }
 
     const updatedApplication = await prisma.application.update({

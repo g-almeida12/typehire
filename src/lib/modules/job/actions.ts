@@ -176,7 +176,6 @@ export async function getJobByIdAction(
       }),
     };
   } catch (err) {
-    console.error(err);
     if (err instanceof AppError) {
       return {
         success: false,

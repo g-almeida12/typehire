@@ -43,6 +43,10 @@ export async function createCompanyAction(
       include: companyWithDetailsInclude,
     });
 
+    for (const user of company.members.map((m) => m.user) ?? []) {
+      updateTag(`user-${user.id}`);
+    }
+
     return { success: true, status: 201, data: mapCompanyEntity(company) };
   } catch (err: any) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -132,15 +136,15 @@ export async function updateCompanyByIdAction(
       }
 
       if (members) {
-          await tx.companyMember.deleteMany({
-            where: {
-              companyId,
-              user: {
-                cpf: { not: null },
-                id: { notIn: newMemberIds, not: currentUserId },
-              },
+        await tx.companyMember.deleteMany({
+          where: {
+            companyId,
+            user: {
+              cpf: { not: null },
+              id: { notIn: newMemberIds, not: currentUserId },
             },
-          });
+          },
+        });
         const count = await tx.user.count({
           where: { id: { in: newMemberIds }, cpf: { not: null } },
         });

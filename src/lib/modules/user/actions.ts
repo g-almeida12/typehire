@@ -207,10 +207,9 @@ export async function updateUserAction(
       throw new AppError("Usuário não encontrado.", 404);
     }
 
-    const { companies, ...data } = newUserData;
     const updatedUser = await prisma.user.update({
       where: { id: currentUserId },
-      data,
+      data: newUserData,
       include: userWithDetailsInclude,
     });
 
