@@ -22,7 +22,8 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
           <EditIcon size={20} aria-hidden="true" /> Atualizar empresa
         </>
       ),
-      onClick: () => router.push(APP_URLS.companyUpdate(companyId)),
+      onClick: () =>
+        startTransition(() => router.push(APP_URLS.companyUpdate(companyId))),
     },
     {
       text: (
@@ -34,7 +35,7 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
     },
   ];
 
-  const handleOptionClick = (confirm: boolean) => {
+  const handleOptionClick = async (confirm: boolean) => {
     if (!confirm) {
       dialogRef.current?.closeModal();
       return;
@@ -45,12 +46,11 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
         const result = await deleteCompanyByIdAction(companyId);
         if (!result.success) throw new Error();
 
-        dialogRef.current?.closeModal();
         showToast("success", "Empresa deletada com sucesso.");
-        router.replace("/");
-      } catch (err) {
-        showToast("error", "Não foi possível deletar a empresa.");
+        startTransition(() => router.replace("/"));
+      } catch (_err) {
         dialogRef.current?.closeModal();
+        showToast("error", "Não foi possível deletar a empresa.");
       }
     });
   };

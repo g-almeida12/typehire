@@ -22,7 +22,8 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
           <EditIcon size={20} aria-hidden="true" /> Atualizar vaga
         </>
       ),
-      onClick: () => router.push(APP_URLS.jobUpdate(jobId)),
+      onClick: () =>
+        startTransition(() => router.push(APP_URLS.jobUpdate(jobId))),
     },
     {
       text: (
@@ -34,7 +35,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
     },
   ];
 
-  const handleOptionClick = (confirm: boolean) => {
+  const handleOptionClick = async (confirm: boolean) => {
     if (!confirm) {
       dialogRef.current?.closeModal();
       return;
@@ -45,9 +46,8 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
         const result = await deleteJobByIdAction(jobId);
         if (!result.success) throw new Error();
 
-        dialogRef.current?.closeModal();
         showToast("success", "Vaga deletada com sucesso.");
-        router.replace("/");
+        startTransition(() => router.replace("/"));
       } catch (err) {
         showToast("error", "Não foi possível deletar a vaga.");
         dialogRef.current?.closeModal();

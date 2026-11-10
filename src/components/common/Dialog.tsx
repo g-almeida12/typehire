@@ -3,6 +3,7 @@
 import {
   DialogHTMLAttributes,
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from "react";
@@ -36,11 +37,20 @@ export const Dialog = forwardRef<DialogRef, DialogProps>(
   ) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
+    useEffect(() => {
+      const dialog = dialogRef.current;
+
+      return () => {
+        dialog?.close();
+        document.body.style.overflow = "";
+      };
+    }, []);
+
     // Expose only the methods to open and close the dialog to the parent component
     useImperativeHandle(ref, () => ({
       closeModal: () => {
         dialogRef.current?.close();
-        document.body.style.overflow = "auto";
+        document.body.style.overflow = "";
       },
       openModal: () => {
         document.body.style.overflow = "hidden";
@@ -52,6 +62,9 @@ export const Dialog = forwardRef<DialogRef, DialogProps>(
       <dialog
         className="relative min-w-82 w-[calc(100%-2rem)] max-w-90 p-2 rounded-md bg-background-700 text-center text-background-100 left-1/2 top-1/2 -translate-1/2"
         ref={dialogRef}
+        onClose={() => {
+          document.body.style.overflow = "";
+        }}
       >
         <h3 className="text-xl font-medium">{title}</h3>
         <hr className="mt-1 mb-2" />
