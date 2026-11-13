@@ -32,12 +32,13 @@ export function ApplicationCreateWrapper({
     startTransition(async () => {
       try {
         const applicationResponse = await createApplicationAction({ jobId });
-        if (!applicationResponse.success) throw Error();
+        if (!applicationResponse.success) throw new Error();
 
         showToast("success", "Candidatura enviada com sucesso.");
         startTransition(() => router.refresh());
       } catch (err) {
         showToast("error", "Não foi possível enviar sua candidatura.");
+      } finally {
         dialogRef.current?.closeModal();
       }
     });
@@ -63,7 +64,7 @@ export function ApplicationCreateWrapper({
               "Candidate-se agora"
             )
           }
-          disabled={userRole === "MEMBER" || userHasApplied}
+          disabled={userRole === "MEMBER" || userHasApplied || isPending}
           onClick={() => dialogRef.current?.openModal()}
         />
       )}

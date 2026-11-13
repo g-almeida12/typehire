@@ -1,7 +1,7 @@
 import { prisma } from "@/database/index";
 
 async function deleteAll() {
-  await prisma.user.deleteMany();
+  await prisma.application.deleteMany();
 }
 deleteAll()
   .catch((err) => {
@@ -12,15 +12,3 @@ deleteAll()
     await prisma.$disconnect();
     process.exit(0);
   });
-
-/*
-main()
-  .catch((err) => {
-    console.error("Error: ", err);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-    process.exit(0);
-  });
-*/

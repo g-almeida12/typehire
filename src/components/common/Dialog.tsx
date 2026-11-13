@@ -38,10 +38,7 @@ export const Dialog = forwardRef<DialogRef, DialogProps>(
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     useEffect(() => {
-      const dialog = dialogRef.current;
-
       return () => {
-        dialog?.close();
         document.body.style.overflow = "";
       };
     }, []);
