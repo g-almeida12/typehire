@@ -9,6 +9,7 @@ import {
   SkeletonText,
 } from "@/components/skeletons";
 import { getCompanyByIdAction } from "@/lib/modules/company";
+import { truncateText } from "@/utils/string";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -87,8 +88,8 @@ export async function generateMetadata(
   }
 
   return {
-    title: `Criar vaga na empresa ${companyResponse.data.name} | TypeHire`,
-    description: "Crie uma nova vaga para sua empresa.",
+    title: `Criar vaga na empresa ${truncateText(companyResponse.data.name, 35)} | TypeHire`,
+    description: `Crie uma nova vaga para sua empresa ${truncateText(companyResponse.data.name, 35)}.`,
   };
 }
 

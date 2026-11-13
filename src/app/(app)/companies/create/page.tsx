@@ -82,5 +82,5 @@ function CompanyFormSectionFallback() {
 }
 
 export const metadata: Metadata = {
-  title: "Criar uma nova empresa | Typehire",
+  title: "Crie uma nova empresa | Typehire",
 };

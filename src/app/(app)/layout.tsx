@@ -5,14 +5,6 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Encontre sua próxima vaga | TypeHire",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
-
 export default async function AppLayout({ children }: LayoutProps<"/">) {
   // Verify if user is registered in database
   const session = await authServer.api.getSession({
@@ -29,3 +21,11 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
 
   return children;
 }
+
+export const metadata: Metadata = {
+  title: "Encontre sua próxima vaga | TypeHire",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};

@@ -11,6 +11,7 @@ import {
   SkeletonUserProfile,
   SkeletonButton,
 } from "@/components/skeletons";
+import { truncateText } from "@/utils/string";
 
 export default async function CompanyUpdatePage(
   props: PageProps<"/companies/[id]/update">,
@@ -120,7 +121,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `Atualizar empresa ${companyResponse.data.name} | TypeHire`,
+    title: `Atualizar empresa ${truncateText(companyResponse.data.name, 35)} | TypeHire`,
     description:
       "Atualize os dados da sua empresa para dar total transparência aos candidatos.",
   };

@@ -10,6 +10,7 @@ import { CompanyJobsSection } from "@/components/company/sections/CompanyJobsSec
 import { CompanyMembersSection } from "@/components/company/sections/CompanyMembersSection";
 import { Suspense } from "react";
 import { SkeletonCompanyContent } from "@/components/skeletons";
+import { truncateText } from "@/utils/string";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
@@ -118,11 +119,10 @@ export async function generateMetadata(
   }
 
   const company = companyResponse.data;
-  const description =
-    company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "");
+  const description = truncateText(company.bio);
 
   return {
-    title: `${company.name} | Vagas e Perfil no TypeHire`,
+    title: `${truncateText(company.name, 35)} | Vagas e Perfil no TypeHire`,
     description,
   };
 }

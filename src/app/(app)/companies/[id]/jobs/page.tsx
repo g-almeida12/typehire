@@ -17,6 +17,7 @@ import {
   SkeletonCompanyProfile,
   SkeletonJobCard,
 } from "@/components/skeletons";
+import { truncateText } from "@/utils/string";
 
 export default async function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
@@ -160,9 +161,8 @@ export async function generateMetadata(
 
   const company = companyResponse.data;
   return {
-    title: `Vagas da ${company.name} | TypeHire`,
-    description:
-      company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : ""),
+    title: `Vagas da ${truncateText(company.name, 35)} | TypeHire`,
+    description: truncateText(company.bio),
   };
 }
 

@@ -12,6 +12,7 @@ import { CandidateListView } from "@/components/user/CandidateListView";
 import { JobInfoTags } from "@/components/job/JobInfoTags";
 import { Suspense } from "react";
 import { SkeletonText, SkeletonCandidateCard } from "@/components/skeletons";
+import { truncateText } from "@/utils/string";
 
 export default async function JobApplicationsPage(
   props: PageProps<"/jobs/[id]/applications">,
@@ -133,8 +134,8 @@ export async function generateMetadata(
   }
 
   return {
-    title: `Suas candidaturas da vaga para ${jobResponse.data.title} | TypeHire`,
-    description: `Veja todas as candidaturas para a sua vaga de ${jobResponse.data.title}, filtre os candidatos e escolha quem melhor se encaixar.`,
+    title: `Suas candidaturas da vaga para ${truncateText(jobResponse.data.title, 35)} | TypeHire`,
+    description: `Veja todas as candidaturas para a sua vaga de ${truncateText(jobResponse.data.title, 35)}, filtre os candidatos e escolha quem melhor se encaixar.`,
   };
 }
 

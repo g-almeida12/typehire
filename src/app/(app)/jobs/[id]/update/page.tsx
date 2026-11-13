@@ -9,6 +9,7 @@ import {
   SkeletonText,
 } from "@/components/skeletons";
 import { getJobByIdAction } from "@/lib/modules/job";
+import { truncateText } from "@/utils/string";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -98,8 +99,8 @@ export async function generateMetadata(
   }
 
   return {
-    title: `Atualizar vaga da empresa ${jobResponse.data.company.name} | TypeHire`,
-    description: "Atualize os dados da vaga da empresa.",
+    title: `Atualizar vaga ${truncateText(jobResponse.data.title, 35)} da empresa ${truncateText(jobResponse.data.company.name, 35)} | TypeHire`,
+    description: `Atualize os dados da vaga de ${truncateText(jobResponse.data.title, 35)} da empresa ${truncateText(jobResponse.data.company.name, 35)}.`,
   };
 }
 

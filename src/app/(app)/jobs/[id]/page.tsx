@@ -14,6 +14,7 @@ import {
   SkeletonSkills,
   SkeletonDescription,
 } from "@/components/skeletons";
+import { truncateText } from "@/utils/string";
 
 export default async function JobPage(props: PageProps<"/jobs/[id]">) {
   return (
@@ -41,7 +42,7 @@ async function JobActionsWrapperContent({
   props,
 }: {
   props: PageProps<"/jobs/[id]">;
-  }) {
+}) {
   const jobId = (await props.params).id;
   const [user, jobResponse] = await Promise.all([
     getCurrentUserData(),
@@ -51,7 +52,10 @@ async function JobActionsWrapperContent({
   // Handle get job request exceptions
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error(`Failed to load job actions wrapper for job ID: ${jobId}`);
+    else
+      throw new Error(
+        `Failed to load job actions wrapper for job ID: ${jobId}`,
+      );
   }
 
   if (jobResponse.data.creator.id !== user!.id) return null;
@@ -73,7 +77,8 @@ async function JobContent({ props }: { props: PageProps<"/jobs/[id]"> }) {
   // Handle get job request exceptions
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error(`Failed to load job page content for job ID: ${jobId}`);
+    else
+      throw new Error(`Failed to load job page content for job ID: ${jobId}`);
   }
 
   const job = jobResponse.data;
@@ -110,10 +115,8 @@ export async function generateMetadata(
 
   const job = jobResponse.data;
   return {
-    title: `${job.title} na ${job.company.name} | TypeHire`,
-    description:
-      job.description.slice(0, 150) +
-      (job.description.length > 150 ? "..." : ""),
+    title: `${truncateText(job.title, 35)} na ${truncateText(job.company.name, 35)} | TypeHire`,
+    description: truncateText(job.description),
   };
 }
 

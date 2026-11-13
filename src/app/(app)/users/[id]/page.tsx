@@ -39,7 +39,10 @@ async function ProfileContent({ userId }: { userId: string }) {
 
   if (!userResult.success) {
     if (userResult.status === 404) notFound();
-    else throw new Error(`Failed to load user content page for user ID: ${userId}`);
+    else
+      throw new Error(
+        `Failed to load user content page for user ID: ${userId}`,
+      );
   }
 
   const user = userResult.data;
@@ -96,5 +99,5 @@ function ProfileContentSkeleton() {
 export const metadata: Metadata = {
   title: "Perfil do usuário | TypeHire",
   description:
-    "Veja suas informações pessoais como nome, email e descrição que serão vistas pelos recrutadores.",
+    "Veja as informações públicas do usuário, como nome, email, habilidades e mais.",
 };
