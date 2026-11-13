@@ -1,8 +1,17 @@
 import { Metadata } from "next";
 import { Navbar } from "@/components/ui/Navbar";
 import { LoginForm } from "@/components/(auth)/LoginForm";
+import { authServer } from "@/lib/auth/auth-server";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { APP_URLS } from "@/utils/constants";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await authServer.api.getSession({
+    headers: await headers(),
+  });
+  if (session?.user) redirect(APP_URLS.home);
+
   return (
     <>
       <Navbar onlyBrand />

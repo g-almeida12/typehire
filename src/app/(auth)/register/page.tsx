@@ -1,13 +1,24 @@
 import { Navbar } from "@/components/ui/Navbar";
 import { Metadata } from "next";
 import { RegisterForm } from "@/components/(auth)/RegisterForm";
+import { authServer } from "@/lib/auth/auth-server";
+import { APP_URLS } from "@/utils/constants";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const session = await authServer.api.getSession({
+    headers: await headers(),
+  });
+  if (session?.user) redirect(APP_URLS.home);
+
   return (
     <>
       <Navbar onlyBrand />
       <main className="pb-4">
-        <h1 className="mt-8 text-2xl font-medium text-center">Crie sua conta</h1>
+        <h1 className="mt-8 text-2xl font-medium text-center">
+          Crie sua conta
+        </h1>
         <p className="text-sm/tight text-background-300 text-center">
           Preencha seus dados pessoais necessários e registre suas informações
           básicas.
