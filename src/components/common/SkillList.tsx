@@ -37,7 +37,7 @@ export function SkillList({ skills, updateMode = undefined }: SkillListProps) {
     </ul>
   ) : (
     <p className="text-sm text-background-300">
-      Que tal tentar adicionar uma nova habilidade?
+      Nenhuma habilidade registrada.
     </p>
   );
 }

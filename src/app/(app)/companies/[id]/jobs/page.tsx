@@ -5,27 +5,55 @@ import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
-import { CreateIcon } from "@/components/icons";
+import { ArrowLeftIcon, CreateIcon } from "@/components/icons";
 import { getCompanyByIdAction } from "@/lib/modules/company";
 import { notFound } from "next/navigation";
 import { InfoTag } from "@/components/common/InfoTag";
 import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import {
+  SkeletonCompanyProfile,
+  SkeletonJobCard,
+} from "@/components/skeletons";
 
 export default async function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
 ) {
-  const [searchParams, params] = await Promise.all([
-    props.searchParams,
-    props.params,
-  ]);
-  const companyId = params.id;
-  const filter = JobURLFilterSchema.parse({...searchParams, companyId});
+  return (
+    <>
+      <Navbar />
+      <main className="pb-4">
+        <section className="mb-12">
+          <Suspense fallback={<CompanyHeaderFallback />}>
+            <CompanyJobsHeader props={props} />
+          </Suspense>
 
-  const [userId, jobsResponse, companyResponse] = await Promise.all([
+          <div className="mt-8">
+            <h1 className="mb-2 text-xl font-medium">Pesquise por vagas</h1>
+            <SearchInput placeholder="Digite o título da vaga" />
+          </div>
+        </section>
+
+        <section>
+          <Suspense fallback={<JobListFallback />}>
+            <JobListContent props={props} />
+          </Suspense>
+        </section>
+      </main>
+    </>
+  );
+}
+
+async function CompanyJobsHeader({
+  props,
+}: {
+  props: PageProps<"/companies/[id]/jobs">;
+}) {
+  const companyId = (await props.params).id;
+  const [userId, companyResponse] = await Promise.all([
     getCurrentUserId(),
-    getJobsAction(filter, 1, 10),
     getCompanyByIdAction(companyId),
   ]);
 
@@ -37,89 +65,113 @@ export default async function CompanyJobsPage(
     }
   }
 
-  const isError = !jobsResponse.success;
-  const jobs = !isError ? jobsResponse.data.jobs : [];
-  const hasMoreJobs = !isError
-    ? jobsResponse.data.pagination.hasNextPage
-    : false;
-
-  const company = companyResponse.data;
-  const companyCreator = company.members.filter(
-    (m) => m.id === company.createdBy,
-  )[0];
   const USER_ROLE =
-    companyCreator.id === userId
+    companyResponse.data.createdBy === userId
       ? "CREATOR"
-      : company.members.map((m) => m.id).includes(userId!)
+      : companyResponse.data.members.map((m) => m.id).includes(userId!)
         ? "MEMBER"
         : "USER";
 
   return (
-    <>
-      <Navbar />
-      <main className="pb-4">
-        <section>
-          <div className="flex flex-row items-center justify-between">
-            <div className="size-6 mt-4">
-              <BackButton />
-            </div>
+    <div className="mt-4">
+      <div className="flex flex-row items-center justify-between">
+        <div className="size-6">
+          <BackButton />
+        </div>
 
-            {USER_ROLE !== "USER" && (
-              <Link
-                href={APP_URLS.jobCreate(companyId)}
-                aria-label="Criar nova vaga"
-                title="Criar nova vaga"
-              >
-                <CreateIcon aria-hidden="true" />
-              </Link>
-            )}
-          </div>
+        {USER_ROLE !== "USER" && (
+          <Link
+            href={APP_URLS.jobCreate(companyId)}
+            aria-label="Criar nova vaga"
+            title="Criar nova vaga"
+          >
+            <CreateIcon aria-hidden="true" />
+          </Link>
+        )}
+      </div>
 
-          <div className="mt-6 mb-12">
-            {USER_ROLE !== "USER" && (
-              <InfoTag
-                label={
-                  USER_ROLE === "CREATOR"
-                    ? "Sua empresa"
-                    : "Você é membro"
-                }
-              />
-            )}
-            <CompanyProfile
-              company={company}
-              type="readonly"
-              showCompanySize={false}
-              visualOnlyWebsiteLink={false}
-            />
+      <div className="mt-6">
+        {USER_ROLE !== "USER" && (
+          <InfoTag
+            label={USER_ROLE === "CREATOR" ? "Sua empresa" : "Você é membro"}
+          />
+        )}
+        <CompanyProfile
+          company={companyResponse.data}
+          type="readonly"
+          showCompanySize={false}
+          visualOnlyWebsiteLink={false}
+        />
+      </div>
+    </div>
+  );
+}
 
-            <div className="mt-8">
-              <h1 className="mb-2 text-xl font-medium">Pesquise por vagas</h1>
-              <SearchInput placeholder="Digite o título da vaga" />
-            </div>
-          </div>
-        </section>
+async function JobListContent({
+  props,
+}: {
+  props: PageProps<"/companies/[id]/jobs">;
+}) {
+  const [params, searchParams] = await Promise.all([
+    props.params,
+    props.searchParams,
+  ]);
+  const filter = JobURLFilterSchema.parse({
+    ...searchParams,
+    companyId: params.id,
+  });
+  const jobResponse = await getJobsAction(filter, 1, 10);
 
-        <section>
-          {isError ? (
-            <div className="flex flex-col items-center justify-center px-4 text-center">
-              <p className="text-background-300 text-lg/[22px]">
-                Não foi possível carregar as vagas no momento.
-              </p>
-              <p className="text-sm text-background-400 mt-2">
-                Tente recarregar a página mais tarde.
-              </p>
-            </div>
-          ) : (
-            <JobListView
-              initialJobs={jobs}
-              initialHasMore={hasMoreJobs}
-              filter={filter}
-              key={JSON.stringify(filter)}
-            />
-          )}
-        </section>
-      </main>
-    </>
+  if (!jobResponse.success) {
+    return (
+        <div className="flex flex-col items-center justify-center px-4 text-center">
+          <p className="text-background-300 text-lg/[22px]">
+            Não foi possível carregar mais vagas.
+          </p>
+          <p className="text-sm text-background-400 mt-2">
+            Tente recarregar a página mais tarde.
+          </p>
+        </div>
+    );
+  }
+
+  return (
+      <JobListView
+        initialJobs={jobResponse.data.jobs}
+        initialHasMore={jobResponse.data.pagination.hasNextPage}
+        filter={filter}
+      />
+  );
+}
+
+function CompanyHeaderFallback() {
+  return (
+    <div className="mt-4">
+      <div className="flex flex-row items-center justify-between mb-6">
+        <div className="size-6">
+          <ArrowLeftIcon
+            size={24}
+            className="animate-pulse"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="size-6">
+          <CreateIcon size={24} className="animate-pulse" aria-hidden="true" />
+        </div>
+      </div>
+
+      <SkeletonCompanyProfile />
+    </div>
+  );
+}
+
+function JobListFallback() {
+  return (
+    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
+      {Array.from({ length: 4 }).map((_, idx) => (
+        <SkeletonJobCard key={`job-${idx}`} />
+      ))}
+    </div>
   );
 }
 
@@ -131,12 +183,13 @@ export async function generateMetadata(
 
   if (!companyResponse.success) {
     if (companyResponse.status === 404) notFound();
-    else throw Error();
+    else throw new Error();
   }
 
   const company = companyResponse.data;
   return {
     title: `Vagas da ${company.name} | TypeHire`,
-    description: company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : "")
+    description:
+      company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : ""),
   };
 }

@@ -7,20 +7,12 @@ import {
 import { ApplicationListView } from "@/components/application/ApplicationListView";
 import { ApplicationFilterDropdown } from "@/components/application/ApplicationFilterDropdown";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { SkeletonApplicationCard } from "@/components/skeletons";
 
 export default async function ApplicationsPage(
   props: PageProps<"/applications">,
 ) {
-  const searchParams = await props.searchParams;
-  const filter = ApplicationURLFilterSchema.parse(searchParams);
-
-  const applicationsResponse = await getApplicationsAction(filter, 1, 10);
-  const isError = !applicationsResponse.success;
-  const applications = !isError ? applicationsResponse.data.applications : [];
-  const hasMoreApplications = !isError
-    ? applicationsResponse.data.pagination.hasNextPage
-    : false;
-
   return (
     <>
       <Navbar />
@@ -40,27 +32,57 @@ export default async function ApplicationsPage(
           </div>
         </section>
 
-        <section>
-          {isError ? (
-            <div className="flex flex-col items-center justify-center px-4 text-center">
-              <p className="text-background-300 text-lg/[22px]">
-                Não foi possível carregar suas candidaturas no momento.
-              </p>
-              <p className="text-sm text-background-400 mt-2">
-                Tente recarregar a página mais tarde.
-              </p>
-            </div>
-          ) : (
-            <ApplicationListView
-              filter={filter}
-              initialApplications={applications}
-              initialHasMore={hasMoreApplications}
-              key={JSON.stringify(searchParams)}
-            />
-          )}
+        <section className="flex flex-col items-center justify-center px-4 text-center">
+          <Suspense fallback={<ApplicationListFallback />}>
+            <ApplicationListContent props={props} />
+          </Suspense>
         </section>
       </main>
     </>
+  );
+}
+
+async function ApplicationListContent({
+  props,
+}: {
+  props: PageProps<"/applications">;
+}) {
+  const searchParams = await props.searchParams;
+  const filter = ApplicationURLFilterSchema.parse(searchParams);
+  const applicationResponse = await getApplicationsAction(filter, 1, 10);
+
+  if (!applicationResponse.success) {
+    return (
+      <>
+        <p className="text-background-300 text-lg/[22px]">
+          Não foi possível carregar suas candidaturas no momento.
+        </p>
+        <p className="text-sm text-background-400 mt-2">
+          Tente recarregar a página mais tarde.
+        </p>
+      </>
+    );
+  }
+
+  return (
+    <ApplicationListView
+      filter={filter}
+      initialApplications={applicationResponse.data.applications}
+      initialHasMore={applicationResponse.data.pagination.hasNextPage}
+    />
+  );
+}
+
+function ApplicationListFallback() {
+  return (
+    <div
+      className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]"
+      aria-busy="true"
+    >
+      {Array.from({ length: 4 }).map((_, idx) => (
+        <SkeletonApplicationCard key={`job-${idx}`} />
+      ))}
+    </div>
   );
 }
 

@@ -10,3 +10,5 @@ export * from './SkeletonSocialMedias';
 export * from './SkeletonApplicationCard';
 export * from './SkeletonSearchInput';
 export * from './SkeletonCandidateCard';
+export * from './SkeletonButton';
+export * from './SkeletonCompanyContent';

@@ -1,22 +1,74 @@
 import { BackButton } from "@/components/common/BackButton";
-import { CompanyProfile } from "@/components/company/CompanyProfile";
-import { JobCard } from "@/components/job/JobCard";
-import { UserProfile } from "@/components/user/UserProfile";
 import { Navbar } from "@/components/ui/Navbar";
-import { ArrowUpRightIcon } from "@/components/icons";
 import { getCompanyByIdAction } from "@/lib/modules/company/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import { Button } from "@/components/common/Button";
-import { APP_URLS } from "@/utils/constants";
 import { CompanyActionsWrapper } from "@/components/company/CompanyActionsWrapper";
-import { InfoTag } from "@/components/common/InfoTag";
-import Link from "next/link";
+import { CompanyHeaderSection } from "@/components/company/sections/CompanyHeaderSection";
+import { CompanyJobsSection } from "@/components/company/sections/CompanyJobsSection";
+import { CompanyMembersSection } from "@/components/company/sections/CompanyMembersSection";
+import { Suspense } from "react";
+import { SkeletonCompanyContent } from "@/components/skeletons";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   const companyId = (await props.params).id;
+
+  return (
+    <>
+      <Navbar />
+      <main className="pb-4">
+        <section className="w-full flex flex-row items-center justify-between mt-4">
+          <div className="size-6">
+            <BackButton />
+          </div>
+          <Suspense fallback={null}>
+            <CompanyActionsWrapperContent companyId={companyId} />
+          </Suspense>
+        </section>
+
+        <Suspense
+          fallback={
+            <div className="mt-4">
+              <SkeletonCompanyContent />
+            </div>
+          }
+        >
+          <CompanyContent companyId={companyId} />
+        </Suspense>
+      </main>
+    </>
+  );
+}
+
+async function CompanyActionsWrapperContent({
+  companyId,
+}: {
+  companyId: string;
+}) {
+  const [user, companyResponse] = await Promise.all([
+    getCurrentUserData(),
+    getCompanyByIdAction(companyId),
+  ]);
+
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) {
+      notFound();
+    } else {
+      throw new Error();
+    }
+  }
+
+  if (user!.id !== companyResponse.data.createdBy) return null;
+
+  return (
+    <div className="size-6">
+      <CompanyActionsWrapper companyId={companyId} />
+    </div>
+  );
+}
+
+async function CompanyContent({ companyId }: { companyId: string }) {
   const [user, companyResponse] = await Promise.all([
     getCurrentUserData(),
     getCompanyByIdAction(companyId),
@@ -31,11 +83,8 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
   }
 
   const company = companyResponse.data;
-  const companyCreator = company.members.filter(
-    (m) => m.id === company.createdBy,
-  )[0];
   const USER_ROLE =
-    companyCreator.id === user!.id
+    company.createdBy === user!.id
       ? "CREATOR"
       : company.members.map((m) => m.id).includes(user!.id)
         ? "MEMBER"
@@ -43,121 +92,13 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
 
   return (
     <>
-      <Navbar />
-      <main className="pb-4">
-        <section className="w-full flex flex-row items-center justify-between mt-4">
-          <div className="size-6">
-            <BackButton />
-          </div>
-          {USER_ROLE === "CREATOR" && (
-            <div className="size-6">
-              <CompanyActionsWrapper companyId={companyId} />
-            </div>
-          )}
-        </section>
-
-        {/* Company info */}
-        <section className="mt-4">
-          {USER_ROLE !== "USER" && (
-            <InfoTag
-              label={
-                USER_ROLE === "CREATOR"
-                  ? "Sua empresa"
-                  : "Você é membro"
-              }
-            />
-          )}
-          <CompanyProfile
-            company={company}
-            type="readonly"
-            visualOnlyWebsiteLink={false}
-          />
-
-          <h2 className="mt-8 mb-4 text-xl font-medium">Sobre a empresa</h2>
-          <div className="space-y-4 leading-relaxed">
-            <ReactMarkdown>{company.bio}</ReactMarkdown>
-          </div>
-        </section>
-
-        {/* Jobs */}
-        <section className="mt-8">
-          <h2 className="mb-4 text-xl font-medium">Vagas abertas no momento</h2>
-
-          <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-            {company.jobs.length === 0 ? (
-              <p className="text-center text-sm text-background-300">
-                {USER_ROLE === "CREATOR"
-                  ? "Que tal postar sua primeira vaga?"
-                  : "Essa empresa não postou nenhuma vaga ainda."}
-              </p>
-            ) : (
-              company.jobs.map((j, idx) => (
-                <li className="not-first:-mt-px" key={`job-${idx}`}>
-                  <JobCard job={{ ...j, company }} />
-                </li>
-              ))
-            )}
-          </ul>
-
-          <div className="flex flex-col gap-2 items-center mt-4">
-            {USER_ROLE !== "USER" && (
-              <Button
-                text="Criar nova vaga"
-                href={APP_URLS.jobCreate(companyId)}
-              />
-            )}
-            <Link
-              href={APP_URLS.companyJobs(company.id)}
-              className="flex flex-row gap-2 items-center justify-center text-center text-accent-100 text-sm"
-            >
-              Ver todas as vagas
-              <ArrowUpRightIcon
-                size={20}
-                className="text-accent-200"
-                aria-hidden="true"
-              />
-            </Link>
-          </div>
-        </section>
-
-        {/* Memberships */}
-        <section className="mt-8">
-          <h2 className="mb-2 text-xl font-medium">
-            {USER_ROLE !== "USER" ? "Sua equipe" : "Nossa equipe"}
-          </h2>
-
-          <h3 className="mb-2 font-medium text-background-300">
-            Criador {USER_ROLE === "CREATOR" && "(você)"}
-          </h3>
-          <UserProfile
-            user={companyCreator}
-            type={USER_ROLE === "CREATOR" ? "readonly" : "link"}
-          />
-
-          <h3 className="mb-2 mt-4 font-medium text-background-300">
-            Membros
-          </h3>
-          <ul className="flex flex-col gap-4">
-            {company.members.length === 1 ? (
-              <p className="text-center text-sm text-background-300">
-                Não há nenhum membro nessa empresa.
-              </p>
-            ) : (
-              company.members
-                .filter((m) => m.id !== company.createdBy)
-                .map((m, idx) => (
-                  <li key={`user-${idx}`}>
-                    <UserProfile
-                      user={m}
-                      type="link"
-                      isCurrentUserProfile={m.id === user!.id}
-                    />
-                  </li>
-                ))
-            )}
-          </ul>
-        </section>
-      </main>
+      <CompanyHeaderSection userRole={USER_ROLE} company={company} />
+      <CompanyJobsSection userRole={USER_ROLE} company={company} />
+      <CompanyMembersSection
+        userRole={USER_ROLE}
+        company={company}
+        currentUserId={user!.id}
+      />
     </>
   );
 }
@@ -170,7 +111,7 @@ export async function generateMetadata(
 
   if (!companyResponse.success) {
     if (companyResponse.status === 404) notFound();
-    else throw Error();
+    else throw new Error();
   }
 
   const company = companyResponse.data;

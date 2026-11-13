@@ -1,11 +1,17 @@
 import { BackButton } from "@/components/common/BackButton";
+import {
+  SkeletonText,
+  SkeletonInput,
+  SkeletonSocialMedias,
+  SkeletonSkills,
+  SkeletonButton
+} from "@/components/skeletons";
 import { ProfileUpdateForm } from "@/components/user/ProfileUpdateForm";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
-export default async function ProfileUpdate() {
-  const user = (await getCurrentUserData())!;
-
+export default function ProfileUpdate() {
   return (
     <main className="pb-4">
       <section>
@@ -18,13 +24,57 @@ export default async function ProfileUpdate() {
         </h1>
       </section>
 
-      <section>
-        <ProfileUpdateForm
-          user={user}
-          key={user.id}
-        />
-      </section>
+      <Suspense fallback={<ProfileFormSectionFallback />}>
+        <ProfileFormSection />
+      </Suspense>
     </main>
+  );
+}
+
+async function ProfileFormSection() {
+  const user = (await getCurrentUserData())!;
+
+  return (
+    <section>
+      <ProfileUpdateForm user={user} key={user.id} />
+    </section>
+  );
+}
+
+function ProfileFormSectionFallback() {
+  return (
+    <div aria-busy="true">
+      <div>
+        <SkeletonText customClassName=" w-60 h-5 mb-6 rounded-md bg-background-200" />
+
+        {/* Inputs */}
+        <div className="flex flex-col gap-4">
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <SkeletonInput variant="input" key={`input-${idx}`} />
+          ))}
+          <SkeletonInput variant="textarea" />
+        </div>
+      </div>
+
+      {/* Social medias */}
+      <div className="mt-8">
+        <SkeletonText customClassName=" w-60 h-5 mb-6 rounded-md bg-background-200" />
+        <SkeletonSocialMedias />
+      </div>
+
+      {/* Skills */}
+      <div className="mt-8">
+        <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
+        <SkeletonInput variant="input" />
+        <div className="mt-4">
+          <SkeletonSkills />
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <SkeletonButton />
+      </div>
+    </div>
   );
 }
 
