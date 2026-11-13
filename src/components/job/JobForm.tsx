@@ -23,7 +23,7 @@ import { JobTypeDropdown } from "./JobTypeDropdown";
 import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 
 interface JobFormProps {
   companyId?: string;
@@ -37,7 +37,6 @@ export function JobForm({ job, companyId }: JobFormProps) {
     setValue,
     handleSubmit,
     register,
-    reset,
     control,
   } = useForm<JobClientCreatePayload | JobUpdatePayload>({
     defaultValues: job ?? {
@@ -64,19 +63,6 @@ export function JobForm({ job, companyId }: JobFormProps) {
         : "hourly"
     : undefined;
   const isBusy = isSubmitting || isRedirecting;
-
-  // Cleanup on dismount
-  useEffect(() => {
-    return () =>
-      reset({
-        title: "",
-        description: "",
-        modality: "REMOTE",
-        type: "FULL_TIME",
-        level: "INTERN",
-        skills: [],
-      });
-  }, []);
 
   const handleButtonClick = async (
     data: JobClientCreatePayload | JobUpdatePayload,

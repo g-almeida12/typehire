@@ -8,7 +8,7 @@ import {
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../common/Input";
 import { KeyRoundIcon, MailIcon } from "@/components/icons";
@@ -22,7 +22,6 @@ export function LoginForm() {
     handleSubmit,
     setError,
     register,
-    reset,
   } = useForm<UserLoginPayload>({
     defaultValues: {
       email: "",
@@ -33,15 +32,6 @@ export function LoginForm() {
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
-
-  // Cleanup on dismount
-  useEffect(() => {
-    return () =>
-      reset({
-        email: "",
-        password: "",
-      });
-  }, []);
 
   const handleSignInByEmail = async (data: UserLoginPayload) => {
     try {

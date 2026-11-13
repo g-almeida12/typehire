@@ -8,7 +8,7 @@ import {
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import Link from "next/link";
@@ -27,7 +27,6 @@ export function RegisterForm() {
     handleSubmit,
     setError,
     register,
-    reset,
   } = useForm<UserRegisterPayload>({
     defaultValues: {
       email: "",
@@ -42,18 +41,6 @@ export function RegisterForm() {
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
-
-  useEffect(() => {
-    return () =>
-      reset({
-        email: "",
-        name: "",
-        cpf: "",
-        agreeToTerms: false,
-        image: null,
-        password: "",
-      });
-  }, []);
 
   const handleSignUpByEmail = async (data: UserRegisterPayload) => {
     try {
