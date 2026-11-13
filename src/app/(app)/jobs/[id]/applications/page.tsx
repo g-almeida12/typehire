@@ -52,7 +52,7 @@ async function JobHeader({
   const jobResponse = await getJobByIdAction(jobId);
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else throw new Error(`Failed to load header for job ID: ${jobId}`);
   }
 
   return (
@@ -88,7 +88,9 @@ async function JobApplicationListContent({
     ]);
   if (jobResponse.status === 404) notFound();
   if (!jobResponse.success || !jobApplcStatusesResponse.success)
-    throw new Error();
+    throw new Error(
+      `Failed to load job or job application status for job ID: ${params.id}`,
+    );
 
   return (
     <>
@@ -127,7 +129,7 @@ export async function generateMetadata(
 
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw Error();
+    else throw new Error(`Failed to generate metadata for job ID: ${jobId}`);
   }
 
   return {

@@ -58,11 +58,11 @@ async function CompanyJobsHeader({
   ]);
 
   if (!companyResponse.success) {
-    if (companyResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to load company jobs header for company ID: ${companyId}`,
+      );
   }
 
   const USER_ROLE =
@@ -124,24 +124,46 @@ async function JobListContent({
 
   if (!jobResponse.success) {
     return (
-        <div className="flex flex-col items-center justify-center px-4 text-center">
-          <p className="text-background-300 text-lg/[22px]">
-            Não foi possível carregar mais vagas.
-          </p>
-          <p className="text-sm text-background-400 mt-2">
-            Tente recarregar a página mais tarde.
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center px-4 text-center">
+        <p className="text-background-300 text-lg/[22px]">
+          Não foi possível carregar mais vagas.
+        </p>
+        <p className="text-sm text-background-400 mt-2">
+          Tente recarregar a página mais tarde.
+        </p>
+      </div>
     );
   }
 
   return (
-      <JobListView
-        initialJobs={jobResponse.data.jobs}
-        initialHasMore={jobResponse.data.pagination.hasNextPage}
-        filter={filter}
-      />
+    <JobListView
+      initialJobs={jobResponse.data.jobs}
+      initialHasMore={jobResponse.data.pagination.hasNextPage}
+      filter={filter}
+    />
   );
+}
+
+export async function generateMetadata(
+  props: PageProps<"/companies/[id]/jobs">,
+): Promise<Metadata> {
+  const companyId = (await props.params).id;
+  const companyResponse = await getCompanyByIdAction(companyId);
+
+  if (!companyResponse.success) {
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to generate metadata for company ID: ${companyId}`,
+      );
+  }
+
+  const company = companyResponse.data;
+  return {
+    title: `Vagas da ${company.name} | TypeHire`,
+    description:
+      company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : ""),
+  };
 }
 
 function CompanyHeaderFallback() {
@@ -173,23 +195,4 @@ function JobListFallback() {
       ))}
     </div>
   );
-}
-
-export async function generateMetadata(
-  props: PageProps<"/companies/[id]/jobs">,
-): Promise<Metadata> {
-  const companyId = (await props.params).id;
-  const companyResponse = await getCompanyByIdAction(companyId);
-
-  if (!companyResponse.success) {
-    if (companyResponse.status === 404) notFound();
-    else throw new Error();
-  }
-
-  const company = companyResponse.data;
-  return {
-    title: `Vagas da ${company.name} | TypeHire`,
-    description:
-      company.bio.slice(0, 150) + (company.bio.length > 150 ? "..." : ""),
-  };
 }

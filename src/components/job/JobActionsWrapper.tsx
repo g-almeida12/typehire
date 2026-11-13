@@ -48,7 +48,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
 
         showToast("success", "Vaga deletada com sucesso.");
         startTransition(() => router.replace("/"));
-      } catch (err) {
+      } catch (_err) {
         showToast("error", "Não foi possível deletar a vaga.");
         dialogRef.current?.closeModal();
       }

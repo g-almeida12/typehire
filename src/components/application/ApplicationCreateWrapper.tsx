@@ -36,7 +36,7 @@ export function ApplicationCreateWrapper({
 
         showToast("success", "Candidatura enviada com sucesso.");
         startTransition(() => router.refresh());
-      } catch (err) {
+      } catch (_err) {
         showToast("error", "Não foi possível enviar sua candidatura.");
       } finally {
         dialogRef.current?.closeModal();

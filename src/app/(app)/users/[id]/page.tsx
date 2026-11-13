@@ -38,11 +38,8 @@ async function ProfileContent({ userId }: { userId: string }) {
   const userResult = await getUserByIdAction(userId);
 
   if (!userResult.success) {
-    if (userResult.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (userResult.status === 404) notFound();
+    else throw new Error(`Failed to load user content page for user ID: ${userId}`);
   }
 
   const user = userResult.data;

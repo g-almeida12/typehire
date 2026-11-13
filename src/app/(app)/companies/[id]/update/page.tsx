@@ -48,11 +48,11 @@ async function CompanyFormContent({
   ]);
 
   if (!companyResponse.success) {
-    if (companyResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to load form content for company ID: ${companyId}`,
+      );
   }
 
   return (
@@ -113,7 +113,10 @@ export async function generateMetadata(
 
   if (!companyResponse.success) {
     if (companyResponse.status === 404) notFound();
-    else throw Error();
+    else
+      throw new Error(
+        `Failed to generate metadata for company ID: ${companyId}`,
+      );
   }
 
   return {

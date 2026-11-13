@@ -52,7 +52,8 @@ async function CompanyHeader({
   const jobResponse = await getJobByIdAction(jobId);
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else
+      throw new Error(`Failed to load job company header for job ID: ${jobId}`);
   }
 
   return (
@@ -73,7 +74,7 @@ async function JobFormContent({
   const jobResponse = await getJobByIdAction(jobId);
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else throw new Error(`Failed to load form for job ID: ${jobId}`);
   }
 
   return (
@@ -93,7 +94,7 @@ export async function generateMetadata(
 
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else throw new Error(`Failed to generate metadata for job ID: ${jobId}`);
   }
 
   return {

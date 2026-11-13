@@ -23,7 +23,7 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
 
         <div className="my-8">
           <Suspense fallback={<SkeletonCompanyProfile />}>
-            <JobCompanyHeader props={props} />
+            <CompanyHeader props={props} />
           </Suspense>
         </div>
 
@@ -45,20 +45,16 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
   );
 }
 
-async function JobCompanyHeader({
-  props,
-}: {
-  props: PageProps<"/jobs/create">;
-}) {
+async function CompanyHeader({ props }: { props: PageProps<"/jobs/create"> }) {
   const companyId = (await props.searchParams).companyId as string;
   const companyResponse = await getCompanyByIdAction(companyId);
 
   if (!companyResponse.success) {
-    if (companyResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to load company header for company ID: ${companyId}`,
+      );
   }
 
   return (
@@ -84,7 +80,10 @@ export async function generateMetadata(
 
   if (!companyResponse.success) {
     if (companyResponse.status === 404) notFound();
-    else throw Error();
+    else
+      throw new Error(
+        `Failed to generate metadata for company ID: ${companyId}`,
+      );
   }
 
   return {

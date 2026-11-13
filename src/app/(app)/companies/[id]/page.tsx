@@ -52,11 +52,11 @@ async function CompanyActionsWrapperContent({
   ]);
 
   if (!companyResponse.success) {
-    if (companyResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to load company actions for company ID: ${companyId}`,
+      );
   }
 
   if (user!.id !== companyResponse.data.createdBy) return null;
@@ -75,11 +75,11 @@ async function CompanyContent({ companyId }: { companyId: string }) {
   ]);
 
   if (!companyResponse.success) {
-    if (companyResponse.status === 404) {
-      notFound();
-    } else {
-      throw new Error();
-    }
+    if (companyResponse.status === 404) notFound();
+    else
+      throw new Error(
+        `Failed to load company page content for company ID: ${companyId}`,
+      );
   }
 
   const company = companyResponse.data;
@@ -111,7 +111,10 @@ export async function generateMetadata(
 
   if (!companyResponse.success) {
     if (companyResponse.status === 404) notFound();
-    else throw new Error();
+    else
+      throw new Error(
+        `Failed to generate metadata for company ID: ${companyId}`,
+      );
   }
 
   const company = companyResponse.data;

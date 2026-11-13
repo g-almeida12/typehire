@@ -51,7 +51,7 @@ async function JobActionsWrapperContent({
   // Handle get job request exceptions
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else throw new Error(`Failed to load job actions wrapper for job ID: ${jobId}`);
   }
 
   if (jobResponse.data.creator.id !== user!.id) return null;
@@ -73,7 +73,7 @@ async function JobContent({ props }: { props: PageProps<"/jobs/[id]"> }) {
   // Handle get job request exceptions
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw new Error();
+    else throw new Error(`Failed to load job page content for job ID: ${jobId}`);
   }
 
   const job = jobResponse.data;
@@ -105,7 +105,7 @@ export async function generateMetadata(
 
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
-    else throw Error();
+    else throw new Error(`Failed to generate metadata for job ID: ${jobId}`);
   }
 
   const job = jobResponse.data;
