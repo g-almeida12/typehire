@@ -24,7 +24,7 @@ export function ApplicationStatusTag({ status }: ApplicationStatusTagProps) {
       tagColors = { bg: "#FF4D4D30", text: "#FF4D4D" };
       break;
     default:
-      tagColors = { bg: "#ECECEC30", text: "#ECECEC" };
+      tagColors = { bg: "#ECECEC30", text: "#1C1C1C" };
   }
 
   return (

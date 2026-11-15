@@ -22,6 +22,8 @@ import {
   getCachedApplicationById,
   getCachedJobApplicationStatuses,
 } from "@/lib/data/application/caches";
+import { after } from "next/server";
+import { sendApplicationUpdateEmail } from "@/lib/email/emails";
 
 const STATUSES = Object.values(ApplicationStatus);
 
@@ -247,6 +249,7 @@ export async function updateApplicationByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
+    let oldStatus: ApplicationStatus | undefined = undefined;
     if (applicationData.status) {
       const application = await prisma.application.findUnique({
         where: {
@@ -264,13 +267,10 @@ export async function updateApplicationByIdAction(
       }
 
       if (application.status === applicationData.status) {
-        throw new AppError(
-          "A candidatura já está nessa etapa.",
-          422,
-          "status",
-        );
+        throw new AppError("A candidatura já está nessa etapa.", 422, "status");
       }
 
+      oldStatus = application.status;
       const oldStatusIdx = STATUSES.indexOf(application.status);
       const newStatusIdx = STATUSES.indexOf(applicationData.status);
       if (oldStatusIdx > newStatusIdx && !applicationData.feedback) {
@@ -297,6 +297,32 @@ export async function updateApplicationByIdAction(
 
     updateTag(`application-${applicationId}`);
     updateTag(`job-application-statuses-${updatedApplication.jobId}`);
+
+    const statusHasChanged =
+      applicationData.status &&
+      oldStatus &&
+      applicationData.status !== oldStatus;
+
+    if (statusHasChanged) {
+      after(async () => {
+        const candidate = updatedApplication.candidate;
+        const job = updatedApplication.job;
+        const sendTo =
+          process.env.NODE_ENV === "production"
+            ? candidate.email
+            : (process.env.RESEND_EMAIL ?? "");
+
+        await sendApplicationUpdateEmail({
+          to: sendTo,
+          userName: candidate.name,
+          jobTitle: job.title,
+          companyName: job.company.name,
+          oldStatus: oldStatus!,
+          newStatus: applicationData.status,
+          feedback: applicationData.feedback ?? "",
+        });
+      });
+    }
 
     return {
       success: true,
