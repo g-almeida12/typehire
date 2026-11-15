@@ -37,6 +37,12 @@ export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
 
 export const UserCompleteProfileSchema = z.object({
   cpf: CpfSchema,
+  agreeToTerms: z
+    .boolean()
+    .refine(
+      (val) => val === true,
+      "Você deve concordar com os termos e condições.",
+    ),
 });
 export type UserCompleteProfilePayload = z.infer<
   typeof UserCompleteProfileSchema

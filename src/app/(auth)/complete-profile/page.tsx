@@ -16,10 +16,10 @@ export default async function CompleteProfilePage() {
     <>
       <Navbar onlyBrand />
       <main className="pt-10">
-        <h1 className="mt-8 text-2xl font-medium">
+        <h1 className="mt-8 text-2xl font-medium text-center">
           Termine de criar sua conta
         </h1>
-        <p className="text-sm/tight text-background-300">
+        <p className="text-sm/tight text-background-300 text-center">
           Apenas insira o seu CPF e já pode ir na busca de novas vagas.
         </p>
 
