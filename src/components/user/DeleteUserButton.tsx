@@ -15,7 +15,7 @@ export function DeleteUserButton() {
       const result = await deleteUserAction();
       if (!result.success) throw new Error();
 
-      router.replace(APP_URLS.register);
+      router.replace(APP_URLS.REGISTER);
     } catch (_err) {
       showToast("error", "Não foi possível deletar sua conta.");
     }

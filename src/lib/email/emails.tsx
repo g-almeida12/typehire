@@ -3,15 +3,16 @@ import nodemailer from "nodemailer";
 import CandidateStatusEmail from "./templates/CandidateStatusEmail";
 import AccountVerificationEmail from "./templates/AccountVerificationEmail";
 import { render } from "react-email";
+import { ENV } from "@/utils/env/env.server";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.NODEMAILER_EMAIL,
-    pass: process.env.NODEMAILER_APP_PASSWORD,
+    user: ENV.NODEMAILER_EMAIL,
+    pass: ENV.NODEMAILER_APP_PASSWORD,
   },
 });
-const EMAIL_FROM = `TypeHire <no-reply@${process.env.NODEMAILER_EMAIL}>`;
+const EMAIL_FROM = `TypeHire <no-reply@${ENV.NODEMAILER_EMAIL}>`;
 
 export async function sendEmail({
   from,

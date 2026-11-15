@@ -48,8 +48,8 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
     try {
       await updateUserAction(data);
 
-      startTransition(() => router.replace(APP_URLS.profile));
-    } catch (err) {
+      startTransition(() => router.replace(APP_URLS.PROFILE));
+    } catch (_err) {
       setError("root", { message: "Não foi possível atualizar seus dados." });
     }
   };

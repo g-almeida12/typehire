@@ -78,7 +78,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
         if (!updateResponse.success) throw new Error();
 
         startTransition(() =>
-          router.replace(APP_URLS.job(updateResponse.data.id)),
+          router.replace(APP_URLS.JOB(updateResponse.data.id)),
         );
       }
       // Create action
@@ -90,7 +90,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
         if (!createResponse.success) throw new Error();
 
         startTransition(() =>
-          router.replace(APP_URLS.job(createResponse.data.id)),
+          router.replace(APP_URLS.JOB(createResponse.data.id)),
         );
       }
     } catch (_err) {

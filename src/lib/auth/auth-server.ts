@@ -1,13 +1,14 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "../../database/index";
+import { prisma } from "@/database";
 import { after } from "next/server";
-import { sendAccountVerificationEmail } from "../email/emails";
+import { sendAccountVerificationEmail } from "@/lib/email/emails";
+import { ENV } from "@/utils/env/env.server";
 
 export const authServer = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret: ENV.BETTER_AUTH_SECRET,
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -30,8 +31,8 @@ export const authServer = betterAuth({
   plugins: [nextCookies()],
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: ENV.GOOGLE_CLIENT_ID!,
+      clientSecret: ENV.GOOGLE_CLIENT_SECRET!,
     },
   },
   user: {

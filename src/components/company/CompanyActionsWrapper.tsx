@@ -23,7 +23,7 @@ export function CompanyActionsWrapper({ companyId }: { companyId: string }) {
         </>
       ),
       onClick: () =>
-        startTransition(() => router.push(APP_URLS.companyUpdate(companyId))),
+        startTransition(() => router.push(APP_URLS.COMPANY_UPDATE(companyId))),
     },
     {
       text: (

@@ -307,13 +307,9 @@ export async function updateApplicationByIdAction(
       after(async () => {
         const candidate = updatedApplication.candidate;
         const job = updatedApplication.job;
-        const sendTo =
-          process.env.NODE_ENV === "production"
-            ? candidate.email
-            : (process.env.RESEND_EMAIL ?? "");
 
         await sendApplicationUpdateEmail({
-          to: sendTo,
+          to: candidate.email,
           userName: candidate.name,
           jobTitle: job.title,
           companyName: job.company.name,

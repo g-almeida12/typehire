@@ -17,17 +17,17 @@ export function Navbar({ onlyBrand = false }: NavbarProps) {
       </div>
       {!onlyBrand && (
         <div className="flex flex-row gap-6">
-          <Link href={APP_URLS.home} aria-label="Ir para página inicial">
+          <Link href={APP_URLS.HOME} aria-label="Ir para página inicial">
             <SearchIcon size={24} aria-hidden={true} />
           </Link>
           <Link
-            href={APP_URLS.applications}
+            href={APP_URLS.APPLICATIONS}
             aria-label="Ir para página de aplicações"
           >
             <LayersIcon size={24} aria-hidden={true} />
           </Link>
           <Link
-            href={APP_URLS.profile}
+            href={APP_URLS.PROFILE}
             aria-label="Acessar informações do usuário"
           >
             <UserCircleIcon size={24} aria-hidden={true} />

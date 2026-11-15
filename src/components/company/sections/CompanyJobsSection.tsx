@@ -36,11 +36,14 @@ export function CompanyJobsSection({
 
       <div className="flex flex-col gap-2 items-center mt-4">
         {userRole !== "USER" && (
-          <Button text="Criar nova vaga" href={APP_URLS.jobCreate(company.id)} />
+          <Button
+            text="Criar nova vaga"
+            href={APP_URLS.JOB_CREATE(company.id)}
+          />
         )}
 
         <Link
-          href={APP_URLS.companyJobs(company.id)}
+          href={APP_URLS.COMPANY_JOBS(company.id)}
           className="flex flex-row gap-2 items-center justify-center text-center text-accent-100 text-sm"
         >
           Ver todas as vagas

@@ -10,7 +10,7 @@ export default async function CompleteProfilePage() {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) redirect(APP_URLS.register);
+  if (!session?.user) redirect(APP_URLS.REGISTER);
 
   return (
     <>

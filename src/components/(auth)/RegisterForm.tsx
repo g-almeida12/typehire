@@ -55,7 +55,7 @@ export function RegisterForm() {
       }
 
       startTransition(() =>
-        router.replace(APP_URLS.emailVerification(data.email)),
+        router.replace(APP_URLS.EMAIL_VERIFICATION(data.email)),
       );
     } catch (_err) {
       setError("root", {
@@ -131,14 +131,14 @@ export function RegisterForm() {
               >
                 Concordo que li e aceito os{" "}
                 <Link
-                  href={APP_URLS.conditions}
+                  href={APP_URLS.CONDITIONS}
                   className="font-medium text-accent-100 cursor-pointer"
                 >
                   Termos de Condições
                 </Link>{" "}
                 e a{" "}
                 <Link
-                  href={APP_URLS.privacy}
+                  href={APP_URLS.PRIVACY}
                   className="font-medium text-accent-100 cursor-pointer"
                 >
                   Política de Privacidade
@@ -170,7 +170,7 @@ export function RegisterForm() {
 
       <div className="mt-12">
         <GoogleOAuthButton
-          callbackURL={APP_URLS.authCallback}
+          callbackURL={APP_URLS.AUTH_CALLBACK}
           disabled={isBusy}
         />
       </div>
@@ -178,7 +178,7 @@ export function RegisterForm() {
       <p className="mt-17 text-sm text-background-300 text-center">
         Já possui uma conta? Então{" "}
         <Link
-          href={APP_URLS.login}
+          href={APP_URLS.LOGIN}
           className="text-accent-100 font-medium"
           type="button"
         >

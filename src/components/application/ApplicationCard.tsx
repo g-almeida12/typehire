@@ -12,7 +12,7 @@ export function ApplicationCard({
   application: ApplicationResponsePayload;
 }) {
   return (
-    <Link href={APP_URLS.job(application.jobId)} prefetch={false}>
+    <Link href={APP_URLS.JOB(application.jobId)} prefetch={false}>
       <div className="px-4 py-4 border-y border-y-background-700">
         <div className="mb-2">
           <ApplicationStatusTag status={application.status} />
@@ -35,7 +35,10 @@ export function ApplicationCard({
         </div>
 
         {/* Job level and modality tags */}
-        <JobInfoTags level={application.job.level} modality={application.job.modality} />
+        <JobInfoTags
+          level={application.job.level}
+          modality={application.job.modality}
+        />
 
         {/* Job salary and creation date */}
         <div className="flex flex-row justify-between items-baseline mt-6">

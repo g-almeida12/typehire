@@ -12,10 +12,10 @@ export default async function EmailVerificationPage(
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user?.emailVerified) redirect(APP_URLS.home);
+  if (session?.user?.emailVerified) redirect(APP_URLS.HOME);
 
   const rawEmail = (await props.searchParams).email;
-  if (!rawEmail) redirect(APP_URLS.register);
+  if (!rawEmail) redirect(APP_URLS.REGISTER);
 
   const email = Array.isArray(rawEmail) ? rawEmail[0] : rawEmail;
   return (

@@ -13,8 +13,6 @@ import { SkeletonCompanyContent } from "@/components/skeletons";
 import { truncateText } from "@/utils/string";
 
 export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
-  const companyId = (await props.params).id;
-
   return (
     <>
       <Navbar />
@@ -24,7 +22,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
             <BackButton />
           </div>
           <Suspense fallback={null}>
-            <CompanyActionsWrapperContent companyId={companyId} />
+            <CompanyActionsWrapperContent props={props} />
           </Suspense>
         </section>
 
@@ -35,7 +33,7 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
             </div>
           }
         >
-          <CompanyContent companyId={companyId} />
+          <CompanyContent props={props} />
         </Suspense>
       </main>
     </>
@@ -43,10 +41,11 @@ export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
 }
 
 async function CompanyActionsWrapperContent({
-  companyId,
+  props,
 }: {
-  companyId: string;
+  props: PageProps<"/companies/[id]">;
 }) {
+  const companyId = (await props.params).id;
   const [user, companyResponse] = await Promise.all([
     getCurrentUserData(),
     getCompanyByIdAction(companyId),
@@ -69,7 +68,12 @@ async function CompanyActionsWrapperContent({
   );
 }
 
-async function CompanyContent({ companyId }: { companyId: string }) {
+async function CompanyContent({
+  props,
+}: {
+  props: PageProps<"/companies/[id]">;
+}) {
+  const companyId = (await props.params).id;
   const [user, companyResponse] = await Promise.all([
     getCurrentUserData(),
     getCompanyByIdAction(companyId),

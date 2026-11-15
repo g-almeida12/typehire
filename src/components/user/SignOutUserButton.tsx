@@ -15,7 +15,7 @@ export function SignOutUserButton() {
       const result = await signOutAction();
       if (!result.success) throw new Error();
 
-      router.replace(APP_URLS.login);
+      router.replace(APP_URLS.LOGIN);
     } catch (_err) {
       showToast("error", "Não foi possível desconectar sua conta.");
     }

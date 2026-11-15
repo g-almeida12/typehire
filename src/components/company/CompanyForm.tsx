@@ -73,7 +73,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
         }
 
         startTransition(() =>
-          router.replace(APP_URLS.company(updateResponse.data.id)),
+          router.replace(APP_URLS.COMPANY(updateResponse.data.id)),
         );
       }
       // Create action
@@ -94,7 +94,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
         }
 
         startTransition(() =>
-          router.replace(APP_URLS.company(createResponse.data.id)),
+          router.replace(APP_URLS.COMPANY(createResponse.data.id)),
         );
       }
     } catch (err) {

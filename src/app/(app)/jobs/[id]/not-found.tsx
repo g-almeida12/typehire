@@ -28,14 +28,14 @@ export default function JobNotFoundPage() {
             A vaga selecionada não foi encontrada.
           </h1>
           <p className="mt-2 mb-10 text-background-300 text-sm leading-relaxed">
-            Esta vaga pode ter sido descontinuada pelo criador, não existir
-            em nossa base de dados ou o link acessado conter um identificador
+            Esta vaga pode ter sido descontinuada pelo criador, não existir em
+            nossa base de dados ou o link acessado conter um identificador
             inválido.
           </p>
 
           <Button
             text="Voltar para o início"
-            onClick={() => router.replace(APP_URLS.home)}
+            onClick={() => router.replace(APP_URLS.HOME)}
           />
         </div>
       </main>

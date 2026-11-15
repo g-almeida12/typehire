@@ -19,7 +19,7 @@ export function ResendEmailVerificationButton({
     startTransition(async () => {
       const { error } = await authClient.sendVerificationEmail({
         email,
-        callbackURL: APP_URLS.home,
+        callbackURL: APP_URLS.HOME,
       });
 
       if (error) {

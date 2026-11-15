@@ -46,7 +46,7 @@ export async function signUpByEmailAction(
             await authServer.api.sendVerificationEmail({
               body: {
                 email: existingUser.email,
-                callbackURL: APP_URLS.home,
+                callbackURL: APP_URLS.HOME,
               },
             }),
         );
@@ -77,7 +77,7 @@ export async function signUpByEmailAction(
         email: userData.email,
         name: userData.name,
         password: userData.password,
-        callbackURL: APP_URLS.home,
+        callbackURL: APP_URLS.HOME,
         cpf: userData.cpf,
         agreeToTerms: userData.agreeToTerms,
       },

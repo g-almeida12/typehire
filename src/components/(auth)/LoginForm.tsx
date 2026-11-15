@@ -50,7 +50,7 @@ export function LoginForm() {
             "Email não verificado. Por favor, verifique seu email para acessar sua conta.",
           );
           startTransition(() =>
-            router.replace(APP_URLS.emailVerification(data.email)),
+            router.replace(APP_URLS.EMAIL_VERIFICATION(data.email)),
           );
           return;
         }
@@ -58,7 +58,7 @@ export function LoginForm() {
         throw new Error();
       }
 
-      startTransition(() => router.replace(APP_URLS.home));
+      startTransition(() => router.replace(APP_URLS.HOME));
     } catch (_err) {
       setError("root", {
         message: "Desculpe, mas não foi possível conectar na sua conta.",
@@ -116,7 +116,7 @@ export function LoginForm() {
 
       <div className="mt-12">
         <GoogleOAuthButton
-          callbackURL={APP_URLS.authCallback}
+          callbackURL={APP_URLS.AUTH_CALLBACK}
           disabled={isBusy}
         />
       </div>
@@ -124,7 +124,7 @@ export function LoginForm() {
       <p className="mt-17 text-sm text-background-300 text-center">
         Ainda não possui uma conta no TypeHire? Então{" "}
         <Link
-          href={APP_URLS.register}
+          href={APP_URLS.REGISTER}
           className="text-accent-100 font-medium"
           type="button"
         >

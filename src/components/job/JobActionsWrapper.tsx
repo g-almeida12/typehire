@@ -23,7 +23,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
         </>
       ),
       onClick: () =>
-        startTransition(() => router.push(APP_URLS.jobUpdate(jobId))),
+        startTransition(() => router.push(APP_URLS.JOB_UPDATE(jobId))),
     },
     {
       text: (

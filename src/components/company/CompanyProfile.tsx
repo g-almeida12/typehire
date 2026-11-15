@@ -86,7 +86,7 @@ export function CompanyProfile({
       {/* Action buttons */}
       {type === "edit" ? (
         <Link
-          href={APP_URLS.companyUpdate(company.id)}
+          href={APP_URLS.COMPANY_UPDATE(company.id)}
           className="shrink-0 mt-1"
           aria-label="Editar dados da empresa"
         >
@@ -99,7 +99,7 @@ export function CompanyProfile({
       ) : (
         type === "link" && (
           <Link
-            href={APP_URLS.company(company.id)}
+            href={APP_URLS.COMPANY(company.id)}
             className="shrink-0 mt-1"
             aria-label="Ver dados da empresa"
           >

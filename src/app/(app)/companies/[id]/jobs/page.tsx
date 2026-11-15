@@ -82,7 +82,7 @@ async function CompanyJobsHeader({
 
         {USER_ROLE !== "USER" && (
           <Link
-            href={APP_URLS.jobCreate(companyId)}
+            href={APP_URLS.JOB_CREATE(companyId)}
             aria-label="Criar nova vaga"
             title="Criar nova vaga"
           >

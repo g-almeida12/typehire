@@ -27,7 +27,7 @@ export function JobCard({
   };
 }) {
   return (
-    <Link href={APP_URLS.job(job.id)} prefetch={false}>
+    <Link href={APP_URLS.JOB(job.id)} prefetch={false}>
       <div className="px-4 py-4 border-y border-y-background-700">
         {/* Job and company profile */}
         <div className="flex flex-col gap-2">

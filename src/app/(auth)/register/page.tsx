@@ -10,7 +10,7 @@ export default async function RegisterPage() {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user) redirect(APP_URLS.home);
+  if (session?.user) redirect(APP_URLS.HOME);
 
   return (
     <>

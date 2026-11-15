@@ -55,7 +55,7 @@ export function UserProfile({
       {/* Action buttons */}
       {type === "edit" ? (
         <Link
-          href={APP_URLS.profileUpdate}
+          href={APP_URLS.PROFILE_UPDATE}
           className="shrink-0 mt-1"
           aria-label="Editar informações do perfil"
         >
@@ -68,7 +68,7 @@ export function UserProfile({
       ) : (
         type === "link" && (
           <Link
-            href={APP_URLS.user(user.id)}
+            href={APP_URLS.USER(user.id)}
             className="shrink-0 mt-1"
             aria-label="Ver informações do usuário"
           >

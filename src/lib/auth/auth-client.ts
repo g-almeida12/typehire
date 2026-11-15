@@ -1,5 +1,6 @@
+import { ENV_CLIENT } from "@/utils/env/env.client";
 import { createAuthClient } from "better-auth/client";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: ENV_CLIENT.NEXT_PUBLIC_BASE_URL,
 });

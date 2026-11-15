@@ -50,7 +50,7 @@ export function CompleteProfileForm() {
         throw new Error();
       }
 
-      startTransition(() => router.replace(APP_URLS.home));
+      startTransition(() => router.replace(APP_URLS.HOME));
     } catch (_err) {
       setError("root", {
         message:
@@ -97,14 +97,14 @@ export function CompleteProfileForm() {
               >
                 Concordo que li e aceito os{" "}
                 <Link
-                  href={APP_URLS.conditions}
+                  href={APP_URLS.CONDITIONS}
                   className="font-medium text-accent-100 cursor-pointer"
                 >
                   Termos de Condições
                 </Link>{" "}
                 e a{" "}
                 <Link
-                  href={APP_URLS.privacy}
+                  href={APP_URLS.PRIVACY}
                   className="font-medium text-accent-100 cursor-pointer"
                 >
                   Política de Privacidade

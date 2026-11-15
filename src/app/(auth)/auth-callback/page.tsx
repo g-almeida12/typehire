@@ -9,14 +9,14 @@ export default async function AuthCallbackPage() {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) redirect(APP_URLS.register);
+  if (!session?.user) redirect(APP_URLS.REGISTER);
 
   // Verify if user is fully registered (CPF included)
   const user = await prisma.user.findFirst({
     where: { id: session.user.id, cpf: { not: null } },
     select: { id: true },
   });
-  if (!user) redirect(APP_URLS.completeProfile);
+  if (!user) redirect(APP_URLS.COMPLETE_PROFILE);
 
-  redirect(APP_URLS.home);
+  redirect(APP_URLS.HOME);
 }

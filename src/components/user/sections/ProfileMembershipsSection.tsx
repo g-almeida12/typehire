@@ -44,7 +44,7 @@ export function ProfileMembershipsSection({
           <Button
             text="Registrar uma nova empresa"
             variant="ghost"
-            href={APP_URLS.companyCreate}
+            href={APP_URLS.COMPANY_CREATE}
           />
         </div>
       )}

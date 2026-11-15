@@ -10,13 +10,15 @@ export default async function LoginPage() {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user) redirect(APP_URLS.home);
+  if (session?.user) redirect(APP_URLS.HOME);
 
   return (
     <>
       <Navbar onlyBrand />
       <main className="pb-4">
-        <h1 className="mt-8 text-2xl font-medium text-center">Bem-vindo de volta</h1>
+        <h1 className="mt-8 text-2xl font-medium text-center">
+          Bem-vindo de volta
+        </h1>
         <p className="text-sm/tight text-background-300 text-center">
           Faça login e continue a procurar pela sua próxima vaga.
         </p>

@@ -49,7 +49,7 @@ export function ApplicationCreateWrapper({
       {userRole === "CREATOR" ? (
         <Button
           text="Ver candidaturas"
-          href={APP_URLS.jobApplications(jobId)}
+          href={APP_URLS.JOB_APPLICATIONS(jobId)}
         />
       ) : (
         <Button
