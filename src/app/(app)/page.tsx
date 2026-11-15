@@ -1,19 +1,12 @@
 import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/job/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
-import {
-  getJobsAction,
-  JobFormFilterOutputPayload,
-  JobURLFilterSchema,
-} from "@/lib/modules/job/index";
+import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserData } from "@/lib/data/user/index";
 import { Suspense } from "react";
 import { SkeletonJobCard } from "@/components/skeletons";
 
-export default async function HomePage(props: PageProps<"/">) {
-  const searchParams = await props.searchParams;
-  const filter = JobURLFilterSchema.parse(searchParams);
-
+export default function HomePage(props: PageProps<"/">) {
   return (
     <>
       <Navbar />
@@ -28,8 +21,8 @@ export default async function HomePage(props: PageProps<"/">) {
         </section>
 
         <section>
-          <Suspense fallback={<JobListFallback />} key={JSON.stringify(filter)}>
-            <JobList filter={filter} />
+          <Suspense fallback={<JobListFallback />}>
+            <JobList props={props} />
           </Suspense>
         </section>
       </main>
@@ -47,7 +40,9 @@ async function Greeting() {
   );
 }
 
-async function JobList({ filter }: { filter: JobFormFilterOutputPayload }) {
+async function JobList({ props }: { props: PageProps<"/"> }) {
+  const searchParams = await props.searchParams;
+  const filter = JobURLFilterSchema.parse(searchParams);
   const jobResponse = await getJobsAction(filter, 1, 10);
 
   if (!jobResponse.success) {
@@ -68,6 +63,7 @@ async function JobList({ filter }: { filter: JobFormFilterOutputPayload }) {
       initialJobs={jobResponse.data.jobs}
       initialHasMore={jobResponse.data.pagination.hasNextPage}
       filter={filter}
+      key={JSON.stringify(filter)}
     />
   );
 }

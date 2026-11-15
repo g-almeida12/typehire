@@ -5,10 +5,23 @@ import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-export default async function EmailVerificationPage(
+export default function EmailVerificationPage(
   props: PageProps<"/email-verify">,
 ) {
+  return (
+    <Suspense fallback={null}>
+      <EmailVerificationContent props={props} />
+    </Suspense>
+  );
+}
+
+async function EmailVerificationContent({
+  props,
+}: {
+  props: PageProps<"/email-verify">;
+}) {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
@@ -16,8 +29,8 @@ export default async function EmailVerificationPage(
 
   const rawEmail = (await props.searchParams).email;
   if (!rawEmail) redirect(APP_URLS.REGISTER);
-
   const email = Array.isArray(rawEmail) ? rawEmail[0] : rawEmail;
+
   return (
     <>
       <Navbar onlyBrand />

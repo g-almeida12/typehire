@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import { SkeletonCompanyContent } from "@/components/skeletons";
 import { truncateText } from "@/utils/string";
 
-export default async function CompanyPage(props: PageProps<"/companies/[id]">) {
+export default function CompanyPage(props: PageProps<"/companies/[id]">) {
   return (
     <>
       <Navbar />

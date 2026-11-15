@@ -4,8 +4,17 @@ import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-export default async function AppLayout({ children }: LayoutProps<"/">) {
+export default function AppLayout({ children }: LayoutProps<"/">) {
+  return (
+    <Suspense fallback={null}>
+      <AuthGate>{children}</AuthGate>
+    </Suspense>
+  );
+}
+
+async function AuthGate({ children }: { children: React.ReactNode }) {
   // Verify if user is registered in database
   const session = await authServer.api.getSession({
     headers: await headers(),

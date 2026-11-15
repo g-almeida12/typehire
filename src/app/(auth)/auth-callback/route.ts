@@ -4,7 +4,7 @@ import { APP_URLS } from "@/utils/constants";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function AuthCallbackPage() {
+export async function GET() {
   // Verify if user is registered in database
   const session = await authServer.api.getSession({
     headers: await headers(),
