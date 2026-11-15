@@ -15,6 +15,7 @@ import { KeyRoundIcon, MailIcon } from "@/components/icons";
 import { Button } from "../common/Button";
 import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import Link from "next/link";
+import { useToast } from "@/contexts/ToastContext";
 
 export function LoginForm() {
   const {
@@ -29,6 +30,7 @@ export function LoginForm() {
     },
     resolver: zodResolver(UserLoginSchema),
   });
+  const { showToast } = useToast();
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
@@ -40,6 +42,16 @@ export function LoginForm() {
       if (!response.success) {
         if (response.status === 401) {
           setError("root", { message: response.message });
+          return;
+        }
+        if (response.status === 403) {
+          showToast(
+            "info",
+            "Email não verificado. Por favor, verifique seu email para acessar sua conta.",
+          );
+          startTransition(() =>
+            router.replace(APP_URLS.emailVerification(data.email)),
+          );
           return;
         }
 

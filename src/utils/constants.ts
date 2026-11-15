@@ -3,6 +3,8 @@ export const APP_URLS = {
   privacy: "/privacy",
   conditions: "/conditions",
   register: "/register",
+  emailVerification: (email: string) =>
+    `/email-verify?email=${encodeURIComponent(email)}` as const,
   authCallback: "/auth-callback",
   completeProfile: "/complete-profile",
   login: "/login",

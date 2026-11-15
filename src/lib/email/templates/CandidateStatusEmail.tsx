@@ -10,6 +10,7 @@ import {
   Button,
   Hr,
   Section,
+  
 } from "react-email";
 import type { ApplicationStatus } from "@/database/generated/enums";
 import { APPLICATION_STATUS_LABELS } from "@/utils/mappers";
@@ -24,7 +25,7 @@ interface CandidateStatusEmailProps {
   applicationUrl?: string;
 }
 
-export function CandidateStatusEmail({
+export default function CandidateStatusEmail({
   oldStatus,
   newStatus,
   userName,
@@ -124,7 +125,7 @@ const STATUS_MESSAGES: Record<ApplicationStatus, string> = {
 };
 
 const styles = {
-  body: { backgroundColor: "#f4f4f5", fontFamily: "Arial, sans-serif" },
+  body: { backgroundColor: "#C0C0C0", fontFamily: "Arial, sans-serif" },
   container: {
     backgroundColor: "#ffffff",
     margin: "24px auto",
@@ -132,18 +133,18 @@ const styles = {
     maxWidth: "520px",
     borderRadius: "8px",
   },
-  h1: { fontSize: "22px", color: "#111827", margin: "0 0 16px" },
-  text: { fontSize: "15px", color: "#374151", lineHeight: "22px" },
+  h1: { fontSize: "22px", color: "#1E1E25", margin: "0 0 16px" },
+  text: { fontSize: "15px", color: "#2C2C37", lineHeight: "22px" },
   statusBox: { margin: "16px 0" },
-  arrow: { margin: "0 10px", color: "#6b7280", fontSize: "16px" },
+  arrow: { margin: "0 10px", color: "#2C2C37", fontSize: "16px" },
   feedbackLabel: {
     fontSize: "13px",
     fontWeight: 600,
-    color: "#6b7280",
+    color: "#656572",
     margin: "20px 0 4px",
   },
   feedback: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#ECECEC",
     padding: "12px",
     borderRadius: "6px",
     fontSize: "15px",
@@ -153,7 +154,7 @@ const styles = {
     margin: 0,
   },
   button: {
-    backgroundColor: "#6d28d9",
+    backgroundColor: "#7019DE",
     color: "#ffffff",
     padding: "12px 20px",
     borderRadius: "6px",
@@ -162,6 +163,22 @@ const styles = {
     display: "inline-block",
     marginTop: "20px",
   },
-  hr: { borderColor: "#e5e7eb", margin: "24px 0" },
-  muted: { fontSize: "13px", color: "#6b7280" },
+  hr: { borderColor: "#4C4C5B", backgroundColor: "#4C4C5B", margin: "24px 0" },
+  muted: { fontSize: "13px", color: "#656572" },
 };
+
+CandidateStatusEmail.PreviewProps = {
+  oldStatus: "INTERVIEW",
+  newStatus: "HIRED",
+  userName: "Gabriel Almeida de Lima",
+  jobTitle: "Desenvolvedor FullStack Júnior",
+  companyName: "GaTechJS",
+  feedback: `
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis sollicitudin sapien. Nunc mattis, mi in sodales cursus, risus dui ullamcorper neque, nec blandit diam erat sit amet diam. Vivamus ipsum risus, consequat eget ante ut, ornare consequat urna. 
+
+Cras interdum, elit venenatis scelerisque sodales, mi justo finibus odio, sed euismod arcu elit ullamcorper justo. Morbi condimentum ante a vehicula dignissim. Nulla viverra non ligula in commodo. Praesent molestie ligula bibendum laoreet bibendum. Sed sed sapien elit. Mauris mollis mauris elit, vestibulum pharetra augue tincidunt sed. 
+
+Nulla enim elit, aliquam eu est sit amet, viverra aliquet sapien. Integer consequat dictum neque, tristique dignissim tellus elementum ac.
+  `,
+  applicationUrl: "https://github.com/g-almeida12",
+} satisfies CandidateStatusEmailProps;

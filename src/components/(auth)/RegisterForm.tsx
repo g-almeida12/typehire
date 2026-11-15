@@ -54,8 +54,10 @@ export function RegisterForm() {
         throw new Error();
       }
 
-      startTransition(() => router.replace(APP_URLS.home));
-    } catch (err: any) {
+      startTransition(() =>
+        router.replace(APP_URLS.emailVerification(data.email)),
+      );
+    } catch (_err) {
       setError("root", {
         message: "Desculpe, mas não foi possível registrar sua conta.",
       });

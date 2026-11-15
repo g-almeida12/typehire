@@ -1,7 +1,7 @@
 import { prisma } from "@/database/index";
 
 async function deleteAll() {
-  await prisma.application.deleteMany();
+  await prisma.user.deleteMany();
 }
 deleteAll()
   .catch((err) => {

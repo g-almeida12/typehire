@@ -24,47 +24,80 @@ import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
+import { APP_URLS } from "@/utils/constants";
+import { after } from "next/server";
 
 export async function signUpByEmailAction(
   userData: UserRegisterPayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
+    // Check if the email or CPF are already registered
+    const existingUser = await prisma.user.findFirst({
+      where: { OR: [{ email: userData.email }, { cpf: userData.cpf }] },
+    });
+    if (existingUser) {
+      // Email is registered but not verified
+      if (
+        existingUser.email === userData.email &&
+        !existingUser.emailVerified
+      ) {
+        after(
+          async () =>
+            await authServer.api.sendVerificationEmail({
+              body: {
+                email: existingUser.email,
+                callbackURL: APP_URLS.home,
+              },
+            }),
+        );
+
+        const signedUpUser = (await prisma.user.findUnique({
+          where: { id: existingUser.id },
+          include: userWithDetailsInclude,
+        })) as UserEntity;
+
+        return {
+          success: true,
+          status: 201,
+          data: mapPrivateUserEntity(signedUpUser),
+        };
+      }
+
+      // CPF is registered
+      return {
+        success: false,
+        status: 409,
+        message: "Email ou CPF já cadastrados.",
+      };
+    }
+
+    // User is not registered
     const authUser = await authServer.api.signUpEmail({
       body: {
         email: userData.email,
         name: userData.name,
         password: userData.password,
-      },
-    });
-
-    const newUser = (await prisma.user.update({
-      where: { id: authUser.user.id },
-      data: {
+        callbackURL: APP_URLS.home,
         cpf: userData.cpf,
         agreeToTerms: userData.agreeToTerms,
       },
+    });
+    const signedUpUser = (await prisma.user.findUnique({
+      where: { id: authUser.user.id },
       include: userWithDetailsInclude,
     })) as UserEntity;
 
-    return { success: true, status: 201, data: mapPrivateUserEntity(newUser) };
-  } catch (err: any) {
-    let response: { message: string; status: number } = {
-      message: "",
-      status: 0,
+    return {
+      success: true,
+      status: 201,
+      data: mapPrivateUserEntity(signedUpUser),
     };
-
-    if (
-      err.body.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL" ||
-      err.code === "P2002"
-    ) {
-      response.message = "Email ou CPF já cadastrados.";
-      response.status = 409;
-    } else {
-      response.message = "Não foi possível realizar o cadastro.";
-      response.status = 500;
-    }
-
-    return { success: false, ...response };
+  } catch (_err) {
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível realizar o cadastro.",
+    };
   }
 }
 
@@ -91,18 +124,28 @@ export async function signInByEmailAction(
       data: mapPrivateUserEntity(loggedUser),
     };
   } catch (err: any) {
-    let response: { message: string; status: number } = {
-      message: "",
-      status: 0,
-    };
     if (err.statusCode === 401) {
-      response.message = "Email ou senha inválidos.";
-      response.status = 401;
-    } else {
-      response.message = "Não foi possível conectar a sua conta.";
-      response.status = 500;
+      return {
+        success: false,
+        message: "Email ou senha inválidos.",
+        status: 401,
+      };
     }
-    return { success: false, ...response };
+
+    if (err.statusCode === 403) {
+      return {
+        success: false,
+        status: 403,
+        message:
+          "Por favor, verifique seu e-mail antes de entrar. Verifique sua caixa de entrada.",
+      };
+    }
+
+    return {
+      success: false,
+      message: "Não foi possível conectar a sua conta.",
+      status: 500,
+    };
   }
 }
 

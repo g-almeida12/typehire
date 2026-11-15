@@ -1,6 +1,7 @@
 import { ApplicationStatus } from "@/database/generated/enums";
 import nodemailer from "nodemailer";
-import { CandidateStatusEmail } from "./templates/CandidateStatusEmail";
+import CandidateStatusEmail from "./templates/CandidateStatusEmail";
+import AccountVerificationEmail from "./templates/AccountVerificationEmail";
 import { render } from "react-email";
 
 const transporter = nodemailer.createTransport({
@@ -10,6 +11,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.NODEMAILER_APP_PASSWORD,
   },
 });
+const EMAIL_FROM = `TypeHire <no-reply@${process.env.NODEMAILER_EMAIL}>`;
 
 export async function sendEmail({
   from,
@@ -66,9 +68,29 @@ export async function sendApplicationUpdateEmail(props: {
   );
 
   return sendEmail({
-    from: `TypeHire <no-reply@${process.env.NODEMAILER_EMAIL}>`,
+    from: EMAIL_FROM,
     to: props.to,
     subject: `Atualização na candidatura: ${props.jobTitle}`,
+    html,
+  });
+}
+
+export async function sendAccountVerificationEmail(props: {
+  to: string;
+  userName: string;
+  verificationUrl: string;
+}) {
+  const html = await render(
+    <AccountVerificationEmail
+      userName={props.userName}
+      verificationUrl={props.verificationUrl}
+    />,
+  );
+
+  return sendEmail({
+    from: EMAIL_FROM,
+    to: props.to,
+    subject: "Confirme sua conta no TypeHire",
     html,
   });
 }
