@@ -74,6 +74,7 @@ export function ApplicationFilterDropdown() {
           ref={(el) => {
             itemsRef.current[idx] = el;
           }}
+          key={sts}
         >
           {STATUS[idx]}
         </DropdownOption>

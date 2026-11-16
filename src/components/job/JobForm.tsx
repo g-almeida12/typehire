@@ -24,6 +24,7 @@ import { JobModalityDropdown } from "./JobModalityDropdown";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
 import { useTransition } from "react";
+import { JobModality } from "@/database/generated/enums";
 
 interface JobFormProps {
   companyId?: string;
@@ -155,7 +156,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
               if (mod === "REMOTE") setValue("location", null);
             }}
           />
-          {["PRESENCIAL", "HÍBRIDO"].includes(selectedModality || "") && (
+          {(["ON_SITE", "HYBRID"] as JobModality[]).includes(selectedModality!) && (
             <Input
               {...register("location")}
               Icon={PinIcon}
