@@ -2,9 +2,9 @@
 
 import {
   finishUserRegisterAction,
-  UserCompleteProfilePayload,
-  UserCompleteProfileSchema,
-} from "@/lib/modules/user";
+  AuthCompleteProfilePayload,
+  AuthCompleteProfileSchema,
+} from "@/lib/modules/auth";
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -24,9 +24,9 @@ export function CompleteProfileForm() {
     setError,
     register,
     reset,
-  } = useForm<UserCompleteProfilePayload>({
+  } = useForm<AuthCompleteProfilePayload>({
     defaultValues: { cpf: "", agreeToTerms: false },
-    resolver: zodResolver(UserCompleteProfileSchema),
+    resolver: zodResolver(AuthCompleteProfileSchema),
   });
   const isBusy = isRedirecting || isSubmitting;
 
@@ -38,7 +38,7 @@ export function CompleteProfileForm() {
       });
   }, []);
 
-  const handleUpdateProfile = async (data: UserCompleteProfilePayload) => {
+  const handleUpdateProfile = async (data: AuthCompleteProfilePayload) => {
     try {
       const response = await finishUserRegisterAction(data);
       if (!response.success) {

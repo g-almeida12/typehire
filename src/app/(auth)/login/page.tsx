@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Navbar } from "@/components/ui/Navbar";
 import { LoginForm } from "@/components/(auth)/LoginForm";
-import { authServer } from "@/lib/auth/auth-server";
+import { authServer } from "@/lib/better-auth/auth-server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";

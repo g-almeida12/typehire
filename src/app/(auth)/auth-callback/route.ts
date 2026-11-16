@@ -1,5 +1,5 @@
 import { prisma } from "@/database";
-import { authServer } from "@/lib/auth/auth-server";
+import { authServer } from "@/lib/better-auth/auth-server";
 import { APP_URLS } from "@/utils/constants";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";

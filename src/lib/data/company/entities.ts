@@ -1,4 +1,5 @@
-  import { CompanyResponsePayload } from "@/lib/modules/company/index";
+import "server-only";
+import { CompanyResponsePayload } from "@/lib/modules/company/index";
 import { Prisma } from "@/database/generated/client";
 
 export const companyWithDetailsInclude = {

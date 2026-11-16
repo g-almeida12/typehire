@@ -1,3 +1,4 @@
+import "server-only";
 import { prisma } from "@/database";
 import { cache } from "react";
 import { JobEntity, jobWithDetailsInclude } from "./entities";

@@ -1,7 +1,7 @@
 import { BackButton } from "@/components/common/BackButton";
 import { DeleteUserButton } from "@/components/user/DeleteUserButton";
 import { SignOutUserButton } from "@/components/user/SignOutUserButton";
-import { getCurrentUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user";
 import { Metadata } from "next";
 import { ProfileHeaderSection } from "@/components/user/sections/ProfileHeaderSection";
 import { ProfileSocialMediasSection } from "@/components/user/sections/ProfileSocialMediasSection";

@@ -1,6 +1,6 @@
 import { ResendEmailVerificationButton } from "@/components/(auth)/ResendEmailVerificationButton";
 import { Navbar } from "@/components/ui/Navbar";
-import { authServer } from "@/lib/auth/auth-server";
+import { authServer } from "@/lib/better-auth/auth-server";
 import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
 import { headers } from "next/headers";

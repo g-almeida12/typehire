@@ -1,3 +1,4 @@
+import "server-only";
 import { ApplicationStatus } from "@/database/generated/enums";
 import nodemailer from "nodemailer";
 import CandidateStatusEmail from "./templates/CandidateStatusEmail";

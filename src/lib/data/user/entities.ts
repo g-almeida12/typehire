@@ -1,3 +1,4 @@
+import "server-only";
 import { Prisma } from "@/database/generated/client";
 import {
   UserPrivateResponsePayload,

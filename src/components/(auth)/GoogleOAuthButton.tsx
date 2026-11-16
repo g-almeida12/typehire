@@ -1,7 +1,7 @@
 "use client";
 
 import { useToast } from "@/contexts/ToastContext";
-import { authClient } from "@/lib/auth/auth-client";
+import { authClient } from "@/lib/better-auth/auth-client";
 import Image from "next/image";
 import { ButtonHTMLAttributes } from "react";
 

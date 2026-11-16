@@ -1,4 +1,5 @@
-import { authServer } from "@/lib/auth/auth-server";
+import "server-only";
+import { authServer } from "@/lib/better-auth/auth-server";
 import { headers } from "next/headers";
 import { mapPrivateUserEntity } from "./index";
 import { UserPrivateResponsePayload } from "@/lib/modules/user/index";

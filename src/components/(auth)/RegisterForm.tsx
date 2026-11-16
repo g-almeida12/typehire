@@ -2,9 +2,9 @@
 
 import {
   signUpByEmailAction,
-  UserRegisterPayload,
-  UserRegisterSchema,
-} from "@/lib/modules/user";
+  AuthRegisterPayload,
+  AuthRegisterSchema,
+} from "@/lib/modules/auth";
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ export function RegisterForm() {
     handleSubmit,
     setError,
     register,
-  } = useForm<UserRegisterPayload>({
+  } = useForm<AuthRegisterPayload>({
     defaultValues: {
       email: "",
       name: "",
@@ -36,13 +36,13 @@ export function RegisterForm() {
       image: null,
       password: "",
     },
-    resolver: zodResolver(UserRegisterSchema),
+    resolver: zodResolver(AuthRegisterSchema),
   });
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
 
-  const handleSignUpByEmail = async (data: UserRegisterPayload) => {
+  const handleSignUpByEmail = async (data: AuthRegisterPayload) => {
     try {
       const response = await signUpByEmailAction(data);
       if (!response.success) {

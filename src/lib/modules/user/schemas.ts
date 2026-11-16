@@ -20,40 +20,6 @@ const CompanySnippetSchema = z.object({
   createdBy: z.string(),
 });
 
-export const UserRegisterSchema = z.object({
-  name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
-  email: z.email("Email inválido."),
-  cpf: CpfSchema,
-  agreeToTerms: z
-    .boolean()
-    .refine(
-      (val) => val === true,
-      "Você deve concordar com os termos e condições.",
-    ),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
-  image: z.string().optional().nullable(),
-});
-export type UserRegisterPayload = z.infer<typeof UserRegisterSchema>;
-
-export const UserCompleteProfileSchema = z.object({
-  cpf: CpfSchema,
-  agreeToTerms: z
-    .boolean()
-    .refine(
-      (val) => val === true,
-      "Você deve concordar com os termos e condições.",
-    ),
-});
-export type UserCompleteProfilePayload = z.infer<
-  typeof UserCompleteProfileSchema
->;
-
-export const UserLoginSchema = z.object({
-  email: z.email("Email inválido."),
-  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres."),
-});
-export type UserLoginPayload = z.infer<typeof UserLoginSchema>;
-
 export const UserUpdateSchema = z
   .object({
     name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),

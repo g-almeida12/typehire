@@ -2,9 +2,9 @@
 
 import {
   signInByEmailAction,
-  UserLoginPayload,
-  UserLoginSchema,
-} from "@/lib/modules/user";
+  AuthLoginPayload,
+  AuthLoginSchema,
+} from "@/lib/modules/auth";
 import { APP_URLS } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -23,19 +23,19 @@ export function LoginForm() {
     handleSubmit,
     setError,
     register,
-  } = useForm<UserLoginPayload>({
+  } = useForm<AuthLoginPayload>({
     defaultValues: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(UserLoginSchema),
+    resolver: zodResolver(AuthLoginSchema),
   });
   const { showToast } = useToast();
   const [isRedirecting, startTransition] = useTransition();
   const router = useRouter();
   const isBusy = isSubmitting || isRedirecting;
 
-  const handleSignInByEmail = async (data: UserLoginPayload) => {
+  const handleSignInByEmail = async (data: AuthLoginPayload) => {
     try {
       const response = await signInByEmailAction(data);
 

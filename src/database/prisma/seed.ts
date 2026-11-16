@@ -1,3 +1,4 @@
+import "server-only";
 import { prisma } from "@/database/index";
 
 async function deleteAll() {

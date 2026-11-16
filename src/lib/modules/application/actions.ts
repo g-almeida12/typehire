@@ -12,16 +12,14 @@ import { getCurrentUserId } from "@/lib/data/user";
 import { AppError } from "@/utils/errors/app-error";
 import { prisma } from "@/database";
 import {
+  getCachedApplicationById,
+  getCachedJobApplicationStatuses,
   applicationWithDetailsInclude,
   mapApplicationEntity,
-} from "@/lib/data/application/entities";
+} from "@/lib/data/application";
 import { ApplicationStatus, Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
-import {
-  getCachedApplicationById,
-  getCachedJobApplicationStatuses,
-} from "@/lib/data/application/caches";
 import { after } from "next/server";
 import { sendApplicationUpdateEmail } from "@/lib/email/emails";
 
