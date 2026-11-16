@@ -7,12 +7,6 @@ const OptionalTextSchema = z
   .transform((v) => (v === "" ? null : v))
   .nullable();
 
-const CpfSchema = z
-  .string()
-  .trim()
-  .transform((val) => val.replace(/\D+/g, ""))
-  .refine((val) => val.length === 11, "CPF inválido digitado.");
-
 const CompanySnippetSchema = z.object({
   id: z.string(),
   image: z.string().nullable(),
@@ -24,7 +18,6 @@ export const UserUpdateSchema = z
   .object({
     name: z.string().trim().min(2, "Nome deve ter no mínimo 2 caracteres."),
     email: z.email("Email inválido."),
-    cpf: CpfSchema,
     location: z
       .union([
         z.literal(""),
@@ -64,9 +57,7 @@ export type UserPublicResponsePayload = z.infer<
   typeof UserPublicResponseSchema
 >;
 
-export const UserPrivateResponseSchema = UserPublicResponseSchema.extend({
-  cpf: CpfSchema,
-});
+export const UserPrivateResponseSchema = UserPublicResponseSchema;
 export type UserPrivateResponsePayload = z.infer<
   typeof UserPrivateResponseSchema
 >;

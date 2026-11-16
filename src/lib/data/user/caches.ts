@@ -15,7 +15,7 @@ export const getCachedUser = cache(
       include: userWithDetailsInclude,
     });
 
-    if (!user || !user.cpf) return null;
+    if (!user) return null;
     return user;
   },
 );
@@ -30,11 +30,10 @@ export const getCachedUserId = cache(
       where: { id: userId },
       select: {
         id: true,
-        cpf: true,
       },
     });
-    
-    if (!user || !user.cpf) return null;
+
+    if (!user) return null;
     return user.id;
   },
 );

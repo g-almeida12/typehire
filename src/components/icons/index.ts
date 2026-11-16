@@ -37,7 +37,8 @@ export {
   DollarSign as DollarIcon,
   Clock as ClockIcon,
   SquarePlus as CreateIcon,
-  ArrowRight as ArrowRightIcon
+  ArrowRight as ArrowRightIcon,
+  CircleAlert as CircleAlertIcon,
 } from "lucide-react";
 export { SiGithub as GitHubIcon } from "react-icons/si";
 export { IoLogoLinkedin as LinkedInIcon } from "react-icons/io5";

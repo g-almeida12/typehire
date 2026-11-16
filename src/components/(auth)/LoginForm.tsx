@@ -116,7 +116,7 @@ export function LoginForm() {
 
       <div className="mt-12">
         <GoogleOAuthButton
-          callbackURL={APP_URLS.AUTH_CALLBACK}
+          callbackURL={APP_URLS.HOME}
           disabled={isBusy}
         />
       </div>

@@ -50,7 +50,6 @@ export function mapPrivateUserEntity(
     id: user.id,
     name: user.name,
     email: user.email,
-    cpf: user.cpf!,
     location: user.location,
     phoneNumber: user.phoneNumber,
     skills: user.skills,

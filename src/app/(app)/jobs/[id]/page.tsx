@@ -16,7 +16,7 @@ import {
 } from "@/components/skeletons";
 import { truncateText } from "@/utils/string";
 
-export default async function JobPage(props: PageProps<"/jobs/[id]">) {
+export default function JobPage(props: PageProps<"/jobs/[id]">) {
   return (
     <>
       <Navbar />

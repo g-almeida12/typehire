@@ -12,8 +12,6 @@ model User {
   name             String
   email            String    @unique
   image            String?
-  cpf              String?   @unique
-  agreeToTerms     Boolean?
   emailVerified    Boolean   @default(false)
   location         String?
   phoneNumber      String?

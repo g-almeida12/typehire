@@ -1,7 +1,6 @@
 export * from './SkeletonCompanyProfile';
 export * from './SkeletonDescription';
 export * from './SkeletonInput';
-export * from './SkeletonNavbar';
 export * from './SkeletonText';
 export * from './SkeletonJobCard';
 export * from './SkeletonUserProfile';

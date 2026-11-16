@@ -14,12 +14,7 @@ import { GoogleOAuthButton } from "./GoogleOAuthButton";
 import Link from "next/link";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
-import {
-  IdCardIcon,
-  KeyRoundIcon,
-  MailIcon,
-  UserCircleIcon,
-} from "@/components/icons";
+import { KeyRoundIcon, MailIcon, UserCircleIcon } from "@/components/icons";
 
 export function RegisterForm() {
   const {
@@ -31,8 +26,6 @@ export function RegisterForm() {
     defaultValues: {
       email: "",
       name: "",
-      cpf: "",
-      agreeToTerms: false,
       image: null,
       password: "",
     },
@@ -55,7 +48,7 @@ export function RegisterForm() {
       }
 
       startTransition(() =>
-        router.replace(APP_URLS.EMAIL_VERIFICATION(data.email)),
+        router.push(APP_URLS.EMAIL_VERIFICATION(data.email)),
       );
     } catch (_err) {
       setError("root", {
@@ -96,15 +89,6 @@ export function RegisterForm() {
             inputMode="email"
           />
           <Input
-            {...register("cpf")}
-            label="CPF"
-            Icon={IdCardIcon}
-            placeholder="123.456.789-00"
-            error={errors.cpf?.message}
-            disabled={isBusy}
-            inputMode="numeric"
-          />
-          <Input
             {...register("password")}
             label="Senha"
             Icon={KeyRoundIcon}
@@ -116,41 +100,24 @@ export function RegisterForm() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <div className="flex flex-row align-start gap-2">
-              <input
-                {...register("agreeToTerms")}
-                type="checkbox"
-                className="relative top-1 h-3.5 w-3.5"
-                id="agree-to-terms"
-                disabled={isBusy}
-              />
-              <label
-                htmlFor="agree-to-terms"
-                className="text-sm text-background-300 text-left"
+          <div>
+            <p className="text-sm text-background-300 text-center">
+              Ao continuar, concordo que li e aceito os{" "}
+              <Link
+                href={APP_URLS.CONDITIONS}
+                className="font-medium text-accent-100 cursor-pointer"
               >
-                Concordo que li e aceito os{" "}
-                <Link
-                  href={APP_URLS.CONDITIONS}
-                  className="font-medium text-accent-100 cursor-pointer"
-                >
-                  Termos de Condições
-                </Link>{" "}
-                e a{" "}
-                <Link
-                  href={APP_URLS.PRIVACY}
-                  className="font-medium text-accent-100 cursor-pointer"
-                >
-                  Política de Privacidade
-                </Link>
-                .
-              </label>
-            </div>
-            {errors.agreeToTerms?.message && (
-              <p className="text-left text-sm text-red-500 w-full">
-                {errors.agreeToTerms?.message}
-              </p>
-            )}
+                Termos de Condições
+              </Link>{" "}
+              e a{" "}
+              <Link
+                href={APP_URLS.PRIVACY}
+                className="font-medium text-accent-100 cursor-pointer"
+              >
+                Política de Privacidade
+              </Link>
+              .
+            </p>
           </div>
           <Button
             text={isBusy ? "Cadastrando usuário..." : "Cadastrar usuário"}
@@ -170,7 +137,7 @@ export function RegisterForm() {
 
       <div className="mt-12">
         <GoogleOAuthButton
-          callbackURL={APP_URLS.AUTH_CALLBACK}
+          callbackURL={APP_URLS.HOME}
           disabled={isBusy}
         />
       </div>

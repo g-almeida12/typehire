@@ -28,7 +28,6 @@ export async function getUserByIdAction(
     }
 
     const user = await getCachedUser(userId);
-
     if (!user) {
       throw new AppError("Usuário não encontrado.", 404);
     }
@@ -66,7 +65,6 @@ export async function getUsersByEmailPrefixAction(
           startsWith: prefix,
           mode: "insensitive",
         },
-        cpf: { not: null },
       },
       take: 7,
       include: userWithDetailsInclude,

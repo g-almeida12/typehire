@@ -5,8 +5,6 @@ export const APP_URLS = {
   REGISTER: "/register",
   EMAIL_VERIFICATION: (email: string) =>
     `/email-verify?email=${encodeURIComponent(email)}` as const,
-  AUTH_CALLBACK: "/auth-callback",
-  COMPLETE_PROFILE: "/complete-profile",
   LOGIN: "/login",
   HOME: "/",
   APPLICATIONS: "/applications",

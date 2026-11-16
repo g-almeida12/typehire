@@ -140,13 +140,12 @@ export async function updateCompanyByIdAction(
           where: {
             companyId,
             user: {
-              cpf: { not: null },
               id: { notIn: newMemberIds, not: currentUserId },
             },
           },
         });
         const count = await tx.user.count({
-          where: { id: { in: newMemberIds }, cpf: { not: null } },
+          where: { id: { in: newMemberIds } },
         });
         if (count !== newMemberIds.length) {
           throw new AppError(

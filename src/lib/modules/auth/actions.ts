@@ -12,56 +12,32 @@ import { ServerActionResponse } from "@/utils/types";
 import { headers } from "next/headers";
 import { after } from "next/server";
 import { UserPrivateResponsePayload } from "../user";
-import {
-  AuthRegisterPayload,
-  AuthLoginPayload,
-  AuthCompleteProfilePayload,
-} from "../auth";
-import { PrismaClientError } from "@/utils/errors/prisma-error";
-import { Prisma } from "@/database/generated/client";
-import { AppError } from "@/utils/errors/app-error";
+import { AuthRegisterPayload, AuthLoginPayload } from "../auth";
 
 export async function signUpByEmailAction(
   userData: AuthRegisterPayload,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
-    // Check if the email or CPF are already registered
-    const existingUser = await prisma.user.findFirst({
-      where: { OR: [{ email: userData.email }, { cpf: userData.cpf }] },
+    const existingUser = await prisma.user.findUnique({
+      where: { email: userData.email },
+      include: userWithDetailsInclude,
     });
-    if (existingUser) {
-      // Email is registered but not verified
-      if (
-        existingUser.email === userData.email &&
-        !existingUser.emailVerified
-      ) {
-        after(
-          async () =>
-            await authServer.api.sendVerificationEmail({
-              body: {
-                email: existingUser.email,
-                callbackURL: APP_URLS.HOME,
-              },
-            }),
-        );
+    // Check if the email is already registered
+    if (existingUser && !existingUser.emailVerified) {
+      after(
+        async () =>
+          await authServer.api.sendVerificationEmail({
+            body: {
+              email: existingUser.email,
+              callbackURL: APP_URLS.HOME,
+            },
+          }),
+      );
 
-        const signedUpUser = (await prisma.user.findUnique({
-          where: { id: existingUser.id },
-          include: userWithDetailsInclude,
-        })) as UserEntity;
-
-        return {
-          success: true,
-          status: 201,
-          data: mapPrivateUserEntity(signedUpUser),
-        };
-      }
-
-      // CPF is registered
       return {
-        success: false,
-        status: 409,
-        message: "Email ou CPF já cadastrados.",
+        success: true,
+        status: 201,
+        data: mapPrivateUserEntity(existingUser),
       };
     }
 
@@ -71,9 +47,7 @@ export async function signUpByEmailAction(
         email: userData.email,
         name: userData.name,
         password: userData.password,
-        callbackURL: APP_URLS.HOME,
-        cpf: userData.cpf,
-        agreeToTerms: userData.agreeToTerms,
+        callbackURL: APP_URLS.EMAIL_VERIFICATION(userData.email),
       },
     });
     const signedUpUser = (await prisma.user.findUnique({
@@ -91,58 +65,6 @@ export async function signUpByEmailAction(
       success: false,
       status: 500,
       message: "Não foi possível realizar o cadastro.",
-    };
-  }
-}
-
-export async function finishUserRegisterAction(
-  completeData: AuthCompleteProfilePayload,
-): ServerActionResponse<UserPrivateResponsePayload> {
-  try {
-    const session = await authServer.api.getSession({
-      headers: await headers(),
-    });
-    if (!session?.user) {
-      throw new AppError("Usuário não encontrado.", 404);
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
-      data: completeData,
-      include: userWithDetailsInclude,
-    });
-
-    return {
-      success: true,
-      status: 200,
-      data: mapPrivateUserEntity(updatedUser),
-    };
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      const leanErr = PrismaClientError.getLeanError(err);
-      switch (leanErr.errType) {
-        case "UNIQUE_CONSTRAINT_ERROR":
-          return {
-            success: false,
-            status: 409,
-            message: "CPF já cadastrado.",
-          };
-      }
-    }
-
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível terminar o registro do usuário.",
     };
   }
 }
