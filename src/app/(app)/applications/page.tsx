@@ -32,7 +32,7 @@ export default async function ApplicationsPage(
           </div>
         </section>
 
-        <section className="flex flex-col items-center justify-center px-4 text-center">
+        <section>
           <Suspense fallback={<ApplicationListFallback />}>
             <ApplicationListContent props={props} />
           </Suspense>
@@ -53,23 +53,36 @@ async function ApplicationListContent({
 
   if (!applicationResponse.success) {
     return (
-      <>
+      <div className="flex flex-col items-center justify-center px-4 text-center">
         <p className="text-background-300 text-lg/[22px]">
           Não foi possível carregar suas candidaturas no momento.
         </p>
         <p className="text-sm text-background-400 mt-2">
           Tente recarregar a página mais tarde.
         </p>
-      </>
+      </div>
     );
   }
 
   return (
-    <ApplicationListView
-      filter={filter}
-      initialApplications={applicationResponse.data.applications}
-      initialHasMore={applicationResponse.data.pagination.hasNextPage}
-    />
+    <div>
+      {applicationResponse.data.pagination.total > 0 && (
+        <p className="mb-2 text-background-300">
+          {applicationResponse.data.pagination.total}{" "}
+          
+          {applicationResponse.data.pagination.total === 1
+            ? "candidatura encontrada"
+            : "candidaturas encontradas"}
+          .
+        </p>
+      )}
+
+      <ApplicationListView
+        filter={filter}
+        initialApplications={applicationResponse.data.applications}
+        initialHasMore={applicationResponse.data.pagination.hasNextPage}
+      />
+    </div>
   );
 }
 

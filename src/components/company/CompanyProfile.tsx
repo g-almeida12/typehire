@@ -51,8 +51,8 @@ export function CompanyProfile({
         </div>
 
         {/* Company name and website */}
-        <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0">
-          <p className="font-medium truncate">
+        <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0 items-start">
+          <p className="-mt-px font-medium truncate">
             {company.name}{" "}
             {showCompanySize && `(${COMPANY_SIZE_LABELS[company.size!]})`}
           </p>

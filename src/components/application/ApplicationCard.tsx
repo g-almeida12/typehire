@@ -26,7 +26,7 @@ export function ApplicationCard({
             type="readonly"
             showCompanySize={false}
           />
-          <div className="flex flex-col gap-0">
+          <div className="flex flex-col gap-0 items-start">
             <p className="text-lg font-medium">{application.job.title}</p>
             <p className="text-background-300 text-sm/[14px] truncate italic">
               {application.job.location ?? "Remoto"}

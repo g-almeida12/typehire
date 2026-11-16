@@ -41,7 +41,7 @@ export function ApplicationListView({
   return (
     <ModuleListView
       errorMessage="Não foi possível carregar mais candidaturas."
-      modulesListEndMessage="Todas as suas candidaturas estão aqui."
+      modulesListEndMessage="Parece que não temos mais candidaturas para mostrar."
       getModulesAction={handleModulesAction}
       filter={filter}
       renderItem={(application) => (
@@ -49,6 +49,7 @@ export function ApplicationListView({
       )}
       initialModules={initialApplications}
       initialHasMore={initialHasMore}
+      key={JSON.stringify(filter)}
     />
   );
 }
