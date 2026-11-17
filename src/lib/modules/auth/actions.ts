@@ -29,7 +29,7 @@ export async function signUpByEmailAction(
           await authServer.api.sendVerificationEmail({
             body: {
               email: existingUser.email,
-              callbackURL: APP_URLS.HOME,
+              callbackURL: APP_URLS.EMAIL_VERIFICATION(userData.email),
             },
           }),
       );

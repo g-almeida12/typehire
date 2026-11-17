@@ -1,20 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/common/Button";
 import { Navbar } from "@/components/ui/Navbar";
 
 export default function AppErrorPage({
-  error,
   retry,
 }: {
-  error: Error & { digest?: string };
   retry: () => void;
 }) {
-  //! Remover no build
-  useEffect(() => console.error("ERROR CATCHED: ", error), [error]);
-
   return (
     <div className="min-h-dvh flex flex-col">
       <Navbar />
