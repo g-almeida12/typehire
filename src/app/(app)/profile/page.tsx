@@ -1,6 +1,4 @@
 import { BackButton } from "@/components/common/BackButton";
-import { DeleteUserButton } from "@/components/user/DeleteUserButton";
-import { SignOutUserButton } from "@/components/user/SignOutUserButton";
 import { getCurrentUserData } from "@/lib/data/user";
 import { Metadata } from "next";
 import { ProfileHeaderSection } from "@/components/user/sections/ProfileHeaderSection";
@@ -17,6 +15,7 @@ import {
   SkeletonButton
 } from "@/components/skeletons";
 import { Suspense } from "react";
+import { AuthActionsWrapper } from "@/components/(auth)/AuthActionsWrapper";
 
 export default function ProfilePage() {
   return (
@@ -54,10 +53,7 @@ async function ProfileContent() {
       {/* Session */}
       <section className="mt-8">
         <h2 className="mb-2 text-xl font-medium">Gerenciamento da sessão</h2>
-        <div className="flex flex-col gap-2">
-          <SignOutUserButton />
-          <DeleteUserButton />
-        </div>
+        <AuthActionsWrapper />
       </section>
     </>
   );
