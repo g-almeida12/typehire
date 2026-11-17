@@ -25,6 +25,7 @@ import { SkillsDropdown } from "../common/SkillsDropdown";
 import { SkillList } from "../common/SkillList";
 import { useTransition } from "react";
 import { JobModality } from "@/database/generated/enums";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 interface JobFormProps {
   companyId?: string;
@@ -107,11 +108,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
       className="flex flex-col gap-8 mt-6"
       autoComplete="off"
     >
-      {errors.root?.message && (
-        <p className="text-left text-sm text-red-500 w-full">
-          {errors.root?.message}
-        </p>
-      )}
+      {errors.root?.message && <ErrorMessage message={errors.root?.message} />}
 
       {/* Job base info */}
       <fieldset>
@@ -156,7 +153,9 @@ export function JobForm({ job, companyId }: JobFormProps) {
               if (mod === "REMOTE") setValue("location", null);
             }}
           />
-          {(["ON_SITE", "HYBRID"] as JobModality[]).includes(selectedModality!) && (
+          {(["ON_SITE", "HYBRID"] as JobModality[]).includes(
+            selectedModality!,
+          ) && (
             <Input
               {...register("location")}
               Icon={PinIcon}

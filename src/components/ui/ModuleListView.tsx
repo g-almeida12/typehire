@@ -5,6 +5,7 @@ import { Button } from "../common/Button";
 import { LoadingSpinner } from "../common/LoadingSpinner";
 import { PaginationResponsePayload } from "@/utils/types";
 import { usePathname } from "next/navigation";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 type CacheEntry = {
   modules: unknown[];
@@ -63,7 +64,7 @@ export function ModuleListView<TModule, TFilter>({
   // Refresh 'modules' on 'initialModules' changes
   useEffect(() => {
     setModules(initialModules);
-   }, [initialModules]);
+  }, [initialModules]);
 
   // Get the cached list to show
   useLayoutEffect(() => {
@@ -156,9 +157,7 @@ export function ModuleListView<TModule, TFilter>({
           if (error) {
             return (
               <div className="flex flex-col gap-2">
-                <p className="text-center text-sm text-background-300">
-                  {error}
-                </p>
+                <ErrorMessage message={error} />
                 <Button text="Tentar novamente" onClick={loadMoreModules} />
               </div>
             );

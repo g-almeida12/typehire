@@ -21,6 +21,7 @@ import {
 import { UserList } from "../user/UserList";
 import { CompanySizeDropdown } from "./CompanySizeDropdown";
 import { UsersDropdown } from "../user/UsersDropdown";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 interface CompanyFormProps {
   company?: CompanyResponsePayload;
@@ -97,7 +98,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
           router.replace(APP_URLS.COMPANY(createResponse.data.id)),
         );
       }
-    } catch (err) {
+    } catch (_err) {
       setError("root", {
         message: `Não foi possível ${company ? "atualizar" : "criar"} a empresa.`,
       });
@@ -110,11 +111,7 @@ export function CompanyForm({ company, currentUserEmail }: CompanyFormProps) {
       className="flex flex-col gap-8 mt-6"
       autoComplete="off"
     >
-      {errors.root?.message && (
-        <p className="text-left text-sm text-red-500 w-full">
-          {errors.root?.message}
-        </p>
-      )}
+      {errors.root?.message && <ErrorMessage message={errors.root?.message} />}
 
       {/* Company base info */}
       <fieldset>

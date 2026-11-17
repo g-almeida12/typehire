@@ -13,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UserCircleIcon,
   MailIcon,
-  IdCardIcon,
   PhoneIcon,
   GlobeIcon,
 } from "@/components/icons";
@@ -24,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
 import { SkillList } from "../common/SkillList";
 import { SkillsDropdown } from "../common/SkillsDropdown";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 interface ProfileUpdateFormProps {
   user: UserPrivateResponsePayload;
@@ -60,11 +60,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
       className="flex flex-col gap-8 mt-6"
       autoComplete="off"
     >
-      {errors.root?.message && (
-        <p className="text-left text-sm text-red-500 w-full">
-          {errors.root?.message}
-        </p>
-      )}
+      {errors.root?.message && <ErrorMessage message={errors.root?.message} />}
       <fieldset>
         <legend className="text-xl font-medium">Informações pessoais</legend>
         <div className="flex flex-col gap-2 mt-3">
@@ -85,15 +81,6 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
             error={errors.email?.message}
             disabled={isBusy}
             defaultValue={user.email}
-          />
-          <Input
-            {...register("cpf")}
-            Icon={IdCardIcon}
-            label="CPF"
-            placeholder="Ex.: 123.456.789-00"
-            error={errors.cpf?.message}
-            disabled={isBusy}
-            defaultValue={user.cpf}
           />
           <Input
             {...register("location")}

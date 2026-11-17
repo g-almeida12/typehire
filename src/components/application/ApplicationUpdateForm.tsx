@@ -15,6 +15,7 @@ import { ArrowRightIcon } from "@/components/icons";
 import { TextArea } from "../common/TextArea";
 import { Button } from "../common/Button";
 import { useRouter } from "next/navigation";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 interface ApplicationUpdateFormProps {
   initialStatus: ApplicationStatus;
@@ -144,9 +145,7 @@ export function ApplicationUpdateForm({
               </>
             )}
 
-            {error && (
-              <p className="text-left text-sm text-red-500 w-full">{error}</p>
-            )}
+            {error && <ErrorMessage message={error} />}
 
             <hr className="my-6" />
 

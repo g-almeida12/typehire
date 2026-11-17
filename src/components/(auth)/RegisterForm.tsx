@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Button } from "../common/Button";
 import { Input } from "../common/Input";
 import { KeyRoundIcon, MailIcon, UserCircleIcon } from "@/components/icons";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 export function RegisterForm() {
   const {
@@ -65,9 +66,7 @@ export function RegisterForm() {
         autoComplete="off"
       >
         {errors.root?.message && (
-          <p className="text-left text-sm text-red-500 w-full">
-            {errors.root?.message}
-          </p>
+          <ErrorMessage message={errors.root?.message} />
         )}
         <div className="flex flex-col gap-2">
           <Input
@@ -136,10 +135,7 @@ export function RegisterForm() {
       </div>
 
       <div className="mt-12">
-        <GoogleOAuthButton
-          callbackURL={APP_URLS.HOME}
-          disabled={isBusy}
-        />
+        <GoogleOAuthButton callbackURL={APP_URLS.HOME} disabled={isBusy} />
       </div>
 
       <p className="mt-17 text-sm text-background-300 text-center">

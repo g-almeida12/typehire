@@ -7,6 +7,7 @@ import {
   EyeOffIcon,
 } from "@/components/icons";
 import { forwardRef, InputHTMLAttributes, useState } from "react";
+import { ErrorMessage } from "./ErrorMessage";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   Icon: IconKey;
@@ -80,14 +81,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               className="size-6 flex-1 cursor-pointer text-background-400 group-focus-within:text-background-700"
               tabIndex={-1}
             >
-              {isVisible ? <EyeIcon size={24} aria-hidden="true" /> : <EyeOffIcon size={24} aria-hidden="true" />}
+              {isVisible ? (
+                <EyeIcon size={24} aria-hidden="true" />
+              ) : (
+                <EyeOffIcon size={24} aria-hidden="true" />
+              )}
             </button>
           )}
         </div>
 
-        {error && (
-          <p className="text-left text-sm text-red-500 w-full">{error}</p>
-        )}
+        {error && <ErrorMessage message={error} />}
       </div>
     );
   },
