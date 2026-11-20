@@ -79,7 +79,7 @@ export async function updateUserAction(
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
-      throw new AppError("Usuário não encontrado.", 404);
+      throw new AppError("Usuário não autenticado.", 401);
     }
 
     const updatedUser = await prisma.user.update({
@@ -121,7 +121,7 @@ export async function uploadResumeAction(
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
-      throw new AppError("Usuário não encontrado.", 404);
+      throw new AppError("Usuário não autenticado.", 401);
     }
 
     const resumeUrl = (formData.get("resume") as File).name;
@@ -144,7 +144,7 @@ export async function removeResumeAction(): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
-      throw new AppError("Usuário não encontrado.", 404);
+      throw new AppError("Usuário não autenticado.", 401);
     }
 
     await prisma.user.update({
@@ -166,7 +166,7 @@ export async function deleteUserAction(): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
-      throw new AppError("Usuário não encontrado.", 404);
+      throw new AppError("Usuário não autenticado.", 401);
     }
 
     await prisma.user.delete({
