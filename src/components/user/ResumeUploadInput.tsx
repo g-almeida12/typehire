@@ -28,7 +28,6 @@ export function ResumeUploadInput({ resumeUrl }: ResumeUploadInputProps) {
     if (!file) return;
 
     const fileValidation = await UserResumeSchema.safeParseAsync(file);
-    console.log("FILE VALIDATION: ", fileValidation);
     if (!fileValidation.success) {
       setError(fileValidation.error.issues[0].message);
       return;

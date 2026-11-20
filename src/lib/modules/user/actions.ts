@@ -149,7 +149,6 @@ export async function uploadResumeAction(
     updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
-    console.error("UPLOAD RESUME ACTION: ", err);
     return AppError.handleDefaultError(
       err,
       "Não foi possível enviar o currículo.",

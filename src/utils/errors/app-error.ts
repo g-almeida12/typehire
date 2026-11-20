@@ -27,10 +27,6 @@ export class AppError extends Error {
     field?: string | Record<string, string[]>;
   } {
     if (err instanceof z.ZodError) {
-      console.error("APP ERROR: ", {
-        root: z.flattenError(err).formErrors,
-        ...z.flattenError(err).fieldErrors,
-      });
       return {
         success: false,
         status: 400,
