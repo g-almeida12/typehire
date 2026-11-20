@@ -8,7 +8,7 @@ import {
   type UserUpdatePayload,
   UserUpdateSchema,
   updateUserAction,
-} from "@/lib/modules/user/index";
+} from "@/lib/modules/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UserCircleIcon,
@@ -24,6 +24,7 @@ import { APP_URLS } from "@/utils/constants";
 import { SkillList } from "../common/SkillList";
 import { SkillsDropdown } from "../common/SkillsDropdown";
 import { ErrorMessage } from "../common/ErrorMessage";
+import { ResumeUploadInput } from "./ResumeUploadInput";
 
 interface ProfileUpdateFormProps {
   user: UserPrivateResponsePayload;
@@ -76,7 +77,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
           <Input
             {...register("email")}
             Icon={MailIcon}
-            label="email"
+            label="Email"
             placeholder="Ex.: exemplo@gmail.com"
             error={errors.email?.message}
             disabled={isBusy}
@@ -150,8 +151,13 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
         </div>
       </fieldset>
 
+      <fieldset className="min-w-0">
+        <legend className="mb-3 text-xl font-medium">Currículo</legend>
+        <ResumeUploadInput resumeUrl={user.resumeUrl} />
+      </fieldset>
+
       <fieldset>
-        <legend className="text-xl font-medium mb-3">
+        <legend className="mb-3 text-xl font-medium">
           Habilidades registradas
         </legend>
         <SkillsDropdown

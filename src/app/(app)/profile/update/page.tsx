@@ -7,7 +7,7 @@ import {
   SkeletonButton
 } from "@/components/skeletons";
 import { ProfileUpdateForm } from "@/components/user/ProfileUpdateForm";
-import { getCurrentUserData } from "@/lib/data/user/index";
+import { getCurrentUserData } from "@/lib/data/user";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

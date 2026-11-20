@@ -145,6 +145,73 @@ export async function updateUserAction(
   }
 }
 
+export async function uploadResumeAction(
+  formData: FormData,
+): ServerActionResponse<null> {
+  try {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
+      throw new AppError("Usuário não encontrado.", 404);
+    }
+
+    const resumeUrl = (formData.get("resume") as File).name;
+    await prisma.user.update({
+      where: { id: currentUserId },
+      data: { resumeUrl },
+    });
+
+    updateTag(`user-${currentUserId}`);
+    return { success: true, status: 200, data: null };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível enviar o currículo.",
+    };
+  }
+}
+
+export async function removeResumeAction(): ServerActionResponse<null> {
+  try {
+    const currentUserId = await getCurrentUserId();
+    if (!currentUserId) {
+      throw new AppError("Usuário não encontrado.", 404);
+    }
+
+    await prisma.user.update({
+      where: { id: currentUserId },
+      data: { resumeUrl: null },
+    });
+
+    updateTag(`user-${currentUserId}`);
+    return { success: true, status: 200, data: null };
+  } catch (err) {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: "Não foi possível remover o currículo.",
+    };
+  }
+}
+
 export async function deleteUserAction(): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
