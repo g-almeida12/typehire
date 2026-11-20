@@ -1,4 +1,4 @@
-import { CircleAlertIcon } from "@/components/icons";
+import { AlertIcon } from "@/components/icons";
 
 interface ErrorMessageProps {
   message: string;
@@ -10,7 +10,7 @@ export function ErrorMessage({ message }: ErrorMessageProps) {
       role="alert"
       className="flex gap-2 items-start w-full rounded-md border border-red-500/30 bg-red-500/10 px-2 py-1"
     >
-      <CircleAlertIcon
+      <AlertIcon
         size={20}
         className="size-5 shrink-0 text-red-400"
         aria-hidden="true"

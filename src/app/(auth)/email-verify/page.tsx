@@ -3,7 +3,7 @@ import { BackButton } from "@/components/common/BackButton";
 import { Navbar } from "@/components/ui/Navbar";
 import { authServer } from "@/lib/better-auth/auth-server";
 import { APP_URLS } from "@/utils/constants";
-import { CircleAlertIcon } from "@/components/icons";
+import { AlertIcon } from "@/components/icons";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -89,7 +89,7 @@ async function EmailVerificationContent({
               role="alert"
               className="mt-6 flex gap-3 rounded-md border border-red-500/30 bg-red-500/10 p-3"
             >
-              <CircleAlertIcon
+              <AlertIcon
                 className="mt-0.5 size-5 shrink-0 text-red-400"
                 aria-hidden="true"
               />
