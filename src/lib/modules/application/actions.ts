@@ -2,10 +2,10 @@
 
 import { PaginationResponsePayload, ServerActionResponse } from "@/utils/types";
 import {
-  ApplicationCreatePayload,
-  ApplicationFormFilterOutputPayload,
+  ApplicationCreateSchema,
+  ApplicationFormFilterSchema,
   ApplicationResponsePayload,
-  ApplicationUpdatePayload,
+  ApplicationUpdateSchema,
   JobApplicationStatuses,
 } from "./schemas";
 import { getCurrentUserId } from "@/lib/data/user";
@@ -22,11 +22,12 @@ import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
 import { after } from "next/server";
 import { sendApplicationUpdateEmail } from "@/lib/email/emails";
+import { IdSchema, PaginationSchema } from "../common/schemas";
 
 const STATUSES = Object.values(ApplicationStatus);
 
 export async function createApplicationAction(
-  applicationData: ApplicationCreatePayload,
+  data: unknown,
 ): ServerActionResponse<ApplicationResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -34,8 +35,10 @@ export async function createApplicationAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
+    const appData = ApplicationCreateSchema.parse(data);
+
     const jobData = await prisma.job.findUnique({
-      where: { id: applicationData.jobId },
+      where: { id: appData.jobId },
       select: {
         company: {
           select: { members: true },
@@ -56,13 +59,13 @@ export async function createApplicationAction(
     const createdApplication = await prisma.application.create({
       data: {
         candidateId: currentUserId,
-        jobId: applicationData.jobId,
+        jobId: appData.jobId,
         status: "PENDING",
       },
       include: applicationWithDetailsInclude,
     });
 
-    updateTag(`job-${applicationData.jobId}`);
+    updateTag(`job-${appData.jobId}`);
     return {
       success: true,
       status: 201,
@@ -89,7 +92,7 @@ export async function createApplicationAction(
 }
 
 export async function getApplicationByIdAction(
-  applicationId: string,
+  id: unknown,
 ): ServerActionResponse<ApplicationResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -97,10 +100,9 @@ export async function getApplicationByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const application = await getCachedApplicationById(
-      applicationId,
-      currentUserId,
-    );
+    const appId = IdSchema.parse(id);
+
+    const application = await getCachedApplicationById(appId, currentUserId);
     if (!application) {
       throw new AppError("Candidatura não encontrada", 404);
     }
@@ -119,9 +121,8 @@ export async function getApplicationByIdAction(
 }
 
 export async function getApplicationsAction(
-  filter: ApplicationFormFilterOutputPayload,
-  page: number = 1,
-  pageSize: number = 10,
+  filterData: unknown,
+  pagination: unknown,
 ): ServerActionResponse<{
   applications: ApplicationResponsePayload[];
   pagination: PaginationResponsePayload;
@@ -131,6 +132,9 @@ export async function getApplicationsAction(
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const filter = ApplicationFormFilterSchema.parse(filterData);
+    const pag = PaginationSchema.parse(pagination);
 
     const whereCondition = filter.jobId
       ? {
@@ -149,7 +153,7 @@ export async function getApplicationsAction(
     const totalApplications = await prisma.application.count({
       where: whereCondition,
     });
-    const totalApplicationsPages = Math.ceil(totalApplications / pageSize);
+    const totalApplicationsPages = Math.ceil(totalApplications / pag.size);
 
     return {
       success: true,
@@ -157,12 +161,12 @@ export async function getApplicationsAction(
       data: {
         applications: applications.map((app) => mapApplicationEntity(app)),
         pagination: {
-          page,
-          pageSize,
+          page: pag.page,
+          pageSize: pag.size,
           total: totalApplications,
           totalPages: totalApplicationsPages,
-          hasNextPage: page < totalApplicationsPages,
-          hasPrevPage: page > 1,
+          hasNextPage: pag.page < totalApplicationsPages,
+          hasPrevPage: pag.page > 1,
         },
       },
     };
@@ -175,13 +179,15 @@ export async function getApplicationsAction(
 }
 
 export async function getJobApplicationStatusesAction(
-  jobId: string,
+  id: unknown,
 ): ServerActionResponse<JobApplicationStatuses> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const jobId = IdSchema.parse(id);
 
     const applicationStatuses = await getCachedJobApplicationStatuses(
       jobId,
@@ -198,8 +204,8 @@ export async function getJobApplicationStatusesAction(
 }
 
 export async function updateApplicationByIdAction(
-  applicationId: string,
-  applicationData: ApplicationUpdatePayload,
+  id: unknown,
+  data: unknown,
 ): ServerActionResponse<ApplicationResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -207,11 +213,14 @@ export async function updateApplicationByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
+    const appId = IdSchema.parse(id);
+    const appData = ApplicationUpdateSchema.parse(data);
+
     let oldStatus: ApplicationStatus | undefined = undefined;
-    if (applicationData.status) {
+    if (appData.status) {
       const application = await prisma.application.findUnique({
         where: {
-          id: applicationId,
+          id: appId,
           OR: [
             { candidateId: currentUserId },
             { job: { createdBy: currentUserId } },
@@ -224,14 +233,16 @@ export async function updateApplicationByIdAction(
         throw new AppError("Candidatura não encontrada.", 404);
       }
 
-      if (application.status === applicationData.status) {
+      // Reject update to the same status
+      if (application.status === appData.status) {
         throw new AppError("A candidatura já está nessa etapa.", 422, "status");
       }
 
+      // Reject update to a previous status without a feedback
       oldStatus = application.status;
       const oldStatusIdx = STATUSES.indexOf(application.status);
-      const newStatusIdx = STATUSES.indexOf(applicationData.status);
-      if (oldStatusIdx > newStatusIdx && !applicationData.feedback) {
+      const newStatusIdx = STATUSES.indexOf(appData.status);
+      if (oldStatusIdx > newStatusIdx && !appData.feedback) {
         throw new AppError(
           "Informe um feedback para mover a candidatura para uma etapa anterior.",
           422,
@@ -242,24 +253,25 @@ export async function updateApplicationByIdAction(
 
     const updatedApplication = await prisma.application.update({
       where: {
-        id: applicationId,
+        id: appId,
         OR: [
           { candidateId: currentUserId },
           { job: { createdBy: currentUserId } },
           { job: { company: { createdBy: currentUserId } } },
         ],
       },
-      data: applicationData,
+      data: appData,
       include: applicationWithDetailsInclude,
     });
 
-    updateTag(`application-${applicationId}`);
+    updateTag(`application-${appId}`);
     updateTag(`job-application-statuses-${updatedApplication.jobId}`);
 
+    // Send a email to candidate on status changes
     const statusHasChanged =
-      applicationData.status &&
+      appData.status &&
       oldStatus &&
-      applicationData.status !== oldStatus;
+      appData.status !== oldStatus;
 
     if (statusHasChanged) {
       after(async () => {
@@ -272,8 +284,8 @@ export async function updateApplicationByIdAction(
           jobTitle: job.title,
           companyName: job.company.name,
           oldStatus: oldStatus!,
-          newStatus: applicationData.status,
-          feedback: applicationData.feedback ?? "",
+          newStatus: appData.status,
+          feedback: appData.feedback ?? "",
         });
       });
     }
@@ -303,7 +315,7 @@ export async function updateApplicationByIdAction(
 }
 
 export async function deleteApplicationByIdAction(
-  applicationId: string,
+  id: unknown,
 ): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -311,9 +323,11 @@ export async function deleteApplicationByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
+    const appId = IdSchema.parse(id);
+
     const { count } = await prisma.application.deleteMany({
       where: {
-        id: applicationId,
+        id: appId,
         OR: [
           { candidateId: currentUserId },
           { job: { createdBy: currentUserId } },

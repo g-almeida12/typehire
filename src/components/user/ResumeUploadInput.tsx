@@ -28,8 +28,9 @@ export function ResumeUploadInput({ resumeUrl }: ResumeUploadInputProps) {
     if (!file) return;
 
     const fileValidation = await UserResumeSchema.safeParseAsync(file);
+    console.log("FILE VALIDATION: ", fileValidation);
     if (!fileValidation.success) {
-      setError(fileValidation.error.message);
+      setError(fileValidation.error.issues[0].message);
       return;
     }
 
@@ -39,7 +40,12 @@ export function ResumeUploadInput({ resumeUrl }: ResumeUploadInputProps) {
       formData.append("resume", fileValidation.data);
       const uploadResponse = await uploadResumeAction(formData);
       if (!uploadResponse.success) {
-        setError("Não foi possível enviar o currículo.");
+        if (typeof uploadResponse.field === "object") {
+          setError(uploadResponse.field.resumeUrl[0]);
+        } else {
+          setError("Não foi possível enviar a o currículo.");
+        }
+
         return;
       }
 

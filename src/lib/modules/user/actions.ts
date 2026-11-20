@@ -2,8 +2,9 @@
 
 import {
   UserPrivateResponsePayload,
-  UserUpdatePayload,
   UserPublicResponsePayload,
+  UserUpdateSchema,
+  UserResumeSchema,
 } from "./schemas";
 import {
   mapPublicUserEntity,
@@ -18,14 +19,17 @@ import { AppError } from "@/utils/errors/app-error";
 import { Prisma } from "@/database/generated/client";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
+import { IdSchema } from "../common/schemas";
 
 export async function getUserByIdAction(
-  userId: string,
+  id: unknown,
 ): ServerActionResponse<UserPublicResponsePayload> {
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const userId = IdSchema.parse(id);
 
     const user = await getCachedUser(userId);
     if (!user) {
@@ -42,11 +46,15 @@ export async function getUserByIdAction(
 }
 
 export async function getUsersByEmailPrefixAction(
-  prefix: string,
+  prefix: unknown,
 ): ServerActionResponse<UserPublicResponsePayload[]> {
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
+    }
+
+    if (typeof prefix !== "string") {
+      throw new AppError("Payload inválido fornecido.", 400);
     }
 
     const users = await prisma.user.findMany({
@@ -74,7 +82,7 @@ export async function getUsersByEmailPrefixAction(
 }
 
 export async function updateUserAction(
-  newUserData: UserUpdatePayload,
+  data: unknown,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -82,9 +90,11 @@ export async function updateUserAction(
       throw new AppError("Usuário não autenticado.", 401);
     }
 
+    const userData = UserUpdateSchema.parse(data);
+
     const updatedUser = await prisma.user.update({
       where: { id: currentUserId },
-      data: newUserData,
+      data: userData,
       include: userWithDetailsInclude,
     });
 
@@ -116,7 +126,7 @@ export async function updateUserAction(
 }
 
 export async function uploadResumeAction(
-  formData: FormData,
+  data: unknown,
 ): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -124,15 +134,22 @@ export async function uploadResumeAction(
       throw new AppError("Usuário não autenticado.", 401);
     }
 
-    const resumeUrl = (formData.get("resume") as File).name;
+    if (!(data instanceof FormData)) {
+      throw new AppError("Payload inválido fornecido.", 400);
+    }
+    const resumeData = await UserResumeSchema.parseAsync(
+      Object.fromEntries(data.entries()).resume,
+    );
+
     await prisma.user.update({
       where: { id: currentUserId },
-      data: { resumeUrl },
+      data: { resumeUrl: resumeData.name },
     });
 
     updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
+    console.error("UPLOAD RESUME ACTION: ", err);
     return AppError.handleDefaultError(
       err,
       "Não foi possível enviar o currículo.",

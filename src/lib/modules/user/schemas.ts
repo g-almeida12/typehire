@@ -17,6 +17,7 @@ const CompanySnippetSchema = z.object({
 export const UserResumeSchema = z
   .custom<File>((val) => val instanceof File, {
     error: "O arquivo inserido é inválido.",
+    path: ["resumeUrl"]
   })
   .superRefine(async (data, ctx) => {
     if (!data) return;

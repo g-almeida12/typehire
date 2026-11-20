@@ -12,13 +12,18 @@ import { ServerActionResponse } from "@/utils/types";
 import { headers } from "next/headers";
 import { after } from "next/server";
 import { UserPrivateResponsePayload } from "../user";
-import { AuthRegisterPayload, AuthLoginPayload } from "../auth";
+import {
+  AuthRegisterSchema,
+  AuthLoginSchema,
+} from "../auth";
 import { AppError } from "@/utils/errors/app-error";
 
 export async function signUpByEmailAction(
-  userData: AuthRegisterPayload,
+  data: unknown,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
+    const userData = AuthRegisterSchema.parse(data);
+
     const existingUser = await prisma.user.findUnique({
       where: { email: userData.email },
       include: userWithDetailsInclude,
@@ -70,9 +75,11 @@ export async function signUpByEmailAction(
 }
 
 export async function signInByEmailAction(
-  userData: AuthLoginPayload,
+  data: unknown,
 ): ServerActionResponse<UserPrivateResponsePayload> {
   try {
+    const userData = AuthLoginSchema.parse(data);
+
     const authUser = await authServer.api.signInEmail({
       body: {
         email: userData.email,
@@ -95,12 +102,10 @@ export async function signInByEmailAction(
     if (err.statusCode === 401) {
       return {
         success: false,
-        message: "Email ou senha inválidos.",
         status: 401,
+        message: "Email ou senha inválidos.",
       };
-    }
-
-    if (err.statusCode === 403) {
+    } else if (err.statusCode === 403) {
       return {
         success: false,
         status: 403,

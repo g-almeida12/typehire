@@ -77,7 +77,7 @@ export function JobForm({ job, companyId }: JobFormProps) {
           data as JobUpdatePayload,
         );
 
-        if (!updateResponse.success) throw new Error();
+        if (!updateResponse.success) throw new Error(updateResponse.message);
 
         startTransition(() =>
           router.replace(APP_URLS.JOB(updateResponse.data.id)),
@@ -89,15 +89,15 @@ export function JobForm({ job, companyId }: JobFormProps) {
           ...(data as JobClientCreatePayload),
           companyId: companyId!,
         });
-        if (!createResponse.success) throw new Error();
+        if (!createResponse.success) throw new Error(createResponse.message);
 
         startTransition(() =>
           router.replace(APP_URLS.JOB(createResponse.data.id)),
         );
       }
-    } catch (_err) {
+    } catch (err: any) {
       setError("root", {
-        message: `Não foi possível ${job ? "atualizar" : "criar"} a vaga.`,
+        message: err.message,
       });
     }
   };

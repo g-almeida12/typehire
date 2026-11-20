@@ -3,9 +3,9 @@
 import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
 import {
-  CompanyCreatePayload,
+  CompanyCreateSchema,
   CompanyResponsePayload,
-  CompanyUpdatePayload,
+  CompanyUpdateSchema,
 } from "@/lib/modules/company/schemas";
 import {
   companyWithDetailsInclude,
@@ -17,15 +17,18 @@ import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { updateTag } from "next/cache";
 import { AppError } from "@/utils/errors/app-error";
 import { getCurrentUserId } from "@/lib/data/user/index";
+import { IdSchema } from "../common/schemas";
 
 export async function createCompanyAction(
-  companyData: CompanyCreatePayload,
+  data: unknown,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const companyData = CompanyCreateSchema.parse(data);
 
     const company = await prisma.company.create({
       data: {
@@ -53,7 +56,7 @@ export async function createCompanyAction(
       const leanError = PrismaClientError.getLeanError(err);
       if (
         leanError.errType === "UNIQUE_CONSTRAINT_ERROR" &&
-        leanError.field === "cnpj"
+        leanError.field === "company_cnpj_key"
       ) {
         return {
           success: false,
@@ -72,12 +75,14 @@ export async function createCompanyAction(
 }
 
 export async function getCompanyByIdAction(
-  companyId: string,
+  id: unknown,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
     if (!(await getCurrentUserId())) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const companyId = IdSchema.parse(id);
 
     const company = await getCachedCompanyById(companyId);
     if (!company) {
@@ -94,8 +99,8 @@ export async function getCompanyByIdAction(
 }
 
 export async function updateCompanyByIdAction(
-  companyId: string,
-  newData: CompanyUpdatePayload,
+  id: unknown,
+  data: unknown,
 ): ServerActionResponse<CompanyResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -103,20 +108,22 @@ export async function updateCompanyByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    // Update the company data
-    const { members, ...data } = newData;
-    const newMemberIds = (members ?? []).map((m) => m.id);
+    const companyId = IdSchema.parse(id);
+    const companyData = CompanyUpdateSchema.parse(data);
 
+    const { members, ...leanCompanyData } = companyData;
+    const newMemberIds = (members ?? []).map((m) => m.id);
     const updatedCompany = await prisma.$transaction(async (tx) => {
       // Update the company if the user has permission to do it
       const { count } = await tx.company.updateMany({
         where: { id: companyId, createdBy: currentUserId },
-        data,
+        data: leanCompanyData,
       });
       if (count === 0) {
         throw new AppError("Empresa não encontrada.", 404);
       }
 
+      // Update company members
       if (members) {
         await tx.companyMember.deleteMany({
           where: {
@@ -162,10 +169,10 @@ export async function updateCompanyByIdAction(
     };
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      const leanError = PrismaClientError.getLeanError(err);
-      switch (leanError.errType) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      switch (leanErr.errType) {
         case "UNIQUE_CONSTRAINT_ERROR":
-          if (leanError.field === "cnpj") {
+          if (leanErr.field === "company_cnpj_key") {
             return {
               success: false,
               status: 409,
@@ -193,13 +200,15 @@ export async function updateCompanyByIdAction(
 }
 
 export async function deleteCompanyByIdAction(
-  companyId: string,
+  id: unknown,
 ): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const companyId = IdSchema.parse(id);
 
     const deletedCompany = await prisma.company.delete({
       where: { id: companyId, createdBy: currentUserId },

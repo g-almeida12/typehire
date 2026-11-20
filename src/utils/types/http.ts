@@ -4,7 +4,7 @@ export type ServerActionResponse<B> = Promise<
       success: false;
       status: number;
       message: string;
-      field?: string | string[];
+      field?: string | Record<string, string[]>;
       data?: unknown;
     }
 >;

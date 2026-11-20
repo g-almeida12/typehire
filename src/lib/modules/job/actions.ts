@@ -3,31 +3,34 @@
 import { prisma } from "@/database";
 import { ServerActionResponse } from "@/utils/types";
 import {
-  JobServerCreatePayload,
   JobResponsePayload,
-  JobUpdatePayload,
-  JobFormFilterOutputPayload,
+  JobServerCreateSchema,
+  JobFormFilterSchema,
+  JobUpdateSchema,
 } from "./schemas";
 import {
   jobWithDetailsInclude,
   mapJobEntity,
   getCachedJobById,
-} from "@/lib/data/job/index";
+} from "@/lib/data/job";
 import { AppError } from "@/utils/errors/app-error";
 import { PaginationResponsePayload } from "@/utils/types";
 import { updateTag } from "next/cache";
-import { getCurrentUserId } from "@/lib/data/user/index";
+import { getCurrentUserId } from "@/lib/data/user";
 import { PrismaClientError } from "@/utils/errors/prisma-error";
 import { Prisma } from "@/database/generated/client";
+import { IdSchema, PaginationSchema } from "../common/schemas";
 
 export async function createJobAction(
-  jobData: JobServerCreatePayload,
+  data: unknown,
 ): ServerActionResponse<JobResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const jobData = JobServerCreateSchema.parse(data);
 
     const isMember = await prisma.companyMember.findFirst({
       where: { userId: currentUserId, companyId: jobData.companyId },
@@ -58,15 +61,28 @@ export async function createJobAction(
       status: 201,
       data: mapJobEntity({ ...createdJob, userHasApplied: false }),
     };
-  } catch (err) {
+  } catch (err: any) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      const leanErr = PrismaClientError.getLeanError(err);
+      if (
+        leanErr.errType === "FOREIGN_KEY_ERROR" &&
+        leanErr.field === "job_companyId_fkey"
+      ) {
+        return {
+          success: false,
+          status: 422,
+          message: "Empresa não encontrada.",
+        };
+      }
+    }
+
     return AppError.handleDefaultError(err, "Não foi possível criar a vaga.");
   }
 }
 
 export async function getJobsAction(
-  filter: JobFormFilterOutputPayload,
-  page: number = 1,
-  pageSize: number = 10,
+  filterData: unknown,
+  pagination: unknown,
 ): ServerActionResponse<{
   jobs: JobResponsePayload[];
   pagination: PaginationResponsePayload;
@@ -76,6 +92,9 @@ export async function getJobsAction(
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const filter = JobFormFilterSchema.parse(filterData);
+    const pag = PaginationSchema.parse(pagination);
 
     const whereCondition: Prisma.JobWhereInput = {
       ...filter,
@@ -87,8 +106,8 @@ export async function getJobsAction(
 
     const jobs = await prisma.job.findMany({
       where: whereCondition,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      skip: (pag.page - 1) * pag.size,
+      take: pag.size,
       orderBy: {
         createdAt: "desc",
       },
@@ -102,7 +121,7 @@ export async function getJobsAction(
     });
 
     const total = await prisma.job.count({ where: whereCondition });
-    const totalPages = Math.ceil(total / pageSize);
+    const totalPages = Math.ceil(total / pag.size);
 
     return {
       success: true,
@@ -112,12 +131,12 @@ export async function getJobsAction(
           mapJobEntity({ ...j, userHasApplied: j.applications.length > 0 }),
         ),
         pagination: {
-          page,
-          pageSize,
+          page: pag.page,
+          pageSize: pag.size,
           total,
           totalPages,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1,
+          hasNextPage: pag.page < totalPages,
+          hasPrevPage: pag.page > 1,
         },
       },
     };
@@ -130,13 +149,15 @@ export async function getJobsAction(
 }
 
 export async function getJobByIdAction(
-  jobId: string,
+  id: unknown,
 ): ServerActionResponse<JobResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const jobId = IdSchema.parse(id);
 
     const job = await getCachedJobById(jobId, currentUserId);
     if (!job) {
@@ -160,8 +181,8 @@ export async function getJobByIdAction(
 }
 
 export async function updateJobByIdAction(
-  jobId: string,
-  newData: JobUpdatePayload,
+  id: unknown,
+  data: unknown,
 ): ServerActionResponse<JobResponsePayload> {
   try {
     const currentUserId = await getCurrentUserId();
@@ -169,7 +190,10 @@ export async function updateJobByIdAction(
       throw new AppError("Usuário não autenticado", 401);
     }
 
-    const { intervalSalary, ...leanNewData } = newData;
+    const jobId = IdSchema.parse(id);
+    const jobData = JobUpdateSchema.parse(data);
+
+    const { intervalSalary, ...leanJobData } = jobData;
     const updatedJob = await prisma.job.update({
       where: {
         id: jobId,
@@ -179,7 +203,7 @@ export async function updateJobByIdAction(
         ],
       },
       data: {
-        ...leanNewData,
+        ...leanJobData,
         minSalary: intervalSalary?.at(0) ?? null,
         maxSalary: intervalSalary?.at(1) ?? null,
       },
@@ -222,13 +246,15 @@ export async function updateJobByIdAction(
 }
 
 export async function deleteJobByIdAction(
-  jobId: string,
+  id: unknown,
 ): ServerActionResponse<null> {
   try {
     const currentUserId = await getCurrentUserId();
     if (!currentUserId) {
       throw new AppError("Usuário não autenticado", 401);
     }
+
+    const jobId = IdSchema.parse(id);
 
     const deletedJob = await prisma.job.delete({
       where: {
@@ -258,7 +284,7 @@ export async function deleteJobByIdAction(
 
     return AppError.handleDefaultError(
       err,
-      "Não foi possível retornar os dados da vaga.",
+      "Não foi possível deletar a vaga.",
     );
   }
 }
