@@ -23,4 +23,27 @@ export class AppError extends Error {
 
     Object.setPrototypeOf(this, new.target.prototype);
   }
+
+  static handleDefaultError(err: any, defaultMessage: string): {
+    success: false;
+    status: number;
+    message: string;
+    field?: string | string[];
+    data?: unknown;
+  } {
+    if (err instanceof AppError) {
+      return {
+        success: false,
+        status: err.statusCode,
+        message: err.message,
+        field: err.field,
+      };
+    }
+
+    return {
+      success: false,
+      status: 500,
+      message: defaultMessage,
+    };
+  }
 }

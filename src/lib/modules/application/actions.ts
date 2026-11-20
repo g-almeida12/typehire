@@ -81,20 +81,10 @@ export async function createApplicationAction(
       }
     }
 
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível se candidatar para a vaga.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível se candidatar para a vaga.",
+    );
   }
 }
 
@@ -121,20 +111,10 @@ export async function getApplicationByIdAction(
       data: mapApplicationEntity(application),
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar a candidatura.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar a candidatura.",
+    );
   }
 }
 
@@ -187,20 +167,10 @@ export async function getApplicationsAction(
       },
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar as candidaturas.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar as candidaturas.",
+    );
   }
 }
 
@@ -220,20 +190,10 @@ export async function getJobApplicationStatusesAction(
 
     return { success: true, status: 200, data: applicationStatuses };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar os estados das candidaturas da vaga.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar os estados das candidaturas da vaga.",
+    );
   }
 }
 
@@ -335,20 +295,10 @@ export async function updateApplicationByIdAction(
       }
     }
 
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível atualizar a candidatura.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível atualizar a candidatura.",
+    );
   }
 }
 
@@ -377,19 +327,9 @@ export async function deleteApplicationByIdAction(
 
     return { success: true, status: 200, data: null };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível deletar a candidatura.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível deletar a candidatura.",
+    );
   }
 }

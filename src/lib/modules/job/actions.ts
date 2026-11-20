@@ -37,7 +37,6 @@ export async function createJobAction(
       throw new AppError(
         "O usuário fornecido não faz parte da empresa e por isso não pode gerenciar vagas.",
         403,
-        "companyId",
       );
     }
 
@@ -60,20 +59,7 @@ export async function createJobAction(
       data: mapJobEntity({ ...createdJob, userHasApplied: false }),
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível criar a vaga.",
-    };
+    return AppError.handleDefaultError(err, "Não foi possível criar a vaga.");
   }
 }
 
@@ -136,20 +122,10 @@ export async function getJobsAction(
       },
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar mais vagas.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar mais vagas.",
+    );
   }
 }
 
@@ -176,20 +152,10 @@ export async function getJobByIdAction(
       }),
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar os dados da vaga.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar os dados da vaga.",
+    );
   }
 }
 
@@ -248,20 +214,10 @@ export async function updateJobByIdAction(
       }
     }
 
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível atualizar os dados da vaga.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível atualizar os dados da vaga.",
+    );
   }
 }
 
@@ -300,19 +256,9 @@ export async function deleteJobByIdAction(
       }
     }
 
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar os dados da vaga.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar os dados da vaga.",
+    );
   }
 }

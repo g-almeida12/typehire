@@ -11,7 +11,7 @@ import {
   getCachedUser,
   getCurrentUserId,
   mapPrivateUserEntity,
-} from "@/lib/data/user/index";
+} from "@/lib/data/user";
 import { ServerActionResponse } from "@/utils/types";
 import { prisma } from "@/database";
 import { AppError } from "@/utils/errors/app-error";
@@ -34,20 +34,10 @@ export async function getUserByIdAction(
 
     return { success: true, status: 200, data: mapPublicUserEntity(user) };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível encontrar o usuário.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível encontrar o usuário.",
+    );
   }
 }
 
@@ -76,20 +66,10 @@ export async function getUsersByEmailPrefixAction(
       data: users.map((u) => mapPublicUserEntity(u)),
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível buscar os usuário.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível buscar os usuário.",
+    );
   }
 }
 
@@ -115,15 +95,6 @@ export async function updateUserAction(
       data: mapPrivateUserEntity(updatedUser),
     };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       const leanErr = PrismaClientError.getLeanError(err);
       switch (leanErr.errType) {
@@ -137,11 +108,10 @@ export async function updateUserAction(
       }
     }
 
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível atualizar o usuário.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível atualizar o usuário.",
+    );
   }
 }
 
@@ -163,20 +133,10 @@ export async function uploadResumeAction(
     updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível enviar o currículo.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível enviar o currículo.",
+    );
   }
 }
 
@@ -195,20 +155,10 @@ export async function removeResumeAction(): ServerActionResponse<null> {
     updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível remover o currículo.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível remover o currículo.",
+    );
   }
 }
 
@@ -226,19 +176,9 @@ export async function deleteUserAction(): ServerActionResponse<null> {
     updateTag(`user-${currentUserId}`);
     return { success: true, status: 200, data: null };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        status: err.statusCode,
-        message: err.message,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível deletar o usuário.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível deletar o usuário.",
+    );
   }
 }

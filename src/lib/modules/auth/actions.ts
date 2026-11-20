@@ -13,6 +13,7 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 import { UserPrivateResponsePayload } from "../user";
 import { AuthRegisterPayload, AuthLoginPayload } from "../auth";
+import { AppError } from "@/utils/errors/app-error";
 
 export async function signUpByEmailAction(
   userData: AuthRegisterPayload,
@@ -60,12 +61,11 @@ export async function signUpByEmailAction(
       status: 201,
       data: mapPrivateUserEntity(signedUpUser),
     };
-  } catch (_err) {
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível realizar o cadastro.",
-    };
+  } catch (err) {
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível realizar o cadastro.",
+    );
   }
 }
 
@@ -109,11 +109,10 @@ export async function signInByEmailAction(
       };
     }
 
-    return {
-      success: false,
-      message: "Não foi possível conectar a sua conta.",
-      status: 500,
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível conectar a sua conta.",
+    );
   }
 }
 
@@ -125,10 +124,9 @@ export async function signOutAction(): ServerActionResponse<boolean> {
 
     return { success: true, status: 200, data: true };
   } catch (err) {
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível desconectar a sua conta.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível desconectar a sua conta.",
+    );
   }
 }

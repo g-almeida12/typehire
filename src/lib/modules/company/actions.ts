@@ -62,20 +62,12 @@ export async function createCompanyAction(
           field: "cnpj",
         };
       }
-    } else if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
     }
 
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível criar a empresa.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível criar a empresa.",
+    );
   }
 }
 
@@ -94,20 +86,10 @@ export async function getCompanyByIdAction(
 
     return { success: true, status: 200, data: mapCompanyEntity(company) };
   } catch (err) {
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível retornar os dados da empresa.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível retornar os dados da empresa.",
+    );
   }
 }
 
@@ -201,20 +183,12 @@ export async function updateCompanyByIdAction(
             field: "members",
           };
       }
-    } else if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
     }
 
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível criar a empresa.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível criar a empresa.",
+    );
   }
 }
 
@@ -250,19 +224,9 @@ export async function deleteCompanyByIdAction(
       }
     }
 
-    if (err instanceof AppError) {
-      return {
-        success: false,
-        message: err.message,
-        status: err.statusCode,
-        field: err.field,
-      };
-    }
-
-    return {
-      success: false,
-      status: 500,
-      message: "Não foi possível deletar a empresa.",
-    };
+    return AppError.handleDefaultError(
+      err,
+      "Não foi possível deletar a empresa.",
+    );
   }
 }
