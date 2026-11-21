@@ -105,6 +105,8 @@ export function RegisterForm() {
               <Link
                 href={APP_URLS.CONDITIONS}
                 className="font-medium text-accent-100 cursor-pointer"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Termos de Condições
               </Link>{" "}
@@ -112,6 +114,8 @@ export function RegisterForm() {
               <Link
                 href={APP_URLS.PRIVACY}
                 className="font-medium text-accent-100 cursor-pointer"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Política de Privacidade
               </Link>
