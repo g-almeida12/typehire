@@ -49,7 +49,10 @@ async function ApplicationListContent({
 }) {
   const searchParams = await props.searchParams;
   const filter = ApplicationURLFilterSchema.parse(searchParams);
-  const applicationResponse = await getApplicationsAction(filter, 1, 10);
+  const applicationResponse = await getApplicationsAction(filter, {
+    page: 1,
+    size: 10,
+  });
 
   if (!applicationResponse.success) {
     return (
@@ -69,7 +72,6 @@ async function ApplicationListContent({
       {applicationResponse.data.pagination.total > 0 && (
         <p className="mb-2 text-background-300">
           {applicationResponse.data.pagination.total}{" "}
-          
           {applicationResponse.data.pagination.total === 1
             ? "candidatura encontrada"
             : "candidaturas encontradas"}

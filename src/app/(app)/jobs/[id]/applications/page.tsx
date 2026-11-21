@@ -84,7 +84,7 @@ async function JobApplicationListContent({
   const [jobResponse, jobApplcResponse, jobApplcStatusesResponse] =
     await Promise.all([
       getJobByIdAction(params.id),
-      getApplicationsAction(filter, 1, 10),
+      getApplicationsAction(filter, { page: 1, size: 10 }),
       getJobApplicationStatusesAction(params.id),
     ]);
   if (jobResponse.status === 404) notFound();

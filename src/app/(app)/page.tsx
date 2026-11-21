@@ -43,7 +43,7 @@ async function Greeting() {
 async function JobList({ props }: { props: PageProps<"/"> }) {
   const searchParams = await props.searchParams;
   const filter = JobURLFilterSchema.parse(searchParams);
-  const jobResponse = await getJobsAction(filter, 1, 10);
+  const jobResponse = await getJobsAction(filter, { page: 1, size: 10 });
 
   if (!jobResponse.success) {
     return (
