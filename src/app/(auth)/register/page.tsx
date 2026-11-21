@@ -13,10 +13,10 @@ export default async function RegisterPage() {
       <AuthGate>
         <Navbar onlyBrand />
         <main className="pb-4">
-          <h1 className="mt-8 text-2xl font-medium text-center">
+          <h1 className="mt-8 text-2xl font-medium text-left">
             Crie sua conta
           </h1>
-          <p className="text-sm/tight text-background-300 text-center">
+          <p className="text-sm/tight text-background-300 text-left">
             Preencha seus dados pessoais necessários e registre suas informações
             básicas.
           </p>

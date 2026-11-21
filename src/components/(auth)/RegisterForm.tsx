@@ -100,7 +100,7 @@ export function RegisterForm() {
 
         <div className="flex flex-col gap-3">
           <div>
-            <p className="text-sm text-background-300 text-center">
+            <p className="text-sm text-background-300 text-left">
               Ao continuar, concordo que li e aceito os{" "}
               <Link
                 href={APP_URLS.CONDITIONS}

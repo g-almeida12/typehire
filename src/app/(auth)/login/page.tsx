@@ -13,10 +13,10 @@ export default function LoginPage() {
       <AuthGate>
         <Navbar onlyBrand />
         <main className="pb-4">
-          <h1 className="mt-8 text-2xl font-medium text-center">
+          <h1 className="mt-8 text-2xl font-medium text-left">
             Bem-vindo de volta
           </h1>
-          <p className="text-sm/tight text-background-300 text-center">
+          <p className="text-sm/tight text-background-300 text-left">
             Faça login e continue a procurar pela sua próxima vaga.
           </p>
 

@@ -13,7 +13,7 @@ import { Suspense } from "react";
 const ERROR_MESSAGES: Record<string, React.ReactNode> = {
   INVALID_TOKEN: (
     <>
-      Este link é inválido ou já foi usado. Se você já confirmou seu email, é só
+      Este link é inválido ou já foi usado. Se você já confirmou seu email, é só{" "}
       <Link href={APP_URLS.LOGIN} className="underline">
         entrar na sua conta
       </Link>
