@@ -30,7 +30,7 @@ export function GoogleOAuthButton({
   return (
     <button
       onClick={handleGoogleSignup}
-      className={`w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] ${props.disabled ? "cursor-default" : "cursor-pointer"}`}
+      className={`w-full max-w-lg flex items-center justify-center gap-2 px-4 py-2 bg-[#131314] border border-[#8E918F] rounded-lg text-[#E3E3E3] ${props.disabled ? "cursor-default" : "cursor-pointer"}`}
       {...props}
     >
       <Image

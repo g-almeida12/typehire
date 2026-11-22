@@ -41,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     `;
 
     return (
-      <div className="group w-full flex flex-col items-start gap-1">
+      <div className="group w-full max-w-lg flex flex-col items-start gap-1">
         {label && (
           <label
             htmlFor={props.id}

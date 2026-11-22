@@ -11,18 +11,20 @@ export default async function RegisterPage() {
   return (
     <Suspense fallback={null}>
       <AuthGate>
-        <Navbar onlyBrand />
-        <main className="pb-4">
-          <h1 className="mt-8 text-2xl font-medium text-left">
-            Crie sua conta
-          </h1>
-          <p className="text-sm/tight text-background-300 text-left">
-            Preencha seus dados pessoais necessários e registre suas informações
-            básicas.
-          </p>
-
-          <RegisterForm />
-        </main>
+        <div className="max-w-lg mx-auto">
+          <Navbar onlyBrand />
+          <main className="pb-4">
+            <h1 className="mt-8 text-2xl font-medium text-left">
+              Crie sua conta
+            </h1>
+            <p className="text-sm/tight text-background-300 text-left">
+              Preencha seus dados pessoais necessários e registre suas informações
+              básicas.
+            </p>
+  
+            <RegisterForm />
+          </main>
+        </div>
       </AuthGate>
     </Suspense>
   );

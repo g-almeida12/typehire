@@ -67,7 +67,7 @@ async function EmailVerificationContent({
   const error = Array.isArray(rawError) ? rawError[0] : rawError;
 
   return (
-    <>
+    <div className="max-w-lg mx-auto">
       <Navbar onlyBrand />
       <main className="">
         <section>
@@ -111,7 +111,7 @@ async function EmailVerificationContent({
           <ResendEmailVerificationButton email={email} />
         </section>
       </main>
-    </>
+    </div>
   );
 }
 

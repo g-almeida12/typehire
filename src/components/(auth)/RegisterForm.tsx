@@ -142,7 +142,7 @@ export function RegisterForm() {
         <GoogleOAuthButton callbackURL={APP_URLS.HOME} disabled={isBusy} />
       </div>
 
-      <p className="mt-17 text-sm text-background-300 text-center">
+      <p className="mt-17 text-sm text-background-300 text-left">
         Já possui uma conta? Então{" "}
         <Link
           href={APP_URLS.LOGIN}
