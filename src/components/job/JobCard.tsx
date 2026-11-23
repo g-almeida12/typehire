@@ -4,6 +4,7 @@ import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobInfoTags } from "./JobInfoTags";
+import { CardContainer } from "../common/CardContainer";
 
 export function JobCard({
   job,
@@ -28,23 +29,25 @@ export function JobCard({
 }) {
   return (
     <Link href={APP_URLS.JOB(job.id)} prefetch={false}>
-      <div className="px-4 py-4 border-y border-y-background-700">
-        {/* Job and company profile */}
-        <div className="flex flex-col gap-2">
-          {/* Company image and name */}
-          <CompanyProfile company={job.company} type="readonly" />
-          <div className="flex flex-col gap-0">
-            <p className="text-lg font-medium">{job.title}</p>
-            {job.location && (
-              <p className="mb-3 text-background-300 text-sm/[14px] truncate italic">
-                {job.location}
-              </p>
-            )}
+      <CardContainer className="flex flex-col justify-between">
+        <div>
+          {/* Job and company profile */}
+          <div className="flex flex-col gap-2">
+            {/* Company image and name */}
+            <CompanyProfile company={job.company} type="readonly" />
+            <div className="max-w-full flex flex-col gap-0">
+              <p className="text-lg/[24px] font-semibold tracking-wide">{job.title}</p>
+              {job.location && (
+                <p className="mb-3 mt-1 text-background-300 text-sm/[14px] truncate italic">
+                  {job.location}
+                </p>
+              )}
+            </div>
           </div>
+  
+          {/* Job level and modality tags */}
+          <JobInfoTags level={job.level} modality={job.modality} />
         </div>
-
-        {/* Job level and modality tags */}
-        <JobInfoTags level={job.level} modality={job.modality} />
 
         {/* Job salary and creation date */}
         <div className="flex flex-row justify-between items-baseline mt-6">
@@ -56,7 +59,7 @@ export function JobCard({
               } else if (job.hourlySalary) {
                 return (
                   <>
-                    ${job.hourlySalary}
+                    {job.hourlySalary}
                     <span className="text-sm text-background-300">/hora</span>
                   </>
                 );
@@ -70,7 +73,7 @@ export function JobCard({
             {formatRelativeTime(job.createdAt)}
           </p>
         </div>
-      </div>
+      </CardContainer>
     </Link>
   );
 }

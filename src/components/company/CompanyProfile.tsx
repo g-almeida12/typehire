@@ -51,13 +51,13 @@ export function CompanyProfile({
         </div>
 
         {/* Company name and website */}
-        <div className="max-w-[calc(100%-50px-1rem)] flex flex-col gap-0 items-start">
-          <p className="-mt-px font-medium truncate">
+        <div className="min-w-0 flex-1 flex flex-col gap-0 items-start">
+          <p className="w-full min-w-0 -mt-px font-medium text-sm truncate">
             {company.name}{" "}
             {showCompanySize && `(${COMPANY_SIZE_LABELS[company.size!]})`}
           </p>
 
-          <p className="-mt-0.5 text-sm text-background-300 italic truncate">
+          <p className="-mt-0.5 pr-1 text-sm text-background-300 italic truncate">
             {showUserMembership ? (
               USER_MEMBERSHIP_MAP[showUserMembership]
             ) : visualOnlyWebsiteLink ? (

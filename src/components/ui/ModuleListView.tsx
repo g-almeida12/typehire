@@ -144,9 +144,9 @@ export function ModuleListView<TModule, TFilter>({
 
   return (
     <div>
-      <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
+      <ul className="flex flex-col gap-2 sm:grid sm:grid-cols-2">
         {modules.map((m, idx) => (
-          <li className="not-first:-mt-px" key={`module-view-${idx}`}>
+          <li key={`module-view-${idx}`}>
             {renderItem(m)}
           </li>
         ))}

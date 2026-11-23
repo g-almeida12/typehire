@@ -14,9 +14,12 @@ import {
 } from "@/utils/mappers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./Button";
+import { RadioContainer } from "./RadioContainer/RadioContainer";
+import { RadioGroup } from "./RadioContainer/RadioGroup";
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
 
 export function SearchInput({ placeholder }: { placeholder: string }) {
   const { register, handleSubmit, reset } = useForm<
@@ -36,6 +39,8 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   const [isRouterLoading, startRouterTransition] = useTransition();
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [resetKey, setResetKey] = useState<number>(0);
+  const searchRef = useRef<HTMLFormElement>(null);
+  useClickOutside(searchRef, () => setIsFilterOpen(false));
 
   const handleSearchSubmit = (filter: JobFormFilterOutputPayload) => {
     const params = new URLSearchParams(searchParams);
@@ -67,25 +72,28 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
     <form
       method="POST"
       onSubmit={handleSubmit(handleSearchSubmit)}
-      className="relative max-w-full"
+      className="relative mx-auto w-full max-w-lg"
       autoComplete="off"
+      ref={searchRef}
     >
+      {/* Search bar */}
       <div
-        className={`max-w-full flex flex-row gap-2 items-center justify-between px-2 py-2 text-background-800 ${isFilterOpen ? "rounded-t-md rounded-b-0" : "rounded-md"} ${isRouterLoading ? "border-background-300 bg-background-300" : "border-background-200 bg-background-200"}`}
+        className={`flex max-w-full flex-row items-center justify-between gap-1 rounded-md px-1 py-1 text-background-800 ${
+          isRouterLoading ? "bg-background-500" : "bg-background-400"
+        }`}
       >
-        <div className="flex flex-row gap-2 max-w-full min-w-0">
-          <div className="w-6 h-6 text-background-800">
-            <button
-              type="submit"
-              disabled={isRouterLoading}
-              className="cursor-pointer"
-            >
-              <SearchIcon size={24} aria-hidden="true" />
-            </button>
-          </div>
+        <div className="flex min-w-0 w-full flex-row items-center gap-1">
+          <button
+            type="submit"
+            disabled={isRouterLoading}
+            aria-label="Pesquisar vagas"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center"
+          >
+            <SearchIcon size={24} aria-hidden="true" />
+          </button>
           <input
             type="search"
-            className="min-w-0 max-w-full focus:outline-none"
+            className="min-w-0 w-full text-background-900 placeholder:text-background-600 focus:outline-none"
             placeholder={placeholder}
             {...register("title")}
             onKeyDown={(e) => {
@@ -97,89 +105,54 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
             disabled={isRouterLoading}
           />
         </div>
-        <div className="w-6 h-6 text-background-800">
-          <button
-            type="button"
-            className="cursor-pointer"
-            onClick={() => setIsFilterOpen((prev) => !prev)}
-            aria-controls="search-filter"
-            aria-expanded={isFilterOpen}
-            aria-label="Abrir filtro de pesquisa"
-          >
-            <SlidersIcon size={24} aria-hidden="true" />
-          </button>
-        </div>
+
+        <button
+          type="button"
+          className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center"
+          onClick={() => setIsFilterOpen((prev) => !prev)}
+          aria-controls="search-filter"
+          aria-expanded={isFilterOpen}
+          aria-label="Abrir filtro de pesquisa"
+        >
+          <SlidersIcon size={24} aria-hidden="true" />
+        </button>
       </div>
 
+      {/* Filter panel */}
       {isFilterOpen && !isRouterLoading && (
-        <div
-          className="absolute z-10 top-full left-0 right-0 flex flex-col gap-4 overflow-y-scroll h-50 border-t px-2 py-2 shadow-lg rounded-b-md border-background-400 bg-background-200"
-          id="search-filter"
-          key={resetKey}
-        >
-          {/* Modality */}
-          <fieldset>
-            <legend className="text-background-500 font-medium">
-              Modalidade
-            </legend>
-            <div className="flex flex-col gap-0">
-              {Object.values(JobModality).map((mod) => (
-                <label
-                  className="flex flex-row gap-2 text-background-800"
-                  key={`radio-${mod}`}
-                >
-                  <input type="radio" value={mod} {...register("modality")} />
-                  {JOB_MODALITY_LABELS[mod as JobModality]}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+        <RadioContainer id="search-filter" key={resetKey}>
+          <RadioGroup
+            legend="Modalidade"
+            values={Object.values(JobModality)}
+            labels={JOB_MODALITY_LABELS}
+            registration={register("modality")}
+          />
 
-          {/* Level */}
-          <fieldset>
-            <legend className="text-background-500 font-medium">
-              Experiência necessária
-            </legend>
-            <div className="flex flex-col gap-0">
-              {Object.values(JobLevel).map((lv) => (
-                <label
-                  className="flex flex-row gap-2 text-background-800"
-                  key={`radio-${lv}`}
-                >
-                  <input type="radio" value={lv} {...register("level")} />
-                  {JOB_LEVEL_LABELS[lv as JobLevel]}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <RadioGroup
+            legend="Experiência necessária"
+            values={Object.values(JobLevel)}
+            labels={JOB_LEVEL_LABELS}
+            registration={register("level")}
+          />
 
-          {/* Type */}
-          <fieldset>
-            <legend className="text-background-500 font-medium">Tipo</legend>
-            <div className="flex flex-col gap-0">
-              {Object.values(JobType).map((tp) => (
-                <label
-                  className="flex flex-row gap-2 text-background-800"
-                  key={`radio-${tp}`}
-                >
-                  <input type="radio" value={tp} {...register("type")} />
-                  {JOB_TYPE_LABELS[tp as JobType]}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <RadioGroup
+            legend="Tipo"
+            values={Object.values(JobType)}
+            labels={JOB_TYPE_LABELS}
+            registration={register("type")}
+          />
 
-          <div className="flex flex-col gap-2 mt-5">
+          <div className="flex flex-col gap-2 border-t border-background-700 pt-4">
             <Button text="Pesquisar" type="submit" />
             <button
               type="button"
               onClick={handleClearFilters}
-              className="text-accent-300 cursor-pointer"
+              className="cursor-pointer py-2 text-accent-300 hover:text-accent-200"
             >
               Limpar filtros
             </button>
           </div>
-        </div>
+        </RadioContainer>
       )}
     </form>
   );
