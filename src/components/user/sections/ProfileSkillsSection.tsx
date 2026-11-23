@@ -11,7 +11,7 @@ export function ProfileSkillsSection({
   isOwner = false,
 }: ProfileSkillsProps) {
   return (
-    <section className="mt-8">
+    <section>
       <h2 className="mb-2 text-xl font-medium">
         {isOwner ? "Suas habilidades" : "Habilidades do usuário"}
       </h2>

@@ -17,7 +17,7 @@ export function ProfileHeaderSection({
       <UserProfile user={user} type={userProfileType} />
 
       {/* Main user info */}
-      <div className="w-full flex flex-row items-center gap-4 mt-2 mb-1">
+      <div className="w-full flex flex-row items-center gap-4 mt-4 mb-2">
         <p className="flex flex-row gap-2 items-center text-sm text-background-300">
           <PhoneIcon size={18} aria-hidden="true" />
           {user.phoneNumber ? user.phoneNumber : "Não informado"}

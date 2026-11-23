@@ -12,14 +12,14 @@ import {
   SkeletonSocialMedias,
   SkeletonText,
   SkeletonUserProfile,
-  SkeletonButton
+  SkeletonButton,
 } from "@/components/skeletons";
 import { Suspense } from "react";
 import { AuthActionsWrapper } from "@/components/(auth)/AuthActionsWrapper";
 
 export default function ProfilePage() {
   return (
-    <main className="pb-4">
+    <main className="w-full max-w-lg pb-4 mx-auto">
       <section>
         <div className="size-6 mt-4">
           <BackButton />
@@ -42,13 +42,15 @@ async function ProfileContent() {
 
       <hr className="mt-4 mb-8" />
 
-      <ProfileSocialMediasSection user={user} />
-      <ProfileSkillsSection skills={user.skills} isOwner={true} />
-      <ProfileMembershipsSection
-        companies={user.companies}
-        userId={user.id}
-        isOwner={true}
-      />
+      <div className="flex flex-col gap-8">
+        <ProfileSocialMediasSection user={user} />
+        <ProfileSkillsSection skills={user.skills} isOwner={true} />
+        <ProfileMembershipsSection
+          companies={user.companies}
+          userId={user.id}
+          isOwner={true}
+        />
+      </div>
 
       {/* Session */}
       <section className="mt-8">

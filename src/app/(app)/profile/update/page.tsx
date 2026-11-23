@@ -4,7 +4,7 @@ import {
   SkeletonInput,
   SkeletonSocialMedias,
   SkeletonSkills,
-  SkeletonButton
+  SkeletonButton,
 } from "@/components/skeletons";
 import { ProfileUpdateForm } from "@/components/user/ProfileUpdateForm";
 import { getCurrentUserData } from "@/lib/data/user";
@@ -13,7 +13,7 @@ import { Suspense } from "react";
 
 export default function ProfileUpdate() {
   return (
-    <main className="pb-4">
+    <main className="w-full max-w-lg mx-auto pb-4">
       <section>
         <div className="size-6 mt-4">
           <BackButton />
@@ -43,7 +43,7 @@ async function ProfileFormSection() {
 
 function ProfileFormSectionFallback() {
   return (
-    <div aria-busy="true">
+    <div className="flex flex-col gap-8" aria-busy="true">
       <div>
         <SkeletonText customClassName=" w-60 h-5 mb-6 rounded-md bg-background-200" />
 
@@ -57,13 +57,13 @@ function ProfileFormSectionFallback() {
       </div>
 
       {/* Social medias */}
-      <div className="mt-8">
+      <div>
         <SkeletonText customClassName=" w-60 h-5 mb-6 rounded-md bg-background-200" />
         <SkeletonSocialMedias />
       </div>
 
       {/* Skills */}
-      <div className="mt-8">
+      <div>
         <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
         <SkeletonInput variant="input" />
         <div className="mt-4">
@@ -71,7 +71,7 @@ function ProfileFormSectionFallback() {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div>
         <SkeletonButton />
       </div>
     </div>

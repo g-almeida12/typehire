@@ -14,7 +14,7 @@ export function ProfileMembershipsSection({
   isOwner = false,
 }: ProfileMembershipsProps) {
   return (
-    <section className="mt-8">
+    <section>
       <h2 className="mb-2 text-xl font-medium">Empresas em que participa</h2>
       {companies.length > 0 ? (
         <ul className="flex flex-col gap-1">

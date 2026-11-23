@@ -64,7 +64,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
       {errors.root?.message && <ErrorMessage message={errors.root?.message} />}
       <fieldset>
         <legend className="text-xl font-medium">Informações pessoais</legend>
-        <div className="flex flex-col gap-2 mt-3">
+        <div className="flex flex-col gap-2 mt-2">
           <Input
             {...register("name")}
             Icon={UserCircleIcon}
@@ -117,7 +117,7 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
 
       <fieldset>
         <legend className="text-xl font-medium">Suas redes sociais</legend>
-        <div className="flex flex-col gap-2 mt-3">
+        <div className="flex flex-col gap-2 mt-2">
           <Input
             {...register("githubUrl")}
             Icon={GitHubIcon}
@@ -152,12 +152,12 @@ export function ProfileUpdateForm({ user }: ProfileUpdateFormProps) {
       </fieldset>
 
       <fieldset className="min-w-0">
-        <legend className="mb-3 text-xl font-medium">Currículo</legend>
+        <legend className="mb-2 text-xl font-medium">Currículo</legend>
         <ResumeUploadInput resumeUrl={user.resumeUrl} />
       </fieldset>
 
       <fieldset>
-        <legend className="mb-3 text-xl font-medium">
+        <legend className="mb-2 text-xl font-medium">
           Habilidades registradas
         </legend>
         <SkillsDropdown
