@@ -20,7 +20,7 @@ export default function LoginPage() {
             <p className="text-sm/tight text-background-300 text-left">
               Faça login e continue a procurar pela sua próxima vaga.
             </p>
-  
+
             <LoginForm />
           </main>
         </div>
@@ -33,7 +33,7 @@ async function AuthGate({ children }: { children: React.ReactNode }) {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user) redirect(APP_URLS.HOME);
+  if (session?.user) redirect(APP_URLS.JOBS);
 
   return children;
 }

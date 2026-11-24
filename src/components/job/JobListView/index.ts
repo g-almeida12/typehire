@@ -1,0 +1,1 @@
+export { JobListView } from './JobListView';

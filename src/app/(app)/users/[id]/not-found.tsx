@@ -34,7 +34,7 @@ export default function UserNotFoundPage() {
 
           <Button
             text="Voltar para o início"
-            onClick={() => router.replace(APP_URLS.HOME)}
+            onClick={() => router.replace(APP_URLS.JOBS)}
           />
         </div>
       </main>

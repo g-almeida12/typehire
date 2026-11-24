@@ -17,7 +17,7 @@ export function Navbar({ onlyBrand = false }: NavbarProps) {
       </div>
       {!onlyBrand && (
         <div className="flex flex-row gap-6">
-          <Link href={APP_URLS.HOME} aria-label="Ir para página inicial">
+          <Link href={APP_URLS.JOBS} aria-label="Ir para página inicial">
             <SearchIcon size={24} aria-hidden={true} />
           </Link>
           <Link

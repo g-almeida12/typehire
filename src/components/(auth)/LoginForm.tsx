@@ -59,7 +59,7 @@ export function LoginForm() {
         throw new Error();
       }
 
-      startTransition(() => router.replace(APP_URLS.HOME));
+      startTransition(() => router.replace(APP_URLS.JOBS));
     } catch (_err) {
       setError("root", {
         message: "Desculpe, mas não foi possível conectar na sua conta.",
@@ -114,7 +114,7 @@ export function LoginForm() {
       </div>
 
       <div className="mt-12">
-        <GoogleOAuthButton callbackURL={APP_URLS.HOME} disabled={isBusy} />
+        <GoogleOAuthButton callbackURL={APP_URLS.JOBS} disabled={isBusy} />
       </div>
 
       <p className="mt-17 text-sm text-background-300 text-center">

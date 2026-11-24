@@ -139,7 +139,7 @@ export function RegisterForm() {
       </div>
 
       <div className="mt-12">
-        <GoogleOAuthButton callbackURL={APP_URLS.HOME} disabled={isBusy} />
+        <GoogleOAuthButton callbackURL={APP_URLS.JOBS} disabled={isBusy} />
       </div>
 
       <p className="mt-17 text-sm text-background-300 text-left">

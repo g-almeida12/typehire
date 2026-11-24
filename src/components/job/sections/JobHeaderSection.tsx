@@ -17,7 +17,7 @@ export function JobHeaderSection({
   job,
 }: JobHeaderSectionProps) {
   return (
-    <section className="mt-6">
+    <section>
       {userRole === "CREATOR" && <InfoTag label="Sua empresa" />}
       {userRole === "MEMBER" && <InfoTag label="Você é membro" />}
       <CompanyProfile

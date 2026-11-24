@@ -18,10 +18,10 @@ export default async function RegisterPage() {
               Crie sua conta
             </h1>
             <p className="text-sm/tight text-background-300 text-left">
-              Preencha seus dados pessoais necessários e registre suas informações
-              básicas.
+              Preencha seus dados pessoais necessários e registre suas
+              informações básicas.
             </p>
-  
+
             <RegisterForm />
           </main>
         </div>
@@ -34,7 +34,7 @@ async function AuthGate({ children }: { children: React.ReactNode }) {
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user) redirect(APP_URLS.HOME);
+  if (session?.user) redirect(APP_URLS.JOBS);
 
   return children;
 }

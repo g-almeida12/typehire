@@ -52,7 +52,7 @@ export function CompanyProfile({
 
         {/* Company name and website */}
         <div className="min-w-0 flex-1 flex flex-col gap-0 items-start">
-          <p className="w-full min-w-0 -mt-px font-medium text-sm truncate">
+          <p className={`${type === "readonly" ? "w-full" : "w-[calc(100%-16px)]"} min-w-0 -mt-px font-medium text-sm truncate`}>
             {company.name}{" "}
             {showCompanySize && `(${COMPANY_SIZE_LABELS[company.size!]})`}
           </p>
@@ -87,7 +87,7 @@ export function CompanyProfile({
       {type === "edit" ? (
         <Link
           href={APP_URLS.COMPANY_UPDATE(company.id)}
-          className="shrink-0 mt-1"
+          className="shrink-0"
           aria-label="Editar dados da empresa"
         >
           <EditIcon
@@ -100,7 +100,7 @@ export function CompanyProfile({
         type === "link" && (
           <Link
             href={APP_URLS.COMPANY(company.id)}
-            className="shrink-0 mt-1"
+            className="shrink-0"
             aria-label="Ver dados da empresa"
           >
             <ArrowUpRightIcon

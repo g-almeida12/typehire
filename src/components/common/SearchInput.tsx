@@ -13,7 +13,7 @@ import {
   JOB_TYPE_LABELS,
 } from "@/utils/mappers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "./Button";
@@ -35,7 +35,6 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
     },
   });
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isRouterLoading, startRouterTransition] = useTransition();
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
   const [resetKey, setResetKey] = useState<number>(0);
@@ -43,10 +42,9 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   useClickOutside(searchRef, () => setIsFilterOpen(false));
 
   const handleSearchSubmit = (filter: JobFormFilterOutputPayload) => {
-    const params = new URLSearchParams(searchParams);
-    Object.entries(filter).forEach(([key, value]) => {
-      params.delete(key);
+    const params = new URLSearchParams();
 
+    Object.entries(filter).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach((v) => params.append(key, String(v)));
       } else if (value) {

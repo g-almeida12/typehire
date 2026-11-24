@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef, useTransition } from "react";
-import { Dialog, DialogRef } from "../common/Dialog";
+import { Dialog, DialogRef } from "../../common/Dialog";
 import { useRouter } from "next/navigation";
 import { deleteJobByIdAction } from "@/lib/modules/job";
 import { EditIcon, TrashIcon } from "@/components/icons";
 import { APP_URLS } from "@/utils/constants";
-import { MoreOptions } from "../common/MoreOptions";
+import { MoreOptions } from "../../common/MoreOptions";
 import { useToast } from "@/contexts/ToastContext";
 
 export function JobActionsWrapper({ jobId }: { jobId: string }) {
@@ -56,7 +56,7 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
   };
 
   return (
-    <>
+    <div>
       <MoreOptions options={OPTIONS} />
       <Dialog
         title="Deletar Vaga?"
@@ -66,6 +66,6 @@ export function JobActionsWrapper({ jobId }: { jobId: string }) {
         ref={dialogRef}
         isPending={isPending}
       />
-    </>
+    </div>
   );
 }

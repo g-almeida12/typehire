@@ -59,7 +59,7 @@ async function EmailVerificationContent({
   const session = await authServer.api.getSession({
     headers: await headers(),
   });
-  if (session?.user?.emailVerified) redirect(APP_URLS.HOME);
+  if (session?.user?.emailVerified) redirect(APP_URLS.JOBS);
 
   const { email: rawEmail, error: rawError } = await props.searchParams;
   if (!rawEmail) redirect(APP_URLS.REGISTER);
