@@ -24,7 +24,7 @@ export function ModuleNotFound({
   const router = useRouter();
 
   return (
-    <div className="fixed inset-0 z-100 bg-background-1000 md:static md:bg-transparent">
+    <div className="flex flex-col flex-1 fixed inset-0 z-100 bg-background-1000 md:static md:bg-transparent">
       <LockBodyScroll device="MOBILE" />
       {applyFullPageStyles && (
         <div className="mb-10">
@@ -38,30 +38,32 @@ export function ModuleNotFound({
         </div>
       )}
       <div
-        className={`flex flex-col items-center p-4  ${applyFullPageStyles ? "" : "md:p-2 md:border md:rounded-md md:border-background-500"}`}
+        className={`flex flex-col flex-1 items-center p-4  ${applyFullPageStyles ? "" : "md:p-2 md:border md:rounded-md md:border-background-500"}`}
       >
-        <div className="w-full max-w-80 flex items-center justify-center">
-          <Image
-            src="/images/global-not-found-img.png"
-            alt="Ilustração de erro"
-            width={500}
-            height={500}
-            priority
-          />
-        </div>
-
-        <div className="flex flex-col items-center mt-5">
-          <h1 className="text-2xl font-bold text-center">{title}</h1>
-          <p className="max-w-md mt-2 mb-10 text-background-300 text-sm leading-relaxed text-center">
-            {description}
-          </p>
-
-          {applyFullPageStyles && (
-            <Button
-              text="Voltar para o início"
-              onClick={() => router.replace(APP_URLS.JOBS)}
+        <div className="flex-1">
+          <div className="w-full max-w-80 mx-auto flex items-center justify-center">
+            <Image
+              src="/images/global-not-found-img.png"
+              alt="Ilustração de erro"
+              width={500}
+              height={500}
+              priority
             />
-          )}
+          </div>
+
+          <div className="flex flex-col items-center mt-5">
+            <h1 className="text-2xl font-bold text-center">{title}</h1>
+            <p className="max-w-md mt-2 mb-10 text-background-300 text-sm leading-relaxed text-center">
+              {description}
+            </p>
+
+            {applyFullPageStyles && (
+              <Button
+                text="Voltar para o início"
+                onClick={() => router.replace(APP_URLS.JOBS)}
+              />
+            )}
+          </div>
         </div>
 
         <a

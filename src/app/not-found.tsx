@@ -12,8 +12,8 @@ export default function AppNotFoundPage() {
   return (
     <div className="min-h-dvh flex flex-col">
       <Navbar />
-      <main className="flex-1 flex flex-col items-center text-center">
-        <div className="w-full max-w-120 flex items-center justify-center mt-15">
+      <main className=" w-full max-w-lg pb-4 mx-auto flex-1 flex flex-col items-center text-center">
+        <div className="w-full max-w-md flex items-center justify-center mt-15">
           <Image
             src="/images/global-not-found-img.png"
             alt="Ilustração de erro"
@@ -23,7 +23,7 @@ export default function AppNotFoundPage() {
           />
         </div>
 
-        <div className="mt-5">
+        <div className="flex flex-col items-center mt-5">
           <h1 className="text-2xl font-bold">
             O endereço procurado encerrou o processo seletivo.
           </h1>
