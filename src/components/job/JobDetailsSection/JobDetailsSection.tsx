@@ -1,26 +1,40 @@
-import { JobResponsePayload } from "@/lib/modules/job";
+import { getJobByIdAction } from "@/lib/modules/job";
 import { Suspense } from "react";
 import { JobHeaderSection } from "./JobHeaderSection";
 import { JobInfoSection } from "./JobInfoSection";
-import { UserPublicResponsePayload } from "@/lib/modules/user";
 import { Navbar } from "../../ui/Navbar";
 import { LockMobileBodyScroll } from "../../ui/LockMobileBodyScroll";
 import { JobActions } from "../JobActions";
+import { SearchParams } from "@/utils/types";
+import { getSearchParam } from "@/utils/string";
+import { JobNotFoundContent } from "../JobNotFoundContent";
+import { getCurrentUserData } from "@/lib/data/user";
 
 interface JobDetailsProps {
-  job: JobResponsePayload;
-  user: Pick<UserPublicResponsePayload, "id" | "skills">;
+  searchParams: SearchParams;
 }
 
-export function JobDetailsSection({ job, user }: JobDetailsProps) {
+export function JobDetailsSection({ searchParams }: JobDetailsProps) {
   return (
-    <Suspense>
-      <JobContent job={job} user={user} />
+    <Suspense fallback={<JobSectionFallback />}>
+      <JobContent searchParams={searchParams} />
     </Suspense>
   );
 }
 
-async function JobContent({ job, user }: JobDetailsProps) {
+async function JobContent({ searchParams }: { searchParams: SearchParams }) {
+  const queries = await searchParams;
+  const jobId = getSearchParam(queries, "job-id");
+  if (!jobId) return <JobSectionFallback />;
+
+  const [user, jobResponse] = await Promise.all([
+    getCurrentUserData(),
+    getJobByIdAction(jobId),
+  ]);
+
+  if (!jobResponse.success) return <JobNotFoundContent />;
+
+  const job = jobResponse.data;
   const userRole =
     job.creator.id === user!.id || job.company.createdBy === user!.id
       ? "CREATOR"
@@ -29,14 +43,14 @@ async function JobContent({ job, user }: JobDetailsProps) {
         : "USER";
 
   return (
-    <section className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background-1000 md:static md:z-auto md:p-2 md:overscroll-auto md:border md:rounded-md md:border-background-500">
+    <section className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background-1000 md:static md:z-auto md:p-2 md:pb-4 md:overscroll-auto md:border md:rounded-md md:border-background-500">
       <div className="md:hidden">
         <Navbar />
       </div>
       <div className="p-4 md:p-2">
         <LockMobileBodyScroll />
 
-        <JobActions job={job} userId={user.id} />
+        <JobActions job={job} userId={user!.id} />
         <div>
           <>
             <JobHeaderSection
@@ -50,5 +64,16 @@ async function JobContent({ job, user }: JobDetailsProps) {
         </div>
       </div>
     </section>
+  );
+}
+
+function JobSectionFallback() {
+  return (
+    <div>
+      <p className="text-sm text-background-300">
+        Selecione uma vaga da lista e veja todos os detalhes, como localização,
+        experiência necessária, salário e descrição detalhada.
+      </p>
+    </div>
   );
 }
