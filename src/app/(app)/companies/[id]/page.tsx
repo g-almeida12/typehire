@@ -14,9 +14,9 @@ import { truncateText } from "@/utils/string";
 
 export default function CompanyPage(props: PageProps<"/companies/[id]">) {
   return (
-    <>
+    <div className="flex min-h-0 flex-col md:h-dvh">
       <Navbar />
-      <main className="pb-4">
+      <main className="flex min-h-0 flex-1 flex-col pb-4">
         <section className="w-full flex flex-row items-center justify-between mt-4">
           <div className="size-6">
             <BackButton />
@@ -36,7 +36,7 @@ export default function CompanyPage(props: PageProps<"/companies/[id]">) {
           <CompanyContent props={props} />
         </Suspense>
       </main>
-    </>
+    </div>
   );
 }
 

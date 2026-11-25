@@ -1,10 +1,8 @@
 import { Greeting } from "@/components/common/Greeting";
 import { SearchInput } from "@/components/common/SearchInput";
-import { JobActions } from "@/components/job/JobActions";
-import { JobDetails } from "@/components/job/JobDetails";
+import { JobDetailsSection } from "@/components/job/JobDetailsSection/JobDetailsSection";
 import { JobListView } from "@/components/job/JobListView";
 import { JobNotFoundContent } from "@/components/job/JobNotFoundContent";
-import { LockMobileBodyScroll } from "@/components/ui/LockMobileBodyScroll";
 import { Navbar } from "@/components/ui/Navbar";
 import { getCurrentUserData } from "@/lib/data/user";
 import { getJobByIdAction } from "@/lib/modules/job";
@@ -54,18 +52,7 @@ async function JobSection({ searchParams }: { searchParams: SearchParams }) {
 
   if (!jobResponse.success) return <JobNotFoundContent />;
 
-  return (
-    <section
-      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-background-1000 md:static md:z-auto md:p-2 md:overscroll-auto md:border md:rounded-md md:border-background-500"
-      key={JSON.stringify(queries)}
-    >
-      <div className="p-4 md:p-2">
-        <LockMobileBodyScroll />
-        <JobActions job={jobResponse.data} userId={user!.id} />
-        <JobDetails job={jobResponse.data} user={user!} />
-      </div>
-    </section>
-  );
+  return <JobDetailsSection job={jobResponse.data} user={user!} />
 }
 
 function JobSectionFallback() {

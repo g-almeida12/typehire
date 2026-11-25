@@ -19,11 +19,11 @@ export function JobActions({ job, userId }: JobActionsProps) {
 async function JobActionsContent({ job, userId }: JobActionsProps) {
   return (
     <div>
-      <div className="mb-4 md:hidden md:mb-0">
+      <div className="mb-2 md:hidden md:mb-0">
         <CloseButtonByQueryRemove searchParam="job-id" />
       </div>
       {job.creator.id === userId && (
-        <div className="mb-4">
+        <div className="mb-2">
           <JobActionsWrapper jobId={job.id} />
         </div>
       )}
