@@ -146,13 +146,11 @@ export function ModuleListView<TModule, TFilter>({
     <div>
       <ul className="flex flex-col gap-2 w-full max-w-md mx-auto">
         {modules.map((m, idx) => (
-          <li key={`module-view-${idx}`}>
-            {renderItem(m)}
-          </li>
+          <li key={`module-view-${idx}`}>{renderItem(m)}</li>
         ))}
       </ul>
 
-      <div className="mt-5">
+      <div>
         {(() => {
           if (error) {
             return (
@@ -164,7 +162,11 @@ export function ModuleListView<TModule, TFilter>({
           }
 
           if (isLoading) {
-            return <LoadingSpinner />;
+            return (
+              <div className="mt-5">
+                <LoadingSpinner />
+              </div>
+            );
           }
 
           if (!hasMore) {
