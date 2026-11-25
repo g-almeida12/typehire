@@ -1,7 +1,6 @@
 import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/job/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
-import { getJobsAction, JobURLFilterSchema } from "@/lib/modules/job/index";
 import { getCurrentUserId } from "@/lib/data/user/index";
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
@@ -13,38 +12,62 @@ import Link from "next/link";
 import { APP_URLS } from "@/utils/constants";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import {
-  SkeletonCompanyProfile,
-  SkeletonJobCard,
-} from "@/components/skeletons";
+import { SkeletonCompanyProfile } from "@/components/skeletons";
 import { truncateText } from "@/utils/string";
+import { JobDetailsSection } from "@/components/job/JobDetailsSection";
+import { Params, SearchParams } from "@/utils/types";
+import { JobURLFilterSchema } from "@/lib/modules/job";
 
-export default async function CompanyJobsPage(
+export default function CompanyJobsPage(
   props: PageProps<"/companies/[id]/jobs">,
 ) {
   return (
-    <>
+    <div className="flex min-h-0 flex-col md:h-dvh">
       <Navbar />
-      <main className="pb-4">
-        <section className="mb-12">
-          <Suspense fallback={<CompanyHeaderFallback />}>
-            <CompanyJobsHeader props={props} />
-          </Suspense>
-
-          <div className="mt-8">
-            <h1 className="mb-2 text-xl font-medium">Pesquise por vagas</h1>
-            <SearchInput placeholder="Digite o título da vaga" />
+      <main className="flex min-h-0 flex-1 flex-col pb-4">
+        <div className="w-full max-w-lg pb-4 mx-auto">
+          <div className="min-h-0 mt-10 mb-4 shrink-0">
+            <Suspense fallback={<CompanyHeaderFallback />}>
+              <CompanyJobsHeader props={props} />
+            </Suspense>
           </div>
-        </section>
+          <div className="shrink-0">
+            <hr className="border-px border-background-500" />
+            <h1 className="mb-2 mt-8 text-lg font-medium text-left text-background-300">
+              Pesquise por vagas
+            </h1>
+            <SearchInput placeholder="Encontre sua próxima vaga" />
+          </div>
+        </div>
 
-        <section>
-          <Suspense fallback={<JobListFallback />}>
-            <JobListContent props={props} />
-          </Suspense>
-        </section>
+        <hr className="opacity-0 md:opacity-100 mt-8 border-background-500" />
+
+        <div className="grid min-h-dvh flex-1 md:gap-4 md:grid-cols-[minmax(320px,1fr)_2fr] md:grid-rows-[minmax(0,1fr)]">
+          <section className="min-w-0 md:pr-2 md:pt-2 md:overflow-y-auto">
+            <JobListContent params={props.params} searchParams={props.searchParams} />
+          </section>
+
+          <div className="relative min-w-0 md:pt-2 md:overflow-y-auto">
+            <JobDetailsSection searchParams={props.searchParams} />
+          </div>
+        </div>
       </main>
-    </>
+    </div>
   );
+}
+
+async function JobListContent({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const companyId = (await params).id;
+  const queries = await searchParams;
+  const filter = JobURLFilterSchema.parse({ ...queries, companyId });
+
+  return <JobListView filter={filter} />
 }
 
 async function CompanyJobsHeader({
@@ -106,43 +129,6 @@ async function CompanyJobsHeader({
   );
 }
 
-async function JobListContent({
-  props,
-}: {
-  props: PageProps<"/companies/[id]/jobs">;
-}) {
-  const [params, searchParams] = await Promise.all([
-    props.params,
-    props.searchParams,
-  ]);
-  const filter = JobURLFilterSchema.parse({
-    ...searchParams,
-    companyId: params.id,
-  });
-  const jobResponse = await getJobsAction(filter, { page: 1, size: 10 });
-
-  if (!jobResponse.success) {
-    return (
-      <div className="flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-background-300 text-lg/[22px]">
-          Não foi possível carregar mais vagas.
-        </p>
-        <p className="text-sm text-background-400 mt-2">
-          Tente recarregar a página mais tarde.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <JobListView
-      initialJobs={jobResponse.data.jobs}
-      initialHasMore={jobResponse.data.pagination.hasNextPage}
-      filter={filter}
-    />
-  );
-}
-
 export async function generateMetadata(
   props: PageProps<"/companies/[id]/jobs">,
 ): Promise<Metadata> {
@@ -181,16 +167,6 @@ function CompanyHeaderFallback() {
       </div>
 
       <SkeletonCompanyProfile />
-    </div>
-  );
-}
-
-function JobListFallback() {
-  return (
-    <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <SkeletonJobCard key={`job-${idx}`} />
-      ))}
     </div>
   );
 }

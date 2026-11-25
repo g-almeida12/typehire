@@ -154,7 +154,7 @@ export function ModuleListView<TModule, TFilter>({
         {(() => {
           if (error) {
             return (
-              <div className="flex flex-col gap-2">
+              <div className={`flex flex-col gap-2 ${modules.length > 0 ? "mt-5" : "mt-0"}`}>
                 <ErrorMessage message={error} />
                 <Button text="Tentar novamente" onClick={loadMoreModules} />
               </div>
@@ -171,7 +171,7 @@ export function ModuleListView<TModule, TFilter>({
 
           if (!hasMore) {
             return (
-              <p className="text-center text-sm text-background-300">
+              <p className="mt-5 text-center text-sm text-background-300">
                 {modulesListEndMessage}
               </p>
             );
