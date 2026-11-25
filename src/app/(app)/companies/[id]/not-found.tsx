@@ -5,9 +5,19 @@ import { Button } from "@/components/common/Button";
 import { Navbar } from "@/components/ui/Navbar";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
+import { ModuleNotFound } from "@/components/ui/ModuleNotFound";
 
 export default function CompanyNotFoundPage() {
   const router = useRouter();
+
+  return (
+    <ModuleNotFound
+      title="A empresa selecionada não foi encontrada."
+      description="Talvez ela tenha encerrado suas atividades em nossa plataforma ou o
+            link acessado contenha um identificador inválido."
+      applyFullPageStyles
+    />
+  );
 
   return (
     <div className="min-h-dvh flex flex-col">

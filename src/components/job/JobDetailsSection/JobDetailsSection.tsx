@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { JobHeaderSection } from "./JobHeaderSection";
 import { JobInfoSection } from "./JobInfoSection";
 import { Navbar } from "../../ui/Navbar";
-import { LockMobileBodyScroll } from "../../ui/LockMobileBodyScroll";
+import { LockBodyScroll } from "../../ui/LockBodyScroll";
 import { JobActions } from "../JobActions";
 import { SearchParams } from "@/utils/types";
 import { getSearchParam } from "@/utils/string";
@@ -48,7 +48,7 @@ async function JobContent({ searchParams }: { searchParams: SearchParams }) {
         <Navbar />
       </div>
       <div className="p-4 md:p-2">
-        <LockMobileBodyScroll />
+        <LockBodyScroll device="MOBILE" />
 
         <JobActions job={job} userId={user!.id} />
         <div>
