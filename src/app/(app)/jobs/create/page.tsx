@@ -18,7 +18,7 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
   return (
     <main className="pb-4">
       <section>
-        <div className="size-6 mt-4">
+        <div className="mt-4">
           <BackButton />
         </div>
 

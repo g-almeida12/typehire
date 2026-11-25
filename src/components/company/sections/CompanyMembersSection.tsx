@@ -17,7 +17,7 @@ export function CompanyMembersSection({
   )[0];
 
   return (
-    <section className="mt-8">
+    <section className="w-full mt-8">
       <h2 className="mb-2 text-xl font-medium">
         {userRole !== "USER" ? "Sua equipe" : "Nossa equipe"}
       </h2>
@@ -33,7 +33,7 @@ export function CompanyMembersSection({
       <h3 className="mb-2 mt-4 font-medium text-background-300">Membros</h3>
       <ul className="flex flex-col gap-4">
         {company.members.length === 1 ? (
-          <p className="text-center text-sm text-background-300">
+          <p className="text-left text-sm text-background-300">
             Não há nenhum membro nessa empresa.
           </p>
         ) : (

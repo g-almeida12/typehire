@@ -21,7 +21,7 @@ export default function ProfilePage() {
   return (
     <main className="w-full max-w-lg pb-4 mx-auto">
       <section>
-        <div className="size-6 mt-4">
+        <div className="mt-4">
           <BackButton />
         </div>
       </section>

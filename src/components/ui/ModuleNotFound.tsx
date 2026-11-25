@@ -1,6 +1,11 @@
 import Image from "next/image";
 
-export function JobNotFoundContent() {
+interface ModuleNotFoundProps {
+  title: string;
+  description: string;
+}
+
+export function ModuleNotFound({ title, description }: ModuleNotFoundProps) {
   return (
     <div className="p-4 md:p-2 md:border md:rounded-md md:border-background-500">
       <div className="w-full max-w-80 flex items-center justify-center mx-auto">
@@ -14,13 +19,9 @@ export function JobNotFoundContent() {
       </div>
 
       <div className="mt-5">
-        <h1 className="text-2xl font-bold">
-          A vaga selecionada não foi encontrada.
-        </h1>
+        <h1 className="text-2xl font-bold">{title}</h1>
         <p className="mt-2 mb-10 text-background-300 text-sm leading-relaxed">
-          Esta vaga pode ter sido descontinuada pelo criador, não existir em
-          nossa base de dados ou o link acessado conter um identificador
-          inválido.
+          {description}
         </p>
       </div>
 

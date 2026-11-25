@@ -1,53 +1,39 @@
-import { BackButton } from "@/components/common/BackButton";
 import { Navbar } from "@/components/ui/Navbar";
-import { getCompanyByIdAction } from "@/lib/modules/company/index";
-import { getCurrentUserData } from "@/lib/data/user/index";
+import { getCompanyByIdAction } from "@/lib/modules/company";
+import { getCurrentUserId } from "@/lib/data/user";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CompanyActionsWrapper } from "@/components/company/CompanyActionsWrapper";
+import { truncateText } from "@/utils/string";
+import { CompanyActions } from "@/components/company/CompanyActions";
+import { Params } from "@/utils/types";
 import { CompanyHeaderSection } from "@/components/company/sections/CompanyHeaderSection";
 import { CompanyJobsSection } from "@/components/company/sections/CompanyJobsSection";
 import { CompanyMembersSection } from "@/components/company/sections/CompanyMembersSection";
 import { Suspense } from "react";
-import { SkeletonCompanyContent } from "@/components/skeletons";
-import { truncateText } from "@/utils/string";
 
 export default function CompanyPage(props: PageProps<"/companies/[id]">) {
   return (
-    <div className="flex min-h-0 flex-col md:h-dvh">
+    <>
       <Navbar />
-      <main className="flex min-h-0 flex-1 flex-col pb-4">
-        <section className="w-full flex flex-row items-center justify-between mt-4">
-          <div className="size-6">
-            <BackButton />
-          </div>
-          <Suspense fallback={null}>
-            <CompanyActionsWrapperContent props={props} />
-          </Suspense>
-        </section>
-
-        <Suspense
-          fallback={
-            <div className="mt-4">
-              <SkeletonCompanyContent />
-            </div>
-          }
-        >
-          <CompanyContent props={props} />
+      <main className="w-full max-w-lg pb-4 mx-auto">
+        <Suspense>
+          <CompanyContent
+            params={props.params}
+          />
         </Suspense>
       </main>
-    </div>
+    </>
   );
 }
 
-async function CompanyActionsWrapperContent({
-  props,
+async function CompanyContent({
+  params,
 }: {
-  props: PageProps<"/companies/[id]">;
+  params: Params;
 }) {
-  const companyId = (await props.params).id;
-  const [user, companyResponse] = await Promise.all([
-    getCurrentUserData(),
+  const companyId = (await params).id;
+  const [userId, companyResponse] = await Promise.all([
+    getCurrentUserId(),
     getCompanyByIdAction(companyId),
   ]);
 
@@ -59,52 +45,26 @@ async function CompanyActionsWrapperContent({
       );
   }
 
-  if (user!.id !== companyResponse.data.createdBy) return null;
-
-  return (
-    <div className="size-6">
-      <CompanyActionsWrapper companyId={companyId} />
-    </div>
-  );
-}
-
-async function CompanyContent({
-  props,
-}: {
-  props: PageProps<"/companies/[id]">;
-}) {
-  const companyId = (await props.params).id;
-  const [user, companyResponse] = await Promise.all([
-    getCurrentUserData(),
-    getCompanyByIdAction(companyId),
-  ]);
-
-  if (!companyResponse.success) {
-    if (companyResponse.status === 404) notFound();
-    else
-      throw new Error(
-        `Failed to load company page content for company ID: ${companyId}`,
-      );
-  }
-
   const company = companyResponse.data;
   const USER_ROLE =
-    company.createdBy === user!.id
+    company.createdBy === userId!
       ? "CREATOR"
-      : company.members.map((m) => m.id).includes(user!.id)
+      : company.members.map((m) => m.id).includes(userId!)
         ? "MEMBER"
         : "USER";
 
   return (
-    <>
+    <section className="mt-4">
+      <CompanyActions company={companyResponse.data} userId={userId!} />
+
       <CompanyHeaderSection userRole={USER_ROLE} company={company} />
       <CompanyJobsSection userRole={USER_ROLE} company={company} />
       <CompanyMembersSection
         userRole={USER_ROLE}
         company={company}
-        currentUserId={user!.id}
+        currentUserId={userId!}
       />
-    </>
+    </section>
   );
 }
 

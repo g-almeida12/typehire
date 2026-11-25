@@ -71,7 +71,7 @@ async function EmailVerificationContent({
       <Navbar onlyBrand />
       <main className="">
         <section>
-          <div className="size-6 mt-4 mb-10">
+          <div className="mt-4 mb-10">
             <BackButton />
           </div>
 

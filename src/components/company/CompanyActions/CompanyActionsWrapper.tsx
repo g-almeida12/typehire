@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef, useTransition } from "react";
-import { Dialog, DialogRef } from "../common/Dialog";
+import { Dialog, DialogRef } from "../../common/Dialog";
 import { deleteCompanyByIdAction } from "@/lib/modules/company";
 import { EditIcon, TrashIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { APP_URLS } from "@/utils/constants";
-import { MoreOptions } from "../common/MoreOptions";
+import { MoreOptions } from "../../common/MoreOptions";
 import { useToast } from "@/contexts/ToastContext";
 
 export function CompanyActionsWrapper({ companyId }: { companyId: string }) {

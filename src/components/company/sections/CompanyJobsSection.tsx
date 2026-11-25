@@ -18,7 +18,7 @@ export function CompanyJobsSection({
     <section className="mt-8">
       <h2 className="mb-4 text-xl font-medium">Vagas abertas no momento</h2>
 
-      <ul className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
+      <ul className="flex flex-col gap-2">
         {company.jobs.length === 0 ? (
           <p className="text-center text-sm text-background-300">
             {userRole === "CREATOR"
@@ -28,7 +28,10 @@ export function CompanyJobsSection({
         ) : (
           company.jobs.map((j, idx) => (
             <li className="not-first:-mt-px" key={`job-${idx}`}>
-              <JobCard job={{ ...j, company }} />
+              <JobCard
+                job={{ ...j, company }}
+                navigateTo={`${APP_URLS.COMPANY(company.id)}/jobs?job-id=${j.id}`}
+              />
             </li>
           ))
         )}

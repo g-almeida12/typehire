@@ -7,7 +7,7 @@ import { LockMobileBodyScroll } from "../../ui/LockMobileBodyScroll";
 import { JobActions } from "../JobActions";
 import { SearchParams } from "@/utils/types";
 import { getSearchParam } from "@/utils/string";
-import { JobNotFoundContent } from "../JobNotFoundContent";
+import { JobNotFound } from "../JobNotFound";
 import { getCurrentUserData } from "@/lib/data/user";
 
 interface JobDetailsProps {
@@ -32,7 +32,7 @@ async function JobContent({ searchParams }: { searchParams: SearchParams }) {
     getJobByIdAction(jobId),
   ]);
 
-  if (!jobResponse.success) return <JobNotFoundContent />;
+  if (!jobResponse.success) return <JobNotFound />;
 
   const job = jobResponse.data;
   const userRole =

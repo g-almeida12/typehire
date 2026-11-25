@@ -21,7 +21,7 @@ export default async function JobApplicationsPage(
     <>
       <main className="pb-4">
         <section className="flex flex-row items-center justify-between">
-          <div className="size-6 mt-4">
+          <div className="mt-4">
             <BackButton />
           </div>
         </section>

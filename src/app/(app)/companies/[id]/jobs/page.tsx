@@ -76,9 +76,7 @@ async function CompanyJobsHeader({
   return (
     <div className="mt-4">
       <div className="flex flex-row items-center justify-between">
-        <div className="size-6">
-          <BackButton />
-        </div>
+        <BackButton />
 
         {USER_ROLE !== "USER" && (
           <Link

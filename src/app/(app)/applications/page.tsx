@@ -19,7 +19,7 @@ export default async function ApplicationsPage(
       <main className="pb-4">
         <section>
           <div className="flex flex-row items-center justify-between">
-            <div className="size-6 mt-4">
+            <div className="mt-4">
               <BackButton />
             </div>
           </div>
