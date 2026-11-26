@@ -1,12 +1,5 @@
-import { ModuleNotFound } from "@/components/ui/ModuleNotFound";
+import CompanyNotFound from "@/components/company/CompanyNotFound";
 
 export default function CompanyNotFoundPage() {
-  return (
-    <ModuleNotFound
-      title="A empresa selecionada não foi encontrada."
-      description="Talvez ela tenha encerrado suas atividades em nossa plataforma ou o
-            link acessado contenha um identificador inválido."
-      applyFullPageStyles
-    />
-  );
+  return <CompanyNotFound />;
 }

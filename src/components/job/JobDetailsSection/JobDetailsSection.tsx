@@ -32,7 +32,7 @@ async function JobContent({ searchParams }: { searchParams: SearchParams }) {
     getJobByIdAction(jobId),
   ]);
 
-  if (!jobResponse.success) return <JobNotFound />;
+  if (!jobResponse.success) return <JobNotFound closeButtonQuery="jobId" />;
 
   const job = jobResponse.data;
   const userRole =
