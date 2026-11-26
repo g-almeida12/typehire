@@ -16,7 +16,7 @@ import {
   JobUpdateSchema,
   createJobAction,
   updateJobByIdAction,
-} from "@/lib/modules/job/index";
+} from "@/lib/modules/job";
 import { JobSalaryInput } from "./JobSalaryInput";
 import { JobLevelDropdown } from "./JobLevelDropdown";
 import { JobTypeDropdown } from "./JobTypeDropdown";
@@ -78,9 +78,10 @@ export function JobForm({ job, companyId }: JobFormProps) {
         );
 
         if (!updateResponse.success) throw new Error(updateResponse.message);
-
         startTransition(() =>
-          router.replace(APP_URLS.JOB(updateResponse.data.id)),
+          router.replace(
+            `${APP_URLS.COMPANY(updateResponse.data.company.id)}/jobs?jobId=${updateResponse.data.id}`,
+          ),
         );
       }
       // Create action
@@ -89,10 +90,12 @@ export function JobForm({ job, companyId }: JobFormProps) {
           ...(data as JobClientCreatePayload),
           companyId: companyId!,
         });
-        if (!createResponse.success) throw new Error(createResponse.message);
 
+        if (!createResponse.success) throw new Error(createResponse.message);
         startTransition(() =>
-          router.replace(APP_URLS.JOB(createResponse.data.id)),
+          router.replace(
+            `${APP_URLS.COMPANY(createResponse.data.company.id)}/jobs?jobId=${createResponse.data.id}`,
+          ),
         );
       }
     } catch (err: any) {

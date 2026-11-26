@@ -24,7 +24,7 @@ export function JobDetailsSection({ searchParams }: JobDetailsProps) {
 
 async function JobContent({ searchParams }: { searchParams: SearchParams }) {
   const queries = await searchParams;
-  const jobId = getSearchParam(queries, "job-id");
+  const jobId = getSearchParam(queries, "jobId");
   if (!jobId) return <JobSectionFallback />;
 
   const [user, jobResponse] = await Promise.all([

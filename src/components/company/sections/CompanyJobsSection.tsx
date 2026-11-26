@@ -30,7 +30,7 @@ export function CompanyJobsSection({
             <li className="not-first:-mt-px" key={`job-${idx}`}>
               <JobCard
                 job={{ ...j, company }}
-                navigateTo={`${APP_URLS.COMPANY(company.id)}/jobs?job-id=${j.id}`}
+                navigateTo={`${APP_URLS.COMPANY(company.id)}/jobs?jobId=${j.id}`}
               />
             </li>
           ))

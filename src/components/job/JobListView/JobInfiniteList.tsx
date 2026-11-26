@@ -51,7 +51,7 @@ export function JobInfiniteList({
       filter={filter}
       renderItem={(job) => {
         const sp = new URLSearchParams(searchParams);
-        sp.set("job-id", job.id);
+        sp.set("jobId", job.id);
 
         return <JobCard job={job} navigateTo={`${location}?${sp.toString()}`} />;
       }}

@@ -11,3 +11,4 @@ export * from './SkeletonSearchInput';
 export * from './SkeletonCandidateCard';
 export * from './SkeletonButton';
 export * from './SkeletonCompanyContent';
+export * from './SkeletonJobForm';

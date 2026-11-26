@@ -18,12 +18,12 @@ export function JobActions({ job, userId }: JobActionsProps) {
 
 async function JobActionsContent({ job, userId }: JobActionsProps) {
   return (
-    <div>
+    <div className="flex flex-row items-center justify-between">
       <div className="mb-2 md:hidden md:mb-0">
-        <CloseButtonByQueryRemove searchParam="job-id" />
+        <CloseButtonByQueryRemove searchParam="jobId" />
       </div>
       {job.creator.id === userId && (
-        <div className="mb-2">
+        <div className="mb-2 ml-auto">
           <JobActionsWrapper jobId={job.id} />
         </div>
       )}

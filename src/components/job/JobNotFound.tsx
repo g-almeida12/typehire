@@ -7,7 +7,7 @@ export function JobNotFound() {
       description="Esta vaga pode ter sido descontinuada pelo criador, não existir em
           nossa base de dados ou o link acessado conter um identificador
           inválido."
-      closeButtonQuery="job-id"
+      closeButtonQuery="jobId"
     />
   );
 }

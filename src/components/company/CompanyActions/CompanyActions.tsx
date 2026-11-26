@@ -9,10 +9,10 @@ interface CompanyActionsProps {
 
 export function CompanyActions({ company, userId }: CompanyActionsProps) {
   return (
-    <div className="size-6">
+    <div className="h-6 flex flex-row items-center justify-between">
       <BackButton />
       {company.createdBy === userId && (
-        <div className="mb-2">
+        <div className="mb-2 ml-auto">
           <CompanyActionsWrapper companyId={company.id} />
         </div>
       )}

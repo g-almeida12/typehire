@@ -2,14 +2,12 @@ import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobForm } from "@/components/job/JobForm";
 import {
-  SkeletonButton,
   SkeletonCompanyProfile,
-  SkeletonInput,
-  SkeletonSkills,
-  SkeletonText,
+  SkeletonJobForm
 } from "@/components/skeletons";
 import { getCompanyByIdAction } from "@/lib/modules/company";
-import { truncateText } from "@/utils/string";
+import { getSearchParam, truncateText } from "@/utils/string";
+import { SearchParams } from "@/utils/types";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -38,8 +36,8 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
       </section>
 
       <section>
-        <Suspense fallback={<JobFormContentFallback />}>
-          <JobFormContent props={props} />
+        <Suspense fallback={<SkeletonJobForm />}>
+          <JobFormContent searchParams={props.searchParams} />
         </Suspense>
       </section>
     </main>
@@ -47,7 +45,8 @@ export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
 }
 
 async function CompanyHeader({ props }: { props: PageProps<"/jobs/create"> }) {
-  const companyId = (await props.searchParams).companyId as string;
+  const queries = await props.searchParams;
+  const companyId = getSearchParam(queries, 'companyId');
   const companyResponse = await getCompanyByIdAction(companyId);
 
   if (!companyResponse.success) {
@@ -67,8 +66,9 @@ async function CompanyHeader({ props }: { props: PageProps<"/jobs/create"> }) {
   );
 }
 
-async function JobFormContent({ props }: { props: PageProps<"/jobs/create"> }) {
-  const companyId = (await props.searchParams).companyId as string;
+async function JobFormContent({ searchParams }: { searchParams: SearchParams }) {
+  const queries = await searchParams;
+  const companyId = getSearchParam(queries, 'companyId');
 
   return <JobForm companyId={companyId} key={companyId} />;
 }
@@ -76,7 +76,8 @@ async function JobFormContent({ props }: { props: PageProps<"/jobs/create"> }) {
 export async function generateMetadata(
   props: PageProps<"/jobs/create">,
 ): Promise<Metadata> {
-  const companyId = (await props.searchParams).companyId as string;
+  const queries = await props.searchParams;
+  const companyId = getSearchParam(queries, 'companyId');
   const companyResponse = await getCompanyByIdAction(companyId);
 
   if (!companyResponse.success) {
@@ -91,47 +92,4 @@ export async function generateMetadata(
     title: `Criar vaga na empresa ${truncateText(companyResponse.data.name, 35)} | TypeHire`,
     description: `Crie uma nova vaga para sua empresa ${truncateText(companyResponse.data.name, 35)}.`,
   };
-}
-
-function JobFormContentFallback() {
-  return (
-    <div className="mt-6">
-      <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
-      <div className="flex flex-col gap-4">
-        {/* Company base info */}
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="textarea" />
-
-        <div>
-          <SkeletonText customClassName="w-40 h-3 mb-1 rounded-md bg-background-400" />
-          <div className="w-full flex flex-col gap-2 px-2 py-1 mb-1 rounded-md border-background-800 bg-background-800">
-            <div className="flex flex-row gap-2">
-              {Array.from({ length: 3 }).map((_, idx) => (
-                <span
-                  className="block w-40 h-6 rounded-md bg-background-500 animate-pulse"
-                  key={`salary-type-${idx}`}
-                ></span>
-              ))}
-            </div>
-          </div>
-          <div className="block w-full h-8 rounded-md bg-background-600 animate-pulse"></div>
-        </div>
-
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="input" />
-
-        {/* Skills */}
-        <div className="mt-8">
-          <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
-          <SkeletonInput variant="input" />
-          <div className="mt-4">
-            <SkeletonSkills />
-          </div>
-        </div>
-      </div>
-
-      <SkeletonButton />
-    </div>
-  );
 }
