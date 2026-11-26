@@ -14,7 +14,7 @@ import { Suspense } from "react";
 
 export default async function JobCreatePage(props: PageProps<"/jobs/create">) {
   return (
-    <main className="pb-4">
+    <main className="w-full max-w-lg pb-4 mx-auto">
       <section>
         <div className="mt-4">
           <BackButton />

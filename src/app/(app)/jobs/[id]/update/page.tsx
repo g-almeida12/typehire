@@ -2,11 +2,8 @@ import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { JobForm } from "@/components/job/JobForm";
 import {
-  SkeletonButton,
   SkeletonCompanyProfile,
-  SkeletonInput,
-  SkeletonSkills,
-  SkeletonText,
+  SkeletonJobForm,
 } from "@/components/skeletons";
 import { getJobByIdAction } from "@/lib/modules/job";
 import { truncateText } from "@/utils/string";
@@ -18,7 +15,7 @@ export default async function JobUpdatePage(
   props: PageProps<"/jobs/[id]/update">,
 ) {
   return (
-    <main className="pb-4">
+    <main className="w-full max-w-lg pb-4 mx-auto">
       <section>
         <div className="mt-4">
           <BackButton />
@@ -36,7 +33,7 @@ export default async function JobUpdatePage(
       </section>
 
       <section>
-        <Suspense fallback={<JobFormContentFallback />}>
+        <Suspense fallback={<SkeletonJobForm />}>
           <JobFormContent props={props} />
         </Suspense>
       </section>
@@ -92,7 +89,6 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const jobId = (await props.params).id;
   const jobResponse = await getJobByIdAction(jobId);
-
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
     else throw new Error(`Failed to generate metadata for job ID: ${jobId}`);
@@ -102,49 +98,4 @@ export async function generateMetadata(
     title: `Atualizar vaga ${truncateText(jobResponse.data.title, 35)} da empresa ${truncateText(jobResponse.data.company.name, 35)} | TypeHire`,
     description: `Atualize os dados da vaga de ${truncateText(jobResponse.data.title, 35)} da empresa ${truncateText(jobResponse.data.company.name, 35)}.`,
   };
-}
-
-function JobFormContentFallback() {
-  return (
-    <div className="mt-6">
-      <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
-      <div className="flex flex-col gap-4">
-        {/* Company base info */}
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="textarea" />
-
-        <div>
-          <SkeletonText customClassName="w-40 h-3 mb-1 rounded-md bg-background-400" />
-          <div className="w-full flex flex-col gap-2 px-2 py-1 mb-1 rounded-md border-background-800 bg-background-800">
-            <div className="flex flex-row gap-2">
-              {Array.from({ length: 3 }).map((_, idx) => (
-                <span
-                  className="block w-40 h-6 rounded-md bg-background-500 animate-pulse"
-                  key={`salary-type-${idx}`}
-                ></span>
-              ))}
-            </div>
-          </div>
-          <div className="block w-full h-8 rounded-md bg-background-600 animate-pulse"></div>
-        </div>
-
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="input" />
-        <SkeletonInput variant="input" />
-
-        {/* Skills */}
-        <div className="mt-8">
-          <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
-          <SkeletonInput variant="input" />
-          <div className="mt-4">
-            <SkeletonSkills />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8">
-        <SkeletonButton />
-      </div>
-    </div>
-  );
 }

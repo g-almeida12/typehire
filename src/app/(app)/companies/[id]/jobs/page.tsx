@@ -1,7 +1,7 @@
 import { SearchInput } from "@/components/common/SearchInput";
 import { JobListView } from "@/components/job/JobListView";
 import { Navbar } from "@/components/ui/Navbar";
-import { getCurrentUserId } from "@/lib/data/user/index";
+import { getCurrentUserId } from "@/lib/data/user";
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyProfile } from "@/components/company/CompanyProfile";
 import { ArrowLeftIcon, CreateIcon } from "@/components/icons";
@@ -44,7 +44,12 @@ export default function CompanyJobsPage(
 
         <div className="grid min-h-dvh flex-1 md:gap-4 md:grid-cols-[minmax(320px,1fr)_2fr] md:grid-rows-[minmax(0,1fr)]">
           <section className="min-w-0 md:pr-2 md:pt-2 md:overflow-y-auto">
-            <JobListContent params={props.params} searchParams={props.searchParams} />
+            <Suspense fallback={null}>
+              <JobListContent
+                params={props.params}
+                searchParams={props.searchParams}
+              />
+            </Suspense>
           </section>
 
           <div className="relative min-w-0 md:pt-2 md:overflow-y-auto">
@@ -67,7 +72,7 @@ async function JobListContent({
   const queries = await searchParams;
   const filter = JobURLFilterSchema.parse({ ...queries, companyId });
 
-  return <JobListView filter={filter} />
+  return <JobListView filter={filter} />;
 }
 
 async function CompanyJobsHeader({

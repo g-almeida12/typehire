@@ -1,23 +1,18 @@
 import { BackButton } from "@/components/common/BackButton";
 import { CompanyForm } from "@/components/company/CompanyForm";
-import { getCompanyByIdAction } from "@/lib/modules/company/index";
-import { getCurrentUserData } from "@/lib/data/user/index";
+import { getCompanyByIdAction } from "@/lib/modules/company";
+import { getCurrentUserData } from "@/lib/data/user";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import {
-  SkeletonText,
-  SkeletonInput,
-  SkeletonUserProfile,
-  SkeletonButton,
-} from "@/components/skeletons";
+import { SkeletonCompanyForm } from "@/components/skeletons";
 import { truncateText } from "@/utils/string";
 
 export default async function CompanyUpdatePage(
   props: PageProps<"/companies/[id]/update">,
 ) {
   return (
-    <main className="pb-4">
+    <main className="w-full max-w-lg pb-4 mx-auto">
       <section>
         <div className="mt-4">
           <BackButton />
@@ -29,7 +24,7 @@ export default async function CompanyUpdatePage(
       </section>
 
       <section>
-        <Suspense fallback={<CompanyFormContentFallback />}>
+        <Suspense fallback={<SkeletonCompanyForm />}>
           <CompanyFormContent props={props} />
         </Suspense>
       </section>
@@ -62,47 +57,6 @@ async function CompanyFormContent({
       currentUserEmail={user!.email}
       key={companyResponse.data.id}
     />
-  );
-}
-
-function CompanyFormContentFallback() {
-  return (
-    <div className="flex flex-col gap-8 mt-6">
-      {/* Company base info */}
-      <div>
-        <SkeletonText customClassName="w-60 h-5 mb-6 rounded-md bg-background-200" />
-
-        <div className="flex flex-col gap-2 mb-2">
-          {Array.from({ length: 3 }).map((_, idx) => (
-            <SkeletonInput variant="input" key={`input-${idx}`} />
-          ))}
-        </div>
-        <SkeletonInput variant="textarea" />
-      </div>
-
-      {/* Memberships */}
-      <div>
-        <SkeletonText customClassName="w-60 h-5 mb-3 rounded-md bg-background-200" />
-        <SkeletonText customClassName="w-full h-4 mb-1 rounded-sm bg-background-200" />
-        <SkeletonText customClassName="w-40 h-4 mb-5 rounded-sm bg-background-200" />
-
-        <SkeletonInput variant="input" />
-        <ul className="flex flex-row flex-wrap gap-0 mt-4 rounded-md bg-background-700">
-          {Array.from({ length: 2 }).map((_, idx) => (
-            <li
-              className="w-full rounded-sm px-2 py-1 bg-background-700"
-              key={`user-${idx}`}
-            >
-              {idx >= 1 && <hr className="mb-2 mx-2 text-background-500" />}
-
-              <SkeletonUserProfile />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <SkeletonButton />
-    </div>
   );
 }
 
