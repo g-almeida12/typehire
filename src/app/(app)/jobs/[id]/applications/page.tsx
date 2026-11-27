@@ -1,55 +1,65 @@
 import { BackButton } from "@/components/common/BackButton";
-import {
-  ApplicationURLFilterSchema,
-  getApplicationsAction,
-  getJobApplicationStatusesAction,
-} from "@/lib/modules/application";
+import { ApplicationURLFilterSchema, getJobApplicationStatusesAction } from "@/lib/modules/application";
 import { Metadata } from "next";
 import { getJobByIdAction } from "@/lib/modules/job";
 import { notFound } from "next/navigation";
-import { ApplicationStatusFilter } from "@/components/application/ApplicationStatusFilter";
-import { CandidateListView } from "@/components/user/CandidateListView";
 import { JobInfoTags } from "@/components/job/JobInfoTags";
 import { Suspense } from "react";
-import { SkeletonText, SkeletonCandidateCard } from "@/components/skeletons";
-import { truncateText } from "@/utils/string";
+import { SkeletonProfileContent, SkeletonText } from "@/components/skeletons";
+import { getSearchParam, truncateText } from "@/utils/string";
+import { Navbar } from "@/components/ui/Navbar";
+import { CompanyProfile } from "@/components/company/CompanyProfile";
+import { Params, SearchParams } from "@/utils/types";
+import { CandidateDetailsSection } from "@/components/user/CandidateDetailsSection";
+import { getUserByIdAction } from "@/lib/modules/user";
+import { CandidateNotFound } from "@/components/user/CandidateNotFound";
+import { ApplicationListView } from "@/components/application/ApplicationListView";
+import { ApplicationStatusFilter } from "@/components/application/ApplicationStatusFilter";
 
 export default async function JobApplicationsPage(
   props: PageProps<"/jobs/[id]/applications">,
 ) {
   return (
     <>
+      <Navbar />
       <main className="pb-4">
-        <section className="flex flex-row items-center justify-between">
-          <div className="mt-4">
+        <section className="w-full max-w-lg pb-4 mx-auto">
+          <div className="mt-10 mb-7">
             <BackButton />
           </div>
-        </section>
 
-        {/* Job info */}
-        <section className="mt-6 mb-6">
           <Suspense fallback={<JobHeaderFallback />}>
-            <JobHeader props={props} />
+            <JobHeader params={props.params} />
           </Suspense>
         </section>
 
-        <section>
-          <p className="mt-8 mb-1">Selecione o filtro</p>
-          <Suspense fallback={<JobApplicationListContentFallback />}>
-            <JobApplicationListContent props={props} />
-          </Suspense>
-        </section>
+        <hr className="mt-8 mb-4 border-background-500 md:mb-0" />
+
+        <div className="grid min-h-dvh flex-1 md:gap-4 md:grid-cols-[minmax(320px,1fr)_2fr] md:grid-rows-[minmax(0,1fr)]">
+          <section className="min-w-0 md:pr-2 md:pt-2 md:overflow-y-auto">
+            <Suspense fallback={null}>
+              <CandidateListContent
+                params={props.params}
+                searchParams={props.searchParams}
+              />
+            </Suspense>
+          </section>
+
+          <div className="relative min-w-0 md:pt-12 md:overflow-y-auto">
+            <Suspense
+              fallback={<SkeletonProfileContent /> }
+            >
+              <CandidateDetailsContent searchParams={props.searchParams} />
+            </Suspense>
+          </div>
+        </div>
       </main>
     </>
   );
 }
 
-async function JobHeader({
-  props,
-}: {
-  props: PageProps<"/jobs/[id]/applications">;
-}) {
-  const jobId = (await props.params).id;
+async function JobHeader({ params }: { params: Params }) {
+  const jobId = (await params).id;
   const jobResponse = await getJobByIdAction(jobId);
   if (!jobResponse.success) {
     if (jobResponse.status === 404) notFound();
@@ -58,7 +68,8 @@ async function JobHeader({
 
   return (
     <>
-      <p className="text-2xl font-medium">{jobResponse.data.title}</p>
+      <CompanyProfile company={jobResponse.data.company} type="readonly" />
+      <p className="mt-3 text-xl font-semibold">{jobResponse.data.title}</p>
       <JobInfoTags
         level={jobResponse.data.level}
         modality={jobResponse.data.modality}
@@ -67,59 +78,58 @@ async function JobHeader({
   );
 }
 
-async function JobApplicationListContent({
-  props,
+async function CandidateListContent({
+  params,
+  searchParams,
 }: {
-  props: PageProps<"/jobs/[id]/applications">;
+  params: Params;
+  searchParams: SearchParams;
 }) {
-  const [searchParams, params] = await Promise.all([
-    props.searchParams,
-    props.params,
-  ]);
-  const filter = ApplicationURLFilterSchema.parse({
-    status: searchParams.status,
-    jobId: params.id,
-  });
+  const queries = await searchParams;
+  const jobId = (await params).id;
+  const filter = ApplicationURLFilterSchema.parse({ ...queries, jobId });
 
-  const [jobResponse, jobApplcResponse, jobApplcStatusesResponse] =
-    await Promise.all([
-      getJobByIdAction(params.id),
-      getApplicationsAction(filter, { page: 1, size: 10 }),
-      getJobApplicationStatusesAction(params.id),
-    ]);
-  if (jobResponse.status === 404) notFound();
-  if (!jobResponse.success || !jobApplcStatusesResponse.success)
-    throw new Error(
-      `Failed to load job or job application status for job ID: ${params.id}`,
-    );
+  const jobAppStatuses = await getJobApplicationStatusesAction(jobId);
+    if (!jobAppStatuses.success) {
+    if (jobAppStatuses.status === 404) notFound();
+    else throw new Error(`Failed to load job application statuses for job ID: ${jobId}`);
+  }
 
   return (
     <>
-      <div className="mb-12">
+      <div className="mb-6 md:mb-0">
         <ApplicationStatusFilter
-          jobApplicationStatuses={jobApplcStatusesResponse.data}
+          jobApplicationStatuses={jobAppStatuses.data}
         />
       </div>
-
-      {!jobApplcResponse.success ? (
-        <div className="flex flex-col items-center justify-center px-4 text-center">
-          <p className="text-background-300 text-lg/[22px]">
-            Não foi possível carregar as candidaturas da vaga.
-          </p>
-          <p className="text-sm text-background-400 mt-2">
-            Tente recarregar a página mais tarde.
-          </p>
-        </div>
-      ) : (
-        <CandidateListView
-          filter={filter}
-          initialApplications={jobApplcResponse.data.applications}
-          initialHasMore={jobApplcResponse.data.pagination.hasNextPage}
-          key={JSON.stringify(searchParams)}
-        />
-      )}
+      <ApplicationListView filter={filter} cardType="CANDIDATE" />
     </>
   );
+}
+
+async function CandidateDetailsContent({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const queries = await searchParams;
+  const candidateId = getSearchParam(queries, "candidateId");
+  if (!candidateId) {
+    return (
+      <div>
+        <p className="hidden text-sm text-background-300 md:block">
+          Selecione um usuário da lista e veja seu nome, email, habilidades
+          cadastradas e as empresas em que participa
+        </p>
+      </div>
+    );
+  }
+
+  const candidateResponse = await getUserByIdAction(candidateId);
+  if (!candidateResponse.success)
+    return <CandidateNotFound closeButtonQuery="userId" />;
+
+  return <CandidateDetailsSection candidate={candidateResponse.data} />;
 }
 
 export async function generateMetadata(
@@ -149,31 +159,5 @@ function JobHeaderFallback() {
         <span className="w-25 h-7 rounded-md bg-background-700 animate-pulse"></span>
       </div>
     </div>
-  );
-}
-
-function JobApplicationListContentFallback() {
-  return (
-    <>
-      {/* Status filter */}
-      <div className="mb-12">
-        <div className="w-[calc(100%+1rem)] flex flex-row gap-2 overflow-x-hidden mt-2">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <span
-              className="shrink-0 w-20 h-8 rounded-md bg-background-700 animate-pulse"
-              key={`status-${idx}`}
-            ></span>
-          ))}
-        </div>
-        <span className="w-25 h-7 rounded-md bg-background-700 animate-pulse"></span>
-      </div>
-
-      {/* Job card list */}
-      <div className="flex flex-col gap-0 -ml-4 w-[calc(100%+2rem)]">
-        {Array.from({ length: 3 }).map((_, idx) => (
-          <SkeletonCandidateCard key={`job-${idx}`} />
-        ))}
-      </div>
-    </>
   );
 }

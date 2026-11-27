@@ -10,6 +10,7 @@ import {
 import { ApplicationStatus } from "@/database/generated/enums";
 import { formatRelativeTime } from "@/utils/date";
 import { ApplicationUpdateForm } from "../application/ApplicationUpdateForm";
+import { CardContainer } from "../common/CardContainer";
 
 interface CandidateCardProps {
   candidate: Pick<
@@ -25,6 +26,7 @@ interface CandidateCardProps {
   applicationId: string;
   status: ApplicationStatus;
   createdAt: Date;
+  navigateTo?: string;
 }
 
 export function CandidateCard({
@@ -32,6 +34,7 @@ export function CandidateCard({
   applicationId,
   status,
   createdAt,
+  navigateTo=undefined
 }: CandidateCardProps) {
   const userSocialMedias = [
     {
@@ -52,8 +55,8 @@ export function CandidateCard({
   ];
 
   return (
-    <div className="px-4 py-4 border-y border-y-background-700">
-      <UserProfile user={candidate} type="link" />
+    <CardContainer className="flex flex-col justify-between">
+      <UserProfile user={candidate} type="link" navigateTo={navigateTo} />
 
       {/* Resume */}
       <div className="mt-2 mb-5">
@@ -126,6 +129,6 @@ export function CandidateCard({
           {formatRelativeTime(createdAt)}
         </span>
       </div>
-    </div>
+    </CardContainer>
   );
 }

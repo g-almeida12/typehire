@@ -10,237 +10,126 @@ import {
 import { prisma } from "../index";
 
 async function main() {
-  console.log("🌱 Iniciando o seed do banco de dados...");
+  console.log("🌱 Iniciando o seed pontual...");
 
-  // Limpa dados existentes na ordem correta para evitar erros de FK
-  await prisma.application.deleteMany();
-  await prisma.job.deleteMany();
-  await prisma.companyMember.deleteMany();
-  await prisma.company.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.account.deleteMany();
-  await prisma.user.deleteMany();
+  // 1. Busca o usuário existente pelo ID fornecido
+  const targetUserId = "bHg5j3pkABH5tIOubdy7dpco4I1K43pO";
 
-  console.log("🧹 Dados antigos limpos.");
+  const user = await prisma.user.findUnique({
+    where: { id: targetUserId },
+  });
 
-  // ==========================================
-  // 1. CRIANDO USUÁRIOS (Recrutadores e Candidatos)
-  // ==========================================
+  if (!user) {
+    console.error(
+      `❌ Erro: Usuário com ID "${targetUserId}" não foi encontrado no banco de dados.`,
+    );
+    console.error(
+      "Certifique-se de que a conta já foi criada antes de rodar este script.",
+    );
+    process.exit(1);
+  }
 
-  const recruter1 = await prisma.user.create({
-    data: {
-      id: "user-recruiter-1",
-      name: "Ana Souza (Recrutadora)",
-      email: "ana.souza@techcorp.com",
-      emailVerified: true,
-      bio: "Head de Talentos na TechCorp Brasil. Sempre em busca de novos talentos.",
+  console.log(`👤 Usuário encontrado: ${user.name ?? user.email}`);
+
+  // 3. Cria uma vaga vinculada a essa nova empresa e criada pelo usuário
+  const newJob = (await prisma.job.findUnique({
+    where: { id: "cmwxwvtac0002rz30eivrgjcw" },
+  }))!;
+
+  console.log(`💼 Vaga criada: ${newJob.title} (ID: ${newJob.id})`);
+
+  // 4. Cria novos candidatos (usando upsert para permitir reexecuções seguras)
+  const candidatesData = [
+    {
+      id: "seed-candidate-lucas",
+      name: "Lucas Ferreira",
+      email: "lucas.ferreira@example.com",
+      bio: "Desenvolvedor Full-Stack com 4 anos de experiência em React, Next.js e Node.js.",
       location: "Recife, PE",
-      phoneNumber: "+55 81 99999-1111",
-      githubUrl: "https://github.com/anasouza",
-      linkedinUrl: "https://linkedin.com/in/ana-souza",
+      githubUrl: "https://github.com/lucasferreira-dev",
+      linkedinUrl: "https://linkedin.com/in/lucas-ferreira-dev",
+      skills: [Skill.TYPESCRIPT, Skill.REACT, Skill.NEXTJS, Skill.POSTGRESQL],
     },
-  });
-
-  const recruter2 = await prisma.user.create({
-    data: {
-      id: "user-recruiter-2",
-      name: "Carlos Mendes (CTO)",
-      email: "carlos@devstudio.io",
-      emailVerified: true,
-      bio: "Fundador e CTO na DevStudio. Apaixonado por arquitetura limpa e open-source.",
-      location: "São Paulo, SP",
+    {
+      id: "seed-candidate-camila",
+      name: "Camila Rocha",
+      email: "camila.rocha@example.com",
+      bio: "Engenheira de Software apaixonada por interfaces acessíveis e arquitetura front-end.",
+      location: "Olinda, PE",
+      githubUrl: "https://github.com/camilarocha",
+      skills: [Skill.TYPESCRIPT, Skill.REACT, Skill.TAILWINDCSS, Skill.FIGMA],
     },
-  });
-
-  const candidate1 = await prisma.user.create({
-    data: {
-      id: "user-candidate-1",
-      name: "Gabriel Almeida",
-      email: "gabriel@email.com",
-      emailVerified: true,
-      bio: "Desenvolvedor Full-Stack focado em ecossistema JavaScript/TypeScript, React e Next.js.",
-      location: "Vitória de Santo Antão, PE",
-      githubUrl: "https://github.com/g-almeida12",
-      linkedinUrl: "https://linkedin.com/in/gabriel-almeida17",
-      skills: [
-        Skill.TYPESCRIPT,
-        Skill.REACT,
-        Skill.NEXTJS,
-        Skill.NODEJS,
-        Skill.POSTGRESQL,
-        Skill.TAILWINDCSS,
-      ],
+    {
+      id: "seed-candidate-rafael",
+      name: "Rafael Costa",
+      email: "rafael.costa@example.com",
+      bio: "Desenvolvedor Backend migrando para Full-Stack, forte bagagem em bancos relacionais.",
+      location: "Caruaru, PE",
+      linkedinUrl: "https://linkedin.com/in/rafael-costa-dev",
+      skills: [Skill.NODEJS, Skill.TYPESCRIPT, Skill.POSTGRESQL, Skill.DOCKER],
     },
-  });
-
-  const candidate2 = await prisma.user.create({
-    data: {
-      id: "user-candidate-2",
-      name: "Mariana Lima",
-      email: "mariana.lima@email.com",
-      emailVerified: true,
-      bio: "Engenheira de Software Frontend com sólida experiência em UI/UX e design systems.",
-      location: "Recife, PE",
-      skills: [Skill.REACT, Skill.TYPESCRIPT, Skill.FIGMA, Skill.TAILWINDCSS],
+    {
+      id: "seed-candidate-beatriz",
+      name: "Beatriz Santos",
+      email: "beatriz.santos@example.com",
+      bio: "Desenvolvedora Web Jr/Pleno focada no ecossistema JavaScript moderno.",
+      location: "Jaboatão dos Guararapes, PE",
+      githubUrl: "https://github.com/beatrizsantos",
+      skills: [Skill.JAVASCRIPT, Skill.REACT, Skill.NEXTJS, Skill.TAILWINDCSS],
     },
-  });
+  ];
 
-  console.log("👥 Usuários criados com sucesso.");
+  const createdCandidates = [];
 
-  // ==========================================
-  // 2. CRIANDO EMPRESAS E MEMBROS
-  // ==========================================
-
-  const techCorp = await prisma.company.create({
-    data: {
-      name: "TechCorp Solutions",
-      cnpj: "12345678000199",
-      website: "https://techcorp.example.com",
-      bio: "Empresa líder em soluções de nuvem e inteligência de dados para o mercado financeiro.",
-      size: CompanySize.LARGE,
-      createdBy: recruter1.id,
-      members: {
-        create: {
-          userId: recruter1.id,
-        },
+  for (const candidate of candidatesData) {
+    const upserted = await prisma.user.upsert({
+      where: { email: candidate.email },
+      update: {},
+      create: {
+        ...candidate,
+        emailVerified: true,
       },
-    },
-  });
+    });
+    createdCandidates.push(upserted);
+  }
 
-  const devStudio = await prisma.company.create({
-    data: {
-      name: "DevStudio Inovação",
-      cnpj: "98765432000188",
-      website: "https://devstudio.io",
-      bio: "Software house focada em criar produtos digitais inovadores para startups globais.",
-      size: CompanySize.MEDIUM,
-      createdBy: recruter2.id,
-      members: {
-        create: {
-          userId: recruter2.id,
-        },
+  console.log(`👥 ${createdCandidates.length} novos candidatos prontos.`);
+
+  // 5. Cria candidaturas dos novos usuários na vaga recém-criada
+  await prisma.application.createMany({
+    data: [
+      {
+        jobId: newJob.id,
+        candidateId: createdCandidates[0].id, // Lucas -> INTERVIEW
+        status: ApplicationStatus.INTERVIEW,
+        feedback:
+          "Ótimo domínio de Next.js e Prisma. Entrevista técnica agendada.",
+        feedbackAt: new Date(),
       },
-    },
+      {
+        jobId: newJob.id,
+        candidateId: createdCandidates[1].id, // Camila -> REVIEW
+        status: ApplicationStatus.REVIEW,
+        feedback: "Portfólio muito bem estruturado, em avaliação.",
+        feedbackAt: new Date(),
+      },
+      {
+        jobId: newJob.id,
+        candidateId: createdCandidates[2].id, // Rafael -> PENDING
+        status: ApplicationStatus.PENDING,
+      },
+      {
+        jobId: newJob.id,
+        candidateId: createdCandidates[3].id, // Beatriz -> REJECTED
+        status: ApplicationStatus.REJECTED,
+        feedback:
+          "Buscamos um perfil com maior experiência prática em arquitetura back-end no momento.",
+        feedbackAt: new Date(),
+      },
+    ],
   });
 
-  console.log("🏢 Empresas criadas.");
-
-  // ==========================================
-  // 3. CRIANDO VAGAS (JOBS) COM DIFERENTES FILTROS
-  // ==========================================
-
-  const job1 = await prisma.job.create({
-    data: {
-      title: "Desenvolvedor(a) Front-End React/Next.js Sênior",
-      description:
-        "Buscamos um(a) desenvolvedor(a) Front-End sênior para liderar a arquitetura de interfaces de nossos produtos corporativos. Necessária forte experiência com Next.js, TypeScript e Design Systems.",
-      minSalary: 8000.0,
-      maxSalary: 12000.0,
-      type: JobType.FULL_TIME,
-      level: JobLevel.SENIOR,
-      modality: JobModality.REMOTE,
-      location: "Remoto (Brasil)",
-      status: JobStatus.OPEN,
-      skills: [Skill.TYPESCRIPT, Skill.REACT, Skill.NEXTJS, Skill.TAILWINDCSS],
-      companyId: techCorp.id,
-      createdBy: recruter1.id,
-    },
-  });
-
-  const job2 = await prisma.job.create({
-    data: {
-      title: "Engenheiro(a) Backend Node.js / TypeScript",
-      description:
-        "Iremos expandir nossa camada de microsserviços. Procuramos alguém que domine Node.js, arquitetura limpa, PostgreSQL e mensageria (RabbitMQ ou Kafka).",
-      fixedSalary: 9500.0,
-      type: JobType.FULL_TIME,
-      level: JobLevel.MID,
-      modality: JobModality.HYBRID,
-      location: "Recife, PE",
-      status: JobStatus.OPEN,
-      skills: [
-        Skill.NODEJS,
-        Skill.TYPESCRIPT,
-        Skill.POSTGRESQL,
-        Skill.DOCKER,
-        Skill.MICROSERVICES,
-      ],
-      companyId: techCorp.id,
-      createdBy: recruter1.id,
-    },
-  });
-
-  const job3 = await prisma.job.create({
-    data: {
-      title: "Desenvolvedor(a) Full-Stack Pleno (React & Node)",
-      description:
-        "Vaga para atuar em projetos dinâmicos para clientes internacionais. Stack moderna baseada em TypeScript, React, Node.js e MongoDB.",
-      minSalary: 6000.0,
-      maxSalary: 8500.0,
-      type: JobType.FULL_TIME,
-      level: JobLevel.MID,
-      modality: JobModality.REMOTE,
-      location: "Remoto",
-      status: JobStatus.OPEN,
-      skills: [Skill.TYPESCRIPT, Skill.REACT, Skill.NODEJS, Skill.MONGODB],
-      companyId: devStudio.id,
-      createdBy: recruter2.id,
-    },
-  });
-
-  const job4 = await prisma.job.create({
-    data: {
-      title: "Estágio em Desenvolvimento Web",
-      description:
-        "Oportunidade de estágio para estudantes de Ciência da Computação ou áreas afins. Você vai aprender na prática com mentoria sênior trabalhando com HTML, CSS, JavaScript e React.",
-      hourlySalary: 45.0, // Exemplo por hora
-      type: JobType.PART_TIME,
-      level: JobLevel.INTERN,
-      modality: JobModality.ON_SITE,
-      location: "São Paulo, SP",
-      status: JobStatus.OPEN,
-      skills: [Skill.JAVASCRIPT, Skill.REACT, Skill.HTML, Skill.CSS],
-      companyId: devStudio.id,
-      createdBy: recruter2.id,
-    },
-  });
-
-  console.log("💼 Vagas criadas.");
-
-  // ==========================================
-  // 4. CRIANDO CANDIDATURAS (APPLICATIONS)
-  // ==========================================
-
-  await prisma.application.create({
-    data: {
-      jobId: job1.id,
-      candidateId: candidate1.id,
-      status: ApplicationStatus.REVIEW,
-      feedback:
-        "Currículo muito bom, portfólio bem estruturado. Aguardando agendamento de entrevista técnica.",
-      feedbackAt: new Date(),
-    },
-  });
-
-  await prisma.application.create({
-    data: {
-      jobId: job3.id,
-      candidateId: candidate1.id,
-      status: ApplicationStatus.PENDING,
-    },
-  });
-
-  await prisma.application.create({
-    data: {
-      jobId: job1.id,
-      candidateId: candidate2.id,
-      status: ApplicationStatus.INTERVIEW,
-      feedback: "Excelente domínio de design systems e componentização.",
-      feedbackAt: new Date(),
-    },
-  });
-
-  console.log("📝 Candidaturas criadas.");
+  console.log("📝 Candidaturas vinculadas à vaga com sucesso!");
   console.log("✅ Seed executado com sucesso!");
 }
 

@@ -52,6 +52,9 @@ export const ApplicationURLFilterSchema = z.object({
   status: z.enum(ApplicationStatus).optional().catch(undefined),
   jobId: z.string().optional().catch(undefined),
 });
+export type ApplicationURLFilterPayload = z.infer<
+  typeof ApplicationURLFilterSchema
+>;
 
 export const ApplicationCreateSchema = z.object({
   jobId: z.string(),
@@ -84,7 +87,7 @@ export const ApplicationResponseSchema = ApplicationBaseSchema.extend({
       id: z.string(),
       name: z.string().min(2, "Nome deve ter no mínimo 2 caracteres."),
       image: z.string().nullable(),
-      website: z.string().nullable()
+      website: z.string().nullable(),
     }),
   }),
   candidate: z.object({

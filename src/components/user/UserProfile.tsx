@@ -1,4 +1,4 @@
-import { UserPublicResponsePayload } from "@/lib/modules/user/index";
+import { UserPublicResponsePayload } from "@/lib/modules/user";
 import Link from "next/link";
 import { ArrowUpRightIcon, EditIcon } from "../icons";
 import { APP_URLS } from "@/utils/constants";
@@ -7,12 +7,14 @@ interface UserProfileProps {
   user: Pick<UserPublicResponsePayload, "name" | "email" | "id">;
   type: "readonly" | "edit" | "link" | "list";
   isCurrentUserProfile?: boolean;
+  navigateTo?: string;
 }
 
 export function UserProfile({
   user,
   type,
   isCurrentUserProfile = false,
+  navigateTo = undefined,
 }: UserProfileProps) {
   const userAvatar =
     user.name.split(" ").length >= 2
@@ -68,7 +70,7 @@ export function UserProfile({
       ) : (
         type === "link" && (
           <Link
-            href={APP_URLS.USER(user.id)}
+            href={navigateTo ?? APP_URLS.USER(user.id)}
             className="shrink-0 mt-1"
             aria-label="Ver informações do usuário"
           >

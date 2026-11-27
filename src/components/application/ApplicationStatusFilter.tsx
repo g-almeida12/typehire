@@ -39,7 +39,7 @@ export function ApplicationStatusFilter({
   };
 
   return (
-    <div className="overflow-x-scroll pb-2 select-none">
+    <div className="overflow-x-scroll pb-2 select-none mask-r-from-85% mask-r-to-100%">
       <ul className="flex flex-row gap-2">
         <li
           className="flex flex-row shrink-0 w-fit items-center justify-center px-2 py-1 rounded-md text-sm font-medium"

@@ -13,3 +13,4 @@ export * from './SkeletonButton';
 export * from './SkeletonCompanyContent';
 export * from './SkeletonJobForm';
 export * from './SkeletonCompanyForm';
+export * from './SkeletonProfileContent'; 

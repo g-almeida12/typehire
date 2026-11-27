@@ -1,4 +1,5 @@
 import "server-only";
+
 import { getJobsAction, JobURLFilterPayload } from "@/lib/modules/job";
 import { JobInfiniteList } from "./JobInfiniteList";
 import { Suspense } from "react";

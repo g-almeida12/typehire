@@ -1,24 +1,16 @@
 import { BackButton } from "@/components/common/BackButton";
 import { Metadata } from "next";
-import { getUserByIdAction } from "@/lib/modules/user/index";
+import { getUserByIdAction } from "@/lib/modules/user";
 import { notFound } from "next/navigation";
 import { ProfileHeaderSection } from "@/components/user/sections/ProfileHeaderSection";
 import { ProfileMembershipsSection } from "@/components/user/sections/ProfileMembershipsSection";
 import { ProfileSkillsSection } from "@/components/user/sections/ProfileSkillsSection";
 import { ProfileSocialMediasSection } from "@/components/user/sections/ProfileSocialMediasSection";
 import { Suspense } from "react";
-import {
-  SkeletonUserProfile,
-  SkeletonText,
-  SkeletonDescription,
-  SkeletonSocialMedias,
-  SkeletonSkills,
-  SkeletonCompanyProfile,
-} from "@/components/skeletons";
+import { SkeletonProfileContent } from "@/components/skeletons";
+import { Params } from "@/utils/types";
 
-export default async function ProfilePage(props: PageProps<"/users/[id]">) {
-  const userId = (await props.params).id;
-
+export default function ProfilePage(props: PageProps<"/users/[id]">) {
   return (
     <main className="pb-4">
       <section>
@@ -27,14 +19,15 @@ export default async function ProfilePage(props: PageProps<"/users/[id]">) {
         </div>
       </section>
 
-      <Suspense fallback={<ProfileContentSkeleton />}>
-        <ProfileContent userId={userId} />
+      <Suspense fallback={<SkeletonProfileContent />}>
+        <ProfileContent params={props.params} />
       </Suspense>
     </main>
   );
 }
 
-async function ProfileContent({ userId }: { userId: string }) {
+async function ProfileContent({ params }: { params: Params }) {
+  const userId = (await params).id;
   const userResult = await getUserByIdAction(userId);
 
   if (!userResult.success) {
@@ -56,43 +49,6 @@ async function ProfileContent({ userId }: { userId: string }) {
       <ProfileSkillsSection skills={user.skills} />
       <ProfileMembershipsSection companies={user.companies} userId={user.id} />
     </>
-  );
-}
-
-function ProfileContentSkeleton() {
-  return (
-    <div aria-busy="true">
-      <div className="mt-6">
-        <SkeletonUserProfile />
-      </div>
-      <div className="flex flex-row gap-4 mt-2">
-        <SkeletonText customClassName="w-30 h-3 rounded-sm bg-background-200" />
-        <SkeletonText customClassName="w-30 h-3 rounded-sm bg-background-200" />
-      </div>
-
-      {/* Resume */}
-      <div className="w-full h-8 mt-3 rounded-md border border-background-500 bg-background-500 animate-pulse"></div>
-
-      <SkeletonDescription />
-      <hr className="mt-4 mb-8" />
-
-      <SkeletonText customClassName="w-60 h-5 mb-2 rounded-md bg-background-200" />
-      <SkeletonSocialMedias />
-
-      <SkeletonText customClassName="w-60 h-5 mb-2 mt-8 rounded-md bg-background-200" />
-      <SkeletonSkills />
-
-      {/* Companies */}
-      <div className="mt-8">
-        <SkeletonText customClassName="w-80 h-6 mb-3 rounded-md bg-background-200" />
-
-        <div className="flex flex-col gap-2">
-          {Array.from({ length: 3 }).map((_, idx) => (
-            <SkeletonCompanyProfile type="link" key={`company-${idx}`} />
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
 

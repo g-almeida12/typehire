@@ -13,7 +13,7 @@ export function ProfileHeaderSection({
   userProfileType = "readonly",
 }: ProfileHeaderSectionProps) {
   return (
-    <section className="mt-8">
+    <section>
       <UserProfile user={user} type={userProfileType} />
 
       {/* Main user info */}
