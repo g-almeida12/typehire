@@ -32,7 +32,6 @@ export default function CompanyJobsPage(
             </Suspense>
           </div>
           <div className="shrink-0">
-            <hr className="border-px border-background-500" />
             <h1 className="mb-2 mt-8 text-lg font-medium text-left text-background-300">
               Pesquise por vagas
             </h1>
@@ -59,20 +58,6 @@ export default function CompanyJobsPage(
       </main>
     </div>
   );
-}
-
-async function JobListContent({
-  params,
-  searchParams,
-}: {
-  params: Params;
-  searchParams: SearchParams;
-}) {
-  const companyId = (await params).id;
-  const queries = await searchParams;
-  const filter = JobURLFilterSchema.parse({ ...queries, companyId });
-
-  return <JobListView filter={filter} />;
 }
 
 async function CompanyJobsHeader({
@@ -132,6 +117,20 @@ async function CompanyJobsHeader({
       </div>
     </div>
   );
+}
+
+async function JobListContent({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const companyId = (await params).id;
+  const queries = await searchParams;
+  const filter = JobURLFilterSchema.parse({ ...queries, companyId });
+
+  return <JobListView filter={filter} />;
 }
 
 export async function generateMetadata(

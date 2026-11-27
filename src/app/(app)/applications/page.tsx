@@ -15,9 +15,9 @@ export default async function ApplicationsPage(
   props: PageProps<"/applications">,
 ) {
   return (
-    <>
+    <div className="flex min-h-0 flex-col md:h-dvh">
       <Navbar />
-      <main className="pb-4">
+      <main className="flex min-h-0 flex-1 flex-col pb-4">
         <section className="w-full max-w-lg pb-4 mx-auto">
           <div className="mt-10 mb-7">
             <BackButton />
@@ -41,7 +41,7 @@ export default async function ApplicationsPage(
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
 
