@@ -48,15 +48,15 @@ export function ApplicationInfiniteList({
 
   return (
     <ModuleListView
-      errorMessage="Não foi possível carregar mais candidaturas."
-      modulesListEndMessage="Parece que a lista de candidatos chegou ao fim."
+      errorMessage={`Não foi possível carregar mais ${cardType === "CANDIDATE" ? "candidatos" : "candidaturas"}.`}
+      modulesListEndMessage={`Parece que a lista de ${cardType === "CANDIDATE" ? "candidatos" : "candidaturas"} chegou ao fim.`}
       getModulesAction={handleModulesAction}
       filter={filter}
       renderItem={(application) => {
-        if (cardType === "CANDIDATE") {
-          const sp = new URLSearchParams(searchParams);
-          sp.set("candidateId", application.candidateId);
+        const sp = new URLSearchParams(searchParams);
 
+        if (cardType === "CANDIDATE") {
+          sp.set("candidateId", application.candidateId);
           return (
             <CandidateCard
               candidate={application.candidate}
@@ -67,7 +67,13 @@ export function ApplicationInfiniteList({
             />
           );
         } else {
-          return <ApplicationCard application={application} />;
+          sp.set("jobId", application.jobId);
+          return (
+            <ApplicationCard
+              application={application}
+              navigateTo={`${location}?${sp.toString()}`}
+            />
+          );
         }
       }}
       initialModules={initialApplications}

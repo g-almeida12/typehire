@@ -9,6 +9,7 @@ import { ApplicationFilterDropdown } from "@/components/application/ApplicationF
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { SkeletonApplicationCard } from "@/components/skeletons";
+import { JobDetailsSection } from "@/components/job/JobDetailsSection";
 
 export default async function ApplicationsPage(
   props: PageProps<"/applications">,
@@ -17,26 +18,28 @@ export default async function ApplicationsPage(
     <>
       <Navbar />
       <main className="pb-4">
-        <section>
-          <div className="flex flex-row items-center justify-between">
-            <div className="mt-4">
-              <BackButton />
-            </div>
+        <section className="w-full max-w-lg pb-4 mx-auto">
+          <div className="mt-10 mb-7">
+            <BackButton />
           </div>
 
-          <div className="mt-6 mb-12">
-            <div className="mt-8">
-              <h1 className="mb-2 text-xl font-medium">Suas candidaturas</h1>
-              <ApplicationFilterDropdown />
-            </div>
-          </div>
+          <h1 className="mb-2 text-xl font-medium">Suas candidaturas</h1>
+          <ApplicationFilterDropdown />
         </section>
 
-        <section>
-          <Suspense fallback={<ApplicationListFallback />}>
-            <ApplicationListContent props={props} />
-          </Suspense>
-        </section>
+        <hr className="mt-8 mb-2 border-background-500 md:mb-0" />
+
+        <div className="grid min-h-dvh flex-1 md:gap-4 md:grid-cols-[minmax(320px,1fr)_2fr] md:grid-rows-[minmax(0,1fr)]">
+          <section className="min-w-0 md:pr-2 md:pt-2 md:overflow-y-auto">
+            <Suspense fallback={<ApplicationListFallback />}>
+              <ApplicationListContent props={props} />
+            </Suspense>
+          </section>
+
+          <div className="relative min-w-0 md:pt-12 md:overflow-y-auto">
+            <JobDetailsSection searchParams={props.searchParams} />
+          </div>
+        </div>
       </main>
     </>
   );
@@ -48,7 +51,7 @@ async function ApplicationListContent({
   props: PageProps<"/applications">;
 }) {
   const searchParams = await props.searchParams;
-  const filter = ApplicationURLFilterSchema.parse(searchParams);
+  const {jobId, ...filter} = ApplicationURLFilterSchema.parse(searchParams);
   const applicationResponse = await getApplicationsAction(filter, {
     page: 1,
     size: 10,
@@ -70,7 +73,7 @@ async function ApplicationListContent({
   return (
     <div>
       {applicationResponse.data.pagination.total > 0 && (
-        <p className="mb-2 text-background-300">
+        <p className="mb-4 text-background-300">
           {applicationResponse.data.pagination.total}{" "}
           {applicationResponse.data.pagination.total === 1
             ? "candidatura encontrada"
@@ -79,11 +82,7 @@ async function ApplicationListContent({
         </p>
       )}
 
-      <ApplicationListView
-        filter={filter}
-        initialApplications={applicationResponse.data.applications}
-        initialHasMore={applicationResponse.data.pagination.hasNextPage}
-      />
+      <ApplicationListView filter={filter} cardType="APPLICATION" />
     </div>
   );
 }

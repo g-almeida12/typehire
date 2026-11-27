@@ -39,7 +39,9 @@ async function ApplicationListContent({
 
   if (!appResponse.success) {
     return (
-      <ErrorMessage message="Não foi possível carregar as candidaturas disponíveis. Tente novamente mais tarde." />
+      <ErrorMessage
+        message={`Não foi possível carregar ${cardType === "CANDIDATE" ? "as candidaturas" : "os candidatos"} disponíveis. Tente novamente mais tarde.`}
+      />
     );
   }
 
